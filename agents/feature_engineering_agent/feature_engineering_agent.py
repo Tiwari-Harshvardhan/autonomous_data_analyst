@@ -20,6 +20,7 @@ for d in (FEATURED_DATA_DIR, PROFILE_DIR, METADATA_DIR, LOG_DIR):
 
 class FeatureEngineeringState(BaseModel):
     input_dataframe_path: str
+    engineered_dataframe_path: Optional[str] = None
     profile_path: Optional[str] = None
     metadata_path: Optional[str] = None
     logs: List[str] = Field(default_factory=list)
@@ -75,7 +76,7 @@ def process_date_columns(df: pd.DataFrame) -> pd.DataFrame:
     for col in df_clean.columns:
         if pd.api.types.is_numeric_dtype(df_clean[col]):
             continue
-        converted = pd.to_datetime(df_clean[col], errors='ignore', datetime_range_to_nan=True)
+        converted = pd.to_datetime(df_clean[col], errors='coerce')
         if pd.api.types.is_datetime64_any_dtype(converted):
             df_clean[col] = converted
             df_clean[f'{col}_day'] = df_clean[col].dt.day
@@ -116,6 +117,7 @@ def execute_feature_engineering(csv_path: str) -> FeatureEngineeringState:
 
     output_csv_path = _unique_path(FEATURED_DATA_DIR, "engineered_data", "csv")
     df.to_csv(output_csv_path, index=False, encoding="utf-8")
+    state.engineered_dataframe_path = output_csv_path
     state.logs.append(f"[PERSIST] Transformed dataset saved. Final distribution shape: {df.shape[0]} rows x {df.shape[1]} cols. Destination path: {output_csv_path}")
 
     state.metadata_path = save_metadata(state)
@@ -132,13 +134,13 @@ feature_engineering_agent = Agent(
     name="feature_engineering_agent",
     model="gemini-2.0-flash",
     description="Automated system targeting data transformation, mathematical scaling, and feature derivation workflows.",
-    instructions=[
-        "You accept tabular datasets (.csv paths) to standardise scale discrepancies and resolve statistical skewness.",
-        "Always execute the pipeline function `run_feature_engineering_on_csv` when passed file paths to automate cleaning steps.",
-        "Review runtime logging details returned from state tracking variables to verify if date transformations or skew changes succeeded.",
-        "Communicate final processing outputs directly to users by summarizing the storage paths for profiles and output CSV sheets.",
-        "Do not apply subsequent min-max normalizations on metrics that have already passed standardization bounds."
-    ],
+    instruction="""
+    You accept tabular datasets (.csv paths) to standardise scale discrepancies and resolve statistical skewness.
+    Always execute the pipeline function `run_feature_engineering_on_csv` when passed file paths to automate cleaning steps.
+    Review runtime logging details returned from state tracking variables to verify if date transformations or skew changes succeeded.
+    Communicate final processing outputs directly to users by summarizing the storage paths for profiles and output CSV sheets.
+    Do not apply subsequent min-max normalizations on metrics that have already passed standardization bounds.
+    """,
     tools=[run_feature_engineering_on_csv]
 )
 

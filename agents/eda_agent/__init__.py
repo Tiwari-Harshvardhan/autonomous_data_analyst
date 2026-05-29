@@ -1,1 +1,1 @@
-from . import agent
+# EDA agent package namespace

@@ -1,1 +1,1 @@
-from . import agent
+# Visualization agent package namespace

@@ -1,1 +1,1 @@
-from . import agent
+# Data collection agent package namespace

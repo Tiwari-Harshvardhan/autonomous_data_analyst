@@ -108,10 +108,17 @@ def visualisation_tool(df: pd.DataFrame) -> List[str]:
         fig, ax = plt.subplots(figsize=(8, 4))
 
         if pd.api.types.is_numeric_dtype(df[col]):
-            df[col].dropna().plot(kind="kde", ax=ax, title=f"Distribution — {col}")
+            numeric_data = df[col].dropna()
+            if numeric_data.empty:
+                plt.close(fig)
+                continue
+            numeric_data.plot(kind="kde", ax=ax, title=f"Distribution — {col}")
             ax.set_xlabel(col)
         else:
-            counts = df[col].value_counts().head(20)  
+            counts = df[col].value_counts().head(20)
+            if counts.empty:
+                plt.close(fig)
+                continue
             counts.plot(kind="bar", ax=ax, title=f"Value counts — {col}")
             ax.set_xlabel(col)
             ax.set_ylabel("Count")

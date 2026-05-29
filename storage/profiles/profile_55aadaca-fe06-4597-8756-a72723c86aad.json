@@ -1,0 +1,39 @@
+{
+    "rows": 5,
+    "columns": 4,
+    "missing_values": {
+        "age": 0,
+        "salary": 0,
+        "department": 0,
+        "start_date": 0
+    },
+    "duplicates": 0,
+    "dtypes": {
+        "age": "int64",
+        "salary": "int64",
+        "department": "str",
+        "start_date": "str"
+    },
+    "numeric_summary": {
+        "age": {
+            "count": 5.0,
+            "mean": 35.6,
+            "std": 9.96493853468249,
+            "min": 25.0,
+            "25%": 28.0,
+            "50%": 35.0,
+            "75%": 40.0,
+            "max": 50.0
+        },
+        "salary": {
+            "count": 5.0,
+            "mean": 91400.0,
+            "std": 34997.14274051526,
+            "min": 50000.0,
+            "25%": 62000.0,
+            "50%": 95000.0,
+            "75%": 120000.0,
+            "max": 130000.0
+        }
+    }
+}

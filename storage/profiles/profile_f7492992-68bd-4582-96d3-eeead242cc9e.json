@@ -1,0 +1,18 @@
+{
+  "shape": [
+    5,
+    4
+  ],
+  "columns": [
+    "age",
+    "salary",
+    "department",
+    "start_date"
+  ],
+  "missing_values": {
+    "age": 0,
+    "salary": 0,
+    "department": 0,
+    "start_date": 0
+  }
+}

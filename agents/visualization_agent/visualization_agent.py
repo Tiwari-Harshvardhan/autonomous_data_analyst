@@ -21,6 +21,7 @@ class VisualisationState(BaseModel):
     input_dataframe_path: str
     dashboard_html_path: Optional[str] = None
     generated_plots: List[str] = Field(default_factory=list)
+    metadata_path: Optional[str] = None
     logs: List[str] = Field(default_factory=list)
 
 def _unique_path(directory: str, prefix: str, extension: str) -> str:
@@ -136,12 +137,12 @@ visualisation_agent = Agent(
     name="visualisation_agent",
     model="gemini-2.0-flash",
     description="Automated business intelligence system that evaluates transformed datasets to compile responsive interactive dashboards.",
-    instructions=[
-        "You accept tabular datasets (.csv paths) processed by the Feature Engineering pipeline to generate rich visual representations.",
-        "Always execute the tool function `run_visualisation_pipeline` to scan numerical distribution scales, trends, and categorical metrics.",
-        "Review runtime log tracking info to verify how many distributions or relationship patterns were parsed into the layout map.",
-        "Communicate final analytical products clearly, supplying the user with the file paths where the interactive HTML Tableau dashboards can be reviewed."
-    ],
+    instruction="""
+    You accept tabular datasets (.csv paths) processed by the Feature Engineering pipeline to generate rich visual representations.
+    Always execute the tool function `run_visualisation_pipeline` to scan numerical distribution scales, trends, and categorical metrics.
+    Review runtime log tracking info to verify how many distributions or relationship patterns were parsed into the layout map.
+    Communicate final analytical products clearly, supplying the user with the file paths where the interactive HTML Tableau dashboards can be reviewed.
+    """,
     tools=[run_visualisation_pipeline]
 )
 

@@ -1,0 +1,16 @@
+{
+  "input_dataframe_path": "storage\\cleaned_data\\cleaned_eb04ccc5-a3a7-4fdb-a92b-6fb9cccda2e7.csv",
+  "engineered_dataframe_path": "storage\\eda_data\\engineered_data_d4dc8a87-cc45-4ee5-8689-ce1dbb935909.csv",
+  "profile_path": "storage\\profiles\\profile_f7492992-68bd-4582-96d3-eeead242cc9e.json",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_eb04ccc5-a3a7-4fdb-a92b-6fb9cccda2e7.csv",
+    "[LOAD] DataFrame loaded successfully. Shape: 5 rows x 4 cols. Numeric features detected: ['age', 'salary']",
+    "[PROFILE] Initial data structure profiled and written to disk: storage\\profiles\\profile_f7492992-68bd-4582-96d3-eeead242cc9e.json",
+    "[SKEW] Variance correction applied. Pre-skewness: {'age': 0.6067598158127394, 'salary': -0.14986527162967675} -> Post-skewness: {'age': 0.06888518667194832, 'salary': -0.14986527162967675}",
+    "[SCALE] Standardization (Z-Score) applied to numerical fields: ['age', 'salary']",
+    "[DATETIME] Evaluated feature types. Generated engineering sub-components: ['start_date_year', 'start_date_month', 'department_month', 'department_year', 'start_date_day', 'department_day']",
+    "[PERSIST] Transformed dataset saved. Final distribution shape: 5 rows x 10 cols. Destination path: storage\\eda_data\\engineered_data_d4dc8a87-cc45-4ee5-8689-ce1dbb935909.csv"
+  ],
+  "quality_report": null
+}

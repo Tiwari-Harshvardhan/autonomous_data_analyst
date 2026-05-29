@@ -1,1 +1,1 @@
-from . import agent
+# Package namespace for agents

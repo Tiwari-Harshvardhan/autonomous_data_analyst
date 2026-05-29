@@ -1,0 +1,163 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_d4dc8a87-cc45-4ee5-8689-ce1dbb935909.csv",
+  "profile_path": "storage\\profiles\\profile_89b30915-83bb-4ff4-8ab8-987dedaf5aa1.json",
+  "plot_paths": [
+    "storage\\plots\\plot_age_c152da2a-6781-4ff1-a9ca-1de7f3316e9c.png",
+    "storage\\plots\\plot_salary_bea31aee-77f5-4ba3-a873-66f7d88aabcd.png",
+    "storage\\plots\\plot_start_date_7ade6732-cc3e-4a74-b2d3-8b9510e89a0b.png",
+    "storage\\plots\\plot_start_date_day_de9ab75d-ae5e-4d68-a907-3ca6b4aeedf1.png",
+    "storage\\plots\\plot_start_date_month_32fad7ca-e90c-4053-ad55-f1f7f2c1222b.png",
+    "storage\\plots\\plot_start_date_year_87525447-b4ed-4745-83d4-44514cf98e9f.png"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "Loading data from: storage\\eda_data\\engineered_data_d4dc8a87-cc45-4ee5-8689-ce1dbb935909.csv",
+    "Loaded DataFrame: 5 rows x 10 cols",
+    "Profile saved: storage\\profiles\\profile_89b30915-83bb-4ff4-8ab8-987dedaf5aa1.json",
+    "Descriptive stats computed for 2 column groups",
+    "Saved 6 plot(s) to storage\\plots",
+    "Outlier detection complete: 9 column(s) checked",
+    "Skewed columns (|skew|>0.5): ['start_date_month']",
+    "Categorical analysis complete",
+    "Bivariate analysis complete: 45 pair(s)"
+  ],
+  "quality_report": {
+    "rows": 5,
+    "columns": 10,
+    "missing_values": {
+      "age": 0,
+      "salary": 0,
+      "department": 5,
+      "start_date": 0,
+      "department_day": 5,
+      "department_month": 5,
+      "department_year": 5,
+      "start_date_day": 0,
+      "start_date_month": 0,
+      "start_date_year": 0
+    },
+    "missing_pct": {
+      "age": 0.0,
+      "salary": 0.0,
+      "department": 100.0,
+      "start_date": 0.0,
+      "department_day": 100.0,
+      "department_month": 100.0,
+      "department_year": 100.0,
+      "start_date_day": 0.0,
+      "start_date_month": 0.0,
+      "start_date_year": 0.0
+    },
+    "duplicates": 0,
+    "dtypes": {
+      "age": "float64",
+      "salary": "float64",
+      "department": "float64",
+      "start_date": "str",
+      "department_day": "float64",
+      "department_month": "float64",
+      "department_year": "float64",
+      "start_date_day": "int64",
+      "start_date_month": "int64",
+      "start_date_year": "int64"
+    },
+    "numeric_summary": {
+      "age": {
+        "count": 5.0,
+        "mean": -2.0872192862952944e-15,
+        "std": 1.0,
+        "min": -1.2046257992506566,
+        "25%": -0.7460112106939064,
+        "50%": 0.0962287503056373,
+        "75%": 0.5641139287641075,
+        "max": 1.2902943308748078
+      },
+      "salary": {
+        "count": 5.0,
+        "mean": -4.4408920985006264e-17,
+        "std": 1.0,
+        "min": -1.1829537144491606,
+        "25%": -0.8400685798262155,
+        "50%": 0.1028655403868835,
+        "75%": 0.8172095708513525,
+        "max": 1.10294718303714
+      },
+      "department": {
+        "count": 0.0,
+        "mean": NaN,
+        "std": NaN,
+        "min": NaN,
+        "25%": NaN,
+        "50%": NaN,
+        "75%": NaN,
+        "max": NaN
+      },
+      "department_day": {
+        "count": 0.0,
+        "mean": NaN,
+        "std": NaN,
+        "min": NaN,
+        "25%": NaN,
+        "50%": NaN,
+        "75%": NaN,
+        "max": NaN
+      },
+      "department_month": {
+        "count": 0.0,
+        "mean": NaN,
+        "std": NaN,
+        "min": NaN,
+        "25%": NaN,
+        "50%": NaN,
+        "75%": NaN,
+        "max": NaN
+      },
+      "department_year": {
+        "count": 0.0,
+        "mean": NaN,
+        "std": NaN,
+        "min": NaN,
+        "25%": NaN,
+        "50%": NaN,
+        "75%": NaN,
+        "max": NaN
+      },
+      "start_date_day": {
+        "count": 5.0,
+        "mean": 10.8,
+        "std": 8.46758525200662,
+        "min": 1.0,
+        "25%": 4.0,
+        "50%": 12.0,
+        "75%": 15.0,
+        "max": 22.0
+      },
+      "start_date_month": {
+        "count": 5.0,
+        "mean": 4.6,
+        "std": 4.33589667773576,
+        "min": 1.0,
+        "25%": 1.0,
+        "50%": 3.0,
+        "75%": 7.0,
+        "max": 11.0
+      },
+      "start_date_year": {
+        "count": 5.0,
+        "mean": 2022.0,
+        "std": 1.5811388300841898,
+        "min": 2020.0,
+        "25%": 2021.0,
+        "50%": 2022.0,
+        "75%": 2023.0,
+        "max": 2024.0
+      }
+    },
+    "skewness": {
+      "start_date_month": {
+        "skewness": 0.9127,
+        "direction": "positive"
+      }
+    }
+  }
+}

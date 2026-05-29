@@ -1,1 +1,1 @@
-from . import agent
+# Extraction agent package namespace

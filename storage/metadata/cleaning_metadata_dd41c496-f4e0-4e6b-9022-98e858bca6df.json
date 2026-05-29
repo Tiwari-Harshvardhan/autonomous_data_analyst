@@ -1,0 +1,27 @@
+{
+    "input_dataframe_path": "storage/dataframes/test_pipeline_input.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_31acc502-cb30-4751-9e52-be7a37eb290d.csv",
+    "profile_path": "storage\\profiles\\profile_4ddbed2e-37d0-4cff-969d-1ea52d1fa777.json",
+    "metadata_path": null,
+    "logs": [
+        "Loading dataframe",
+        "Loaded dataframe with shape (5, 4)",
+        "Data profiling completed",
+        "Missing values handled",
+        "Duplicates removed",
+        "Text standardized",
+        "Numeric validation completed",
+        "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_31acc502-cb30-4751-9e52-be7a37eb290d.csv"
+    ],
+    "quality_report": {
+        "final_rows": 5,
+        "final_columns": 4,
+        "missing_after_cleaning": {
+            "age": 0,
+            "salary": 0,
+            "department": 0,
+            "start_date": 0
+        },
+        "duplicates_after_cleaning": 0
+    }
+}

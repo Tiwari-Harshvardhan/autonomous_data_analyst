@@ -1,0 +1,21 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_c00ead2f-5893-4b8a-ab51-35d515f24482.csv",
+  "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_9655189b-f2e9-4715-8c7e-0a5f2b043642.html",
+  "generated_plots": [
+    "Histogram: age",
+    "Histogram: salary",
+    "Histogram: department",
+    "Scatter: age vs salary",
+    "Bar Chart: start_date"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started visualization generation for: storage\\eda_data\\engineered_data_c00ead2f-5893-4b8a-ab51-35d515f24482.csv",
+    "[PLOT] Generated distribution plot for age",
+    "[PLOT] Generated distribution plot for salary",
+    "[PLOT] Generated distribution plot for department",
+    "[PLOT] Generated scatter plot matrix sample",
+    "[PLOT] Generated categorical distribution for start_date",
+    "[PERSIST] Interactive Tableau-like dashboard compiled and saved to: storage\\dashboards\\tableau_dashboard_9655189b-f2e9-4715-8c7e-0a5f2b043642.html"
+  ]
+}
