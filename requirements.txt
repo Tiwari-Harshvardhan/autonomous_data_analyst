@@ -1,0 +1,6 @@
+google-adk
+pandas
+bs4
+playwright
+matplotlib
+seaborn
