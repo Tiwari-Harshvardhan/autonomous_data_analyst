@@ -253,15 +253,16 @@ def execute_eda(csv_path: str) -> EDAState:
     state.logs.append(f"Loading data from: {csv_path}")
 
     df = pd.read_csv(csv_path, encoding="utf-8")
-    state.logs.append(f"Loaded DataFrame: {df.shape[0]} rows × {df.shape[1]} cols")
+    state.logs.append(f"Loaded DataFrame: {df.shape[0]} rows x {df.shape[1]} cols")
 
     # profile
     profile = profile_dataframe(df)
+    profile['skewness'] = skewness_detector(df)
     state.profile_path = save_profile(profile)
     state.quality_report = profile
     state.logs.append(f"Profile saved: {state.profile_path}")
 
-    # descriptive stats (logged, not separately saved)
+    # descriptive stats 
     stats = descriptive_statistics(df)
     state.logs.append(f"Descriptive stats computed for {len(stats)} column groups")
 
