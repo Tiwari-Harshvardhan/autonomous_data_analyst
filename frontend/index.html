@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autonomous Data Analyst — Chat</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <h2>Past Runs</h2>
+        <div id="historyList" class="history-list"></div>
+      </aside>
+
+      <main class="main">
+        <section class="chatbox">
+          <div id="messages" class="messages"></div>
+          <form id="promptForm" class="prompt-form">
+            <input id="promptInput" placeholder="Ask (or paste a URL) — e.g. https://example.com" />
+            <button type="submit">Run</button>
+          </form>
+        </section>
+
+        <section class="results">
+          <div class="status">
+            <h3>Live Logs</h3>
+            <pre id="logs" class="logs">No active run</pre>
+          </div>
+
+          <div class="summary">
+            <h3>Summary</h3>
+            <div id="summary">No summary</div>
+          </div>
+
+          <div class="plots">
+            <h3>Plots</h3>
+            <div id="plotsGrid" class="plots-grid"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore and run the Autonomous Data Analyst agent pipeline through a modern interactive UI.">
+    <title>Autonomous Data Analyst - Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-brain-circuit"></i>
+                    <span>Analyst AI</span>
+                </div>
+                <button class="new-chat-btn" id="new-chat-btn">
+                    <i class="fa-solid fa-plus"></i> New Analysis
+                </button>
+            </div>
+            
+            <div class="sidebar-history">
+                <div class="history-title">Past Conversations</div>
+                <div class="history-list" id="history-list">
+                    <!-- Dynamic history items loaded here -->
+                    <div class="history-empty">No past runs found</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                    <div class="info">
+                        <span class="name">Harshvardhan</span>
+                        <span class="role">Local Workspace</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <button class="toggle-sidebar" id="toggle-sidebar" aria-label="Toggle Sidebar">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+                <div class="header-title" id="header-title">Autonomous Data Analyst Pipeline</div>
+                <div class="header-status">
+                    <span class="status-badge connected">
+                        <span class="dot"></span> Online
+                    </span>
+                </div>
+            </header>
+
+            <!-- Chat Message List -->
+            <div class="message-container" id="message-container">
+                <!-- Welcome Screen -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <div class="welcome-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h1>What dataset shall we analyze today?</h1>
+                    <p>Provide a query with any target URL (e.g. <code>https://example.com</code>). The pipeline will automatically orchestrate data collection, parsing, cleaning, scaling, profiling, and dashboard rendering.</p>
+                    
+                    <div class="suggestions-grid">
+                        <div class="suggestion-card" onclick="fillInput('Analyze Machine Learning data from https://en.wikipedia.org/wiki/Machine_learning')">
+                            <div class="card-icon"><i class="fa-solid fa-microchip"></i></div>
+                            <h3>Scrape & Analyze Wikipedia ML</h3>
+                            <p>Collects machine learning content, profiles and performs complete EDA.</p>
+                        </div>
+                        <div class="suggestion-card" onclick="fillInput('Collect and visualize data from https://example.com')">
+                            <div class="card-icon"><i class="fa-solid fa-globe"></i></div>
+                            <h3>Quick Test on Example.com</h3>
+                            <p>Runs a fast end-to-end scraper pipeline with low latency.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline Status Overlay (Visible during active execution) -->
+            <div class="execution-progress-panel" id="progress-panel" style="display: none;">
+                <div class="progress-header">
+                    <div class="progress-title">
+                        <i class="fa-solid fa-gears fa-spin spinner-color"></i>
+                        <span>Orchestrating Data Pipeline...</span>
+                    </div>
+                    <span class="current-step-label" id="current-step-label">Initializing</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-bar-fill" style="width: 10%;"></div>
+                </div>
+                <div class="progress-logs" id="progress-logs">
+                    <!-- Dynamic logs showing agent status updates -->
+                </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <footer class="chat-input-container">
+                <form id="chat-form" class="chat-form">
+                    <textarea 
+                        id="chat-input" 
+                        placeholder="Ask the analyst agent to scrape/analyze data (e.g. Scrape https://example.com)..." 
+                        rows="1" 
+                        required
+                    ></textarea>
+                    <button type="submit" class="send-btn" id="send-btn" aria-label="Send query">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
+                </form>
+                <div class="input-info">The pipeline executes parsing, feature engineering, and statistical profiling locally.</div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Image Modal for Fullscreen View -->
+    <div class="image-modal" id="image-modal" onclick="closeImageModal()">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modal-img">
+        <div id="modal-caption"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
