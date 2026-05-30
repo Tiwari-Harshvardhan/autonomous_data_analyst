@@ -9,7 +9,7 @@ def run_test():
     print("=" * 60)
     
     # We will query the pipeline to scrape example.com which is fast and simple
-    test_query = "Scrape data from https://example.com and analyze it"
+    test_query = "Scrape data from https://en.wikipedia.org/wiki/Machine_learning and analyze it"
     print(f"User Query: {test_query}\n")
     
     try:

@@ -1,0 +1,453 @@
+{
+  "user_query": "Scrape data from https://example.com and analyze it",
+  "current_stage": "finished",
+  "pipeline_plan": [
+    "data_collection",
+    "extraction",
+    "clean_data",
+    "feature_engineering",
+    "exploratory_data_analysis",
+    "visualization"
+  ],
+  "raw_data_state": {
+    "user_query": "Scrape data from https://example.com and analyze it",
+    "source_urls": [
+      "https://example.com"
+    ],
+    "raw_data_path": "storage\\raw\\raw_data_b3b787d0-5b90-4cde-aae0-8b7ba4b6fe94.json",
+    "metadata_path": "storage\\metadata\\metadata_6e976b7c-1f8d-48ec-a34a-90accf63628b.json",
+    "logs": [
+      "Started data collection workflow",
+      "Extracted URL(s) from query: ['https://example.com']",
+      "Discovered 1 URLs",
+      "Completed web scraping",
+      "Raw data saved: storage\\raw\\raw_data_b3b787d0-5b90-4cde-aae0-8b7ba4b6fe94.json",
+      "Metadata saved: storage\\metadata\\metadata_6e976b7c-1f8d-48ec-a34a-90accf63628b.json"
+    ],
+    "current_stage": "data_collection",
+    "raw_data_preview": [
+      {
+        "url": "https://example.com",
+        "scraping_mode": "dynamic",
+        "title": "Example Domain",
+        "extracted_text": "This domain is for use in documentation examples without needing permission. Avoid use in operations.\nLearn more",
+        "html_path": "storage\\raw_html\\5e15baca-3346-496b-99bc-4645ef35c704.html",
+        "screenshot_path": "storage\\screenshots\\5e7da56c-af7f-42b2-89a1-cf2370875b85.png",
+        "metadata_path": "storage\\metadata\\55e079c0-c509-4e2a-891d-054a1e1585f8.json",
+        "success": true,
+        "error": null
+      }
+    ]
+  },
+  "extraction_state": {
+    "html_paths": [
+      "storage\\raw_html\\5e15baca-3346-496b-99bc-4645ef35c704.html"
+    ],
+    "parsed_pages": [
+      {
+        "source_html_path": "storage\\raw_html\\5e15baca-3346-496b-99bc-4645ef35c704.html",
+        "url": "https://example.com",
+        "title": "Example Domain",
+        "headings": [
+          "Example Domain"
+        ],
+        "paragraphs": [
+          "This domain is for use in documentation examples without needing permission. Avoid use in operations.",
+          "Learn more"
+        ],
+        "links": [
+          {
+            "text": "Learn more",
+            "href": "https://iana.org/domains/example"
+          }
+        ],
+        "tables": [],
+        "success": true,
+        "error": null
+      }
+    ],
+    "dataframe_path": "storage\\dataframes\\extracted_44de15a7-bb2a-461f-9c43-d7aa1488861d.csv",
+    "metadata_path": "storage\\metadata\\extraction_metadata_a8ba314b-616d-4650-ae73-abcbf9148e3a.json",
+    "logs": [
+      "Starting extraction for 1 HTML files",
+      "storage\\raw_html\\5e15baca-3346-496b-99bc-4645ef35c704.html → ok",
+      "Extraction complete",
+      "DataFrame built: 2 rows, 7 columns",
+      "DataFrame saved: storage\\dataframes\\extracted_44de15a7-bb2a-461f-9c43-d7aa1488861d.csv",
+      "Metadata saved: storage\\metadata\\extraction_metadata_a8ba314b-616d-4650-ae73-abcbf9148e3a.json"
+    ]
+  },
+  "cleaning_state": {
+    "input_dataframe_path": "storage\\dataframes\\extracted_44de15a7-bb2a-461f-9c43-d7aa1488861d.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_d93598c7-f2f7-4e1d-883b-84d12dbc278c.csv",
+    "profile_path": "storage\\profiles\\profile_3b32a6ad-bbbf-4bf3-8457-c6f5950f44cb.json",
+    "metadata_path": "storage\\metadata\\cleaning_metadata_4945ae83-2d8a-4ede-bd2b-515570b1272c.json",
+    "logs": [
+      "Loading dataframe",
+      "Loaded dataframe with shape (2, 7)",
+      "Data profiling completed",
+      "Missing values handled",
+      "Duplicates removed",
+      "Text standardized",
+      "Numeric validation completed",
+      "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_d93598c7-f2f7-4e1d-883b-84d12dbc278c.csv",
+      "Metadata saved at storage\\metadata\\cleaning_metadata_4945ae83-2d8a-4ede-bd2b-515570b1272c.json"
+    ],
+    "quality_report": {
+      "final_rows": 2,
+      "final_columns": 7,
+      "missing_after_cleaning": {
+        "url": 0,
+        "title": 0,
+        "paragraph": 0,
+        "heading_count": 0,
+        "link_count": 0,
+        "table_count": 0,
+        "html_source": 0
+      },
+      "duplicates_after_cleaning": 0
+    }
+  },
+  "feature_state": {
+    "input_dataframe_path": "storage\\cleaned_data\\cleaned_d93598c7-f2f7-4e1d-883b-84d12dbc278c.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+    "profile_path": "storage\\profiles\\profile_e1aeb9c5-3fcc-4ae6-9ebc-26970242e681.json",
+    "metadata_path": "storage\\metadata\\feature_engineering_metadata_df9a9ac8-2a04-446f-a646-02472ac61e0d.json",
+    "logs": [
+      "[INIT] Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_d93598c7-f2f7-4e1d-883b-84d12dbc278c.csv",
+      "[LOAD] DataFrame loaded successfully. Shape: 2 rows x 7 cols. Numeric features detected: ['heading_count', 'link_count', 'table_count']",
+      "[PROFILE] Initial data structure profiled and written to disk: storage\\profiles\\profile_e1aeb9c5-3fcc-4ae6-9ebc-26970242e681.json",
+      "[SKEW] Variance correction applied. Pre-skewness: {'heading_count': nan, 'link_count': nan, 'table_count': nan} -> Post-skewness: {'heading_count': nan, 'link_count': nan, 'table_count': nan}",
+      "[SCALE] Standardization (Z-Score) applied to numerical fields: ['heading_count', 'link_count', 'table_count']",
+      "[DATETIME] Evaluated feature types. Generated engineering sub-components: ['paragraph_year', 'title_day', 'url_year', 'url_day', 'title_month', 'url_month', 'html_source_year', 'paragraph_month', 'html_source_day', 'title_year', 'html_source_month', 'paragraph_day']",
+      "[PERSIST] Transformed dataset saved. Final distribution shape: 2 rows x 19 cols. Destination path: storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+      "[METADATA] Run trace and logs cataloged successfully at: storage\\metadata\\feature_engineering_metadata_df9a9ac8-2a04-446f-a646-02472ac61e0d.json"
+    ],
+    "quality_report": null
+  },
+  "eda_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+    "profile_path": "storage\\profiles\\profile_5a955719-648e-4ab7-a485-ab213d6b0859.json",
+    "plot_paths": [
+      "storage\\plots\\plot_heading_count_c7e21b5b-9bf6-4a32-8eed-2157fedba2c9.png",
+      "storage\\plots\\plot_link_count_731f787d-bb85-4a13-9db9-4016c40f637f.png",
+      "storage\\plots\\plot_table_count_f8b0ba1b-10e7-47af-b530-102fcd35509f.png"
+    ],
+    "metadata_path": "storage\\metadata\\eda_metadata_ae37278d-10a8-49a3-a37c-99c461334588.json",
+    "logs": [
+      "Loading data from: storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+      "Loaded DataFrame: 2 rows x 19 cols",
+      "Profile saved: storage\\profiles\\profile_5a955719-648e-4ab7-a485-ab213d6b0859.json",
+      "Descriptive stats computed for 1 column groups",
+      "Saved 3 plot(s) to storage\\plots",
+      "Outlier detection complete: 19 column(s) checked",
+      "Skewed columns (|skew|>0.5): []",
+      "Categorical analysis complete",
+      "Bivariate analysis complete: 171 pair(s)",
+      "Metadata saved: storage\\metadata\\eda_metadata_ae37278d-10a8-49a3-a37c-99c461334588.json"
+    ],
+    "quality_report": {
+      "rows": 2,
+      "columns": 19,
+      "missing_values": {
+        "url": 2,
+        "title": 2,
+        "paragraph": 2,
+        "heading_count": 0,
+        "link_count": 0,
+        "table_count": 0,
+        "html_source": 2,
+        "url_day": 2,
+        "url_month": 2,
+        "url_year": 2,
+        "title_day": 2,
+        "title_month": 2,
+        "title_year": 2,
+        "paragraph_day": 2,
+        "paragraph_month": 2,
+        "paragraph_year": 2,
+        "html_source_day": 2,
+        "html_source_month": 2,
+        "html_source_year": 2
+      },
+      "missing_pct": {
+        "url": 100.0,
+        "title": 100.0,
+        "paragraph": 100.0,
+        "heading_count": 0.0,
+        "link_count": 0.0,
+        "table_count": 0.0,
+        "html_source": 100.0,
+        "url_day": 100.0,
+        "url_month": 100.0,
+        "url_year": 100.0,
+        "title_day": 100.0,
+        "title_month": 100.0,
+        "title_year": 100.0,
+        "paragraph_day": 100.0,
+        "paragraph_month": 100.0,
+        "paragraph_year": 100.0,
+        "html_source_day": 100.0,
+        "html_source_month": 100.0,
+        "html_source_year": 100.0
+      },
+      "duplicates": 1,
+      "dtypes": {
+        "url": "float64",
+        "title": "float64",
+        "paragraph": "float64",
+        "heading_count": "int64",
+        "link_count": "int64",
+        "table_count": "int64",
+        "html_source": "float64",
+        "url_day": "float64",
+        "url_month": "float64",
+        "url_year": "float64",
+        "title_day": "float64",
+        "title_month": "float64",
+        "title_year": "float64",
+        "paragraph_day": "float64",
+        "paragraph_month": "float64",
+        "paragraph_year": "float64",
+        "html_source_day": "float64",
+        "html_source_month": "float64",
+        "html_source_year": "float64"
+      },
+      "numeric_summary": {
+        "url": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "title": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "paragraph": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "heading_count": {
+          "count": 2.0,
+          "mean": 1.0,
+          "std": 0.0,
+          "min": 1.0,
+          "25%": 1.0,
+          "50%": 1.0,
+          "75%": 1.0,
+          "max": 1.0
+        },
+        "link_count": {
+          "count": 2.0,
+          "mean": 1.0,
+          "std": 0.0,
+          "min": 1.0,
+          "25%": 1.0,
+          "50%": 1.0,
+          "75%": 1.0,
+          "max": 1.0
+        },
+        "table_count": {
+          "count": 2.0,
+          "mean": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "25%": 0.0,
+          "50%": 0.0,
+          "75%": 0.0,
+          "max": 0.0
+        },
+        "html_source": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "url_day": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "url_month": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "url_year": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "title_day": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "title_month": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "title_year": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "paragraph_day": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "paragraph_month": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "paragraph_year": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "html_source_day": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "html_source_month": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        },
+        "html_source_year": {
+          "count": 0.0,
+          "mean": NaN,
+          "std": NaN,
+          "min": NaN,
+          "25%": NaN,
+          "50%": NaN,
+          "75%": NaN,
+          "max": NaN
+        }
+      },
+      "skewness": {}
+    }
+  },
+  "visualization_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_57591c54-8014-42b3-9ef4-08464e7e20d9.html",
+    "generated_plots": [
+      "Histogram: url",
+      "Histogram: title",
+      "Histogram: paragraph",
+      "Scatter: url vs title"
+    ],
+    "metadata_path": "storage\\visual_metadata\\visualisation_metadata_eddb8e12-0396-4685-9ed5-aabe8f4c078b.json",
+    "logs": [
+      "[INIT] Started visualization generation for: storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+      "[PLOT] Generated distribution plot for url",
+      "[PLOT] Generated distribution plot for title",
+      "[PLOT] Generated distribution plot for paragraph",
+      "[PLOT] Generated scatter plot matrix sample",
+      "[PERSIST] Interactive Tableau-like dashboard compiled and saved to: storage\\dashboards\\tableau_dashboard_57591c54-8014-42b3-9ef4-08464e7e20d9.html"
+    ]
+  },
+  "logs": [
+    "Created execution plan.",
+    "Starting data collection stage.",
+    "Data collection completed: storage\\raw\\raw_data_b3b787d0-5b90-4cde-aae0-8b7ba4b6fe94.json",
+    "Starting extraction stage.",
+    "Extraction completed: storage\\dataframes\\extracted_44de15a7-bb2a-461f-9c43-d7aa1488861d.csv",
+    "Starting data cleaning stage.",
+    "Data cleaning completed: storage\\cleaned_data\\cleaned_d93598c7-f2f7-4e1d-883b-84d12dbc278c.csv",
+    "Feature engineering completed: storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+    "Starting exploratory data analysis stage.",
+    "EDA completed: storage\\metadata\\eda_metadata_ae37278d-10a8-49a3-a37c-99c461334588.json",
+    "Starting visualization stage.",
+    "Visualization completed: storage\\dashboards\\tableau_dashboard_57591c54-8014-42b3-9ef4-08464e7e20d9.html",
+    "Full pipeline execution finished."
+  ],
+  "artifact_paths": {
+    "raw_data_path": "storage\\raw\\raw_data_b3b787d0-5b90-4cde-aae0-8b7ba4b6fe94.json",
+    "extracted_dataframe_path": "storage\\dataframes\\extracted_44de15a7-bb2a-461f-9c43-d7aa1488861d.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_d93598c7-f2f7-4e1d-883b-84d12dbc278c.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_3985e1d4-a49e-4bdb-b2a1-1e77e21f4cbe.csv",
+    "eda_metadata_path": "storage\\metadata\\eda_metadata_ae37278d-10a8-49a3-a37c-99c461334588.json",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_57591c54-8014-42b3-9ef4-08464e7e20d9.html"
+  }
+}
