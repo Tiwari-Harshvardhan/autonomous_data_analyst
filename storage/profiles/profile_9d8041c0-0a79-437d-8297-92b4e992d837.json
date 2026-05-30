@@ -1,0 +1,55 @@
+{
+    "rows": 82,
+    "columns": 7,
+    "missing_values": {
+        "url": 0,
+        "title": 0,
+        "paragraph": 0,
+        "heading_count": 0,
+        "link_count": 0,
+        "table_count": 0,
+        "html_source": 0
+    },
+    "duplicates": 0,
+    "dtypes": {
+        "url": "str",
+        "title": "str",
+        "paragraph": "str",
+        "heading_count": "int64",
+        "link_count": "int64",
+        "table_count": "int64",
+        "html_source": "str"
+    },
+    "numeric_summary": {
+        "heading_count": {
+            "count": 82.0,
+            "mean": 27.0,
+            "std": 0.0,
+            "min": 27.0,
+            "25%": 27.0,
+            "50%": 27.0,
+            "75%": 27.0,
+            "max": 27.0
+        },
+        "link_count": {
+            "count": 82.0,
+            "mean": 298.0,
+            "std": 0.0,
+            "min": 298.0,
+            "25%": 298.0,
+            "50%": 298.0,
+            "75%": 298.0,
+            "max": 298.0
+        },
+        "table_count": {
+            "count": 82.0,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "25%": 0.0,
+            "50%": 0.0,
+            "75%": 0.0,
+            "max": 0.0
+        }
+    }
+}

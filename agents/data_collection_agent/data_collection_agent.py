@@ -246,12 +246,18 @@ async def scrape_url(url: str) -> dict:
 async def execute_data_collection(state: WorkflowState) -> WorkflowState:
     state.logs.append("Started data collection workflow")
 
-    # Step 1: discover URLs (in production the ADK agent's google_search
-    # tool populates this; here we use a placeholder list)
-    discovered_urls = [
-        "https://en.wikipedia.org/wiki/Machine_learning",
-        "https://www.ibm.com/topics/machine-learning",
-    ]
+    # Step 1: discover URLs (extract from query if present, otherwise use defaults)
+    import re
+    urls = re.findall(r'https?://[^\s]+', state.user_query)
+    if urls:
+        discovered_urls = urls
+        state.logs.append(f"Extracted URL(s) from query: {discovered_urls}")
+    else:
+        discovered_urls = [
+            "https://en.wikipedia.org/wiki/Machine_learning",
+            "https://www.ibm.com/topics/machine-learning",
+        ]
+        state.logs.append("No URL found in query; using default machine learning URLs")
     state.source_urls = discovered_urls
     state.logs.append(f"Discovered {len(discovered_urls)} URLs")
 

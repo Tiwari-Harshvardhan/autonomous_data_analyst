@@ -1,0 +1,1331 @@
+{
+  "html_paths": [
+    "storage\\raw_html\\653d82d0-5e06-4936-88bc-e5be9f61f5e1.html"
+  ],
+  "parsed_pages": [
+    {
+      "source_html_path": "storage\\raw_html\\653d82d0-5e06-4936-88bc-e5be9f61f5e1.html",
+      "url": "https://www.ibm.com/topics/machine-learning",
+      "title": "What is Machine Learning? | IBM",
+      "headings": [
+        "What is machine learning?",
+        "What is machine learning?",
+        "Machine learning vs. artificial intelligence",
+        "Join over 100,000 subscribers who read the latest news in tech",
+        "Thank you!",
+        "How machine learning works",
+        "Machine learning model parameters and optimization",
+        "Types of machine learning",
+        "Supervised learning",
+        "Unsupervised learning",
+        "Reinforcement learning (RL)",
+        "Deep learning",
+        "Convolutional neural networks (CNNs)",
+        "Recurrent neural networks (RNNs)",
+        "Transformers",
+        "Mamba models",
+        "Machine learning use cases",
+        "Computer vision",
+        "Natural language processing (NLP)",
+        "Time series analysis",
+        "Image generation",
+        "Win the enterprise AI race",
+        "Machine learning operations (MLOps)",
+        "Machine learning libraries",
+        "Listen to: 'What is machine learning?'",
+        "Author",
+        "Resources"
+      ],
+      "paragraphs": [
+        "Machine learning is the subset of artificial intelligence (AI) focused on algorithms that can “learn” the patterns of training data and, subsequently, make accurateinferencesabout new data. This pattern recognition ability enables machine learning models to make decisions or predictions without explicit, hard-coded instructions.",
+        "Machine learning has come to dominate the field of AI: it provides the backbone of most modern AI systems, fromforecastingmodels to autonomous vehicles tolarge language models (LLMs)and othergenerative AItools.",
+        "The central premise of machine learning (ML) is that if you optimize a model’s performance on a dataset of tasks that adequately resemble the real-world problems it will be used for—through a process calledmodel training—the model can make accurate predictions on the new data it sees in its ultimate use case.",
+        "Training itself is simply a means to an end: generalization, the translation of strong performance on training data to useful results in real-world scenarios, is the fundamental goal of machine learning. In essence, a trained model is applying patterns it learned from training data to infer the correct output for a real-world task: the deployment of anAI modelis therefore calledAI inference.",
+        "Deep learning, the subset of machine learning driven by large—or rather, “deep”—artificial neural networks, has emerged over the past few decades as the state-of-the-art AI model architecture across nearly every domain in which AI is used. In contrast to the explicitly defined algorithms of traditional machine learning, deep learning relies on distributed “networks” of mathematical operations that provide an unparalleled ability to learn the intricate nuances of very complex data. Because deep learning requires very large amounts of data and computational resources, its advent has coincided with the escalated importance“big data”andgraphics processing units (GPUs).",
+        "The discipline of machine learning is closely intertwined with that ofdata science. In a sense, machine learning can be understood as a collection of algorithms and techniques to automate data analysis and (more importantly) apply learnings from that analysis to the autonomous execution of relevant tasks.",
+        "The origin of the term (albeit not the core concept itself) is often attributed to Arthur L. Samuel’s 1959 article in IBM Journal, “Some Studies in Machine Learning Using the Game of Checkers.” In the paper’s introduction, Samuel neatly articulates machine learning’s ideal outcome: “a computer can be programmed so that it will learn to play a better game of checkers than can be played by the person who wrote the program.”1",
+        "Though “machine learning” and “artificial intelligence” are often used interchangeably, they are not quite synonymous. In short:all machine learning is AI, but not all AI is machine learning.",
+        "In the popular imagination, “AI” is usually associated with science fiction—typically through depictions of what’s more properly calledartificial general intelligence (AGI), like HAL 9000 in2001: A Space Odysseyor Ava inEx Machina—or, more recently, withgenerativeAI. But “artificial intelligence” is a catch-all term for any program that can use information to make decisions or predictions without active human involvement.",
+        "The most elementary AI systems are a series of if-then-else statements, with rules and logic programmed explicitly by a data scientist.  At the simplest level, even a rudimentary thermostat is a rules-based AI system: when programmed with simple rules like",
+        "IF room_temperature < 67, THEN turn_on_heater",
+        "and",
+        "IF room_temperature > 72, THEN turn_on_air_conditioner",
+        "the thermostat is capable of autonomous decision-making without further human intervention. At a more complex level, a large and intricate rules-baseddecision treeprogrammed by medical experts could parse symptoms, circumstances and comorbidities to aid diagnosis or prognosis.2",
+        "Unlike in expert systems, the logic by which a machine learning model operates isn’t explicitly programmed—it’slearnedthrough experience. Consider a program that filters email spam: rules-based AI requires a data scientist to manually devise accurate, universal criteria for spam; machine learning requires only the selection of an appropriate algorithm and an adequate dataset of sample emails. In training, the model is shown sample emails and predicts which are spam; the error of its predictions is calculated, and its algorithm is adjusted to reduce error; this process is repeated until the model is accurate. The newly trained ML model hasimplicitlylearned how to identify spam.",
+        "As the tasks an AI system is to perform become more complex, rules-based models become increasingly brittle: it’s often impossible to explicitly define every pattern and variable a model must consider. Machine learning systems have emerged as the dominant mode of artificial intelligence because implicit learning patterns from the data itself is inherently more flexible, scalable and accessible.",
+        "Stay up to date on the most important—and intriguing—industry trends on AI, automation, data and beyond with the Think Newsletter, delivered twice weekly. See theIBM Privacy Statement.",
+        "You are subscribed.",
+        "Machine learning works through mathematical logic. The relevant characteristics (or \"features\") of each data point must therefore be expressed numerically, so that the data itself can be fed into a mathematical algorithm that will \"learn\" to map a given input to the desired output.",
+        "Data points in machine learning are usually represented in vector form, in which each element (or dimension) of a data point’svector embeddingcorresponds to its numerical value for a specific feature. For data modalities that are inherently numerical, such as financial data or geospatial coordinates, this is relatively straightforward. But many data modalities, such as text, images, social media graph data or app user behaviors, are not inherently numerical, and therefore entail less immediately intuitive feature engineering to be expressed in an ML-ready way.",
+        "The (often manual) process of choosing which aspects of data to use in machine learning algorithms is calledfeature selection.Feature extractiontechniques refine data down to only its most relevant, meaningful dimensions. Both are subsets offeature engineering, the broader discipline of preprocessing raw data for use in machine learning. One notable distinction of deep learning is that it typically operates on raw data and automates much of the feature engineering—or at least the feature extraction—process. This makes deep learning more scalable, albeit less interpretable, than traditional machine learning.",
+        "For a practical example, consider a simplelinear regressionalgorithm for predicting home sale prices based on a weighted combination of three variables: square footage, age of house and number of bedrooms. Each house is represented as a vector embedding with 3 dimensions:[square footage, bedrooms, age]. A 30-year-old house with 4 bedrooms and 1900 square feet could be represented as[1900, 4, 30](though for mathematical purposes those numbers might first be scaled, or normalized, to a more uniform range).",
+        "The algorithm is a straightforward mathematical function:",
+        "Here,A,BandCare the model parameters: adjusting them will adjust how heavily the model weighs each variable. The goal of machine learning is to find the optimal values for such model parameters: in other words, the parameter values that result in the overall function outputting the most accurate results. While most real-world instances of machine learning involve more complex algorithms with a greater number of input variables, the principle remains the same: optimizing the algorithm's adjustable parameters to yield greater accuracy.",
+        "All machine learning methods can be categorized as one of three distinct learning paradigms: supervised learning, unsupervised learning or reinforcement learning, based on the nature of their training objectives and (often but not always) by the type of training data they entail.",
+        "The end-to-end training process for a given model can, and often does, involve hybrid approaches that leverage more than one of these learning paradigms. For instance, unsupervised learning is often used to preprocess data for use in supervised or reinforcement learning. Large language models (LLMs) typically undergo their initial training (pre-training) andfine-tuningthrough variants of supervised learning, followed by more fine-tuning through RL techniques such asreinforcement learning from human feedback (RLHF).",
+        "In a similar but distinct practice, variousensemble learningmethods aggregate the outputs of multiple algorithms.",
+        "Supervised learning algorithms train models for tasks requiring accuracy, such asclassificationor regression. Supervised machine learning powers both state-of-the-art deep learning models and a wide array of traditional ML models still widely employed across industries.",
+        "To be measured and optimized for accuracy, a model’s outputs must be compared to aground truth: the ideal or “correct” output for any given input. In conventional supervised learning, that ground truth is provided by labeled data. An email spam detection model is trained on a dataset of emails that have each been labeled asSPAMorNOT SPAM. Animage segmentationmodel is trained on images in which every individual pixel has been annotated by its classification. The goal of supervised learning is to adjust the model’s parameters until its outputs consistently match the ground truth provided by those labels.",
+        "Essential to supervised learning is the use of aloss functionthat measures the divergence (“loss”) between the model’s output and the ground truth across a batch of training inputs. The objective of supervised learning is defined mathematically asminimizing the output of a loss function. Once loss has been computed, various optimization algorithms—most of which involve calculating thederivative(s) of the loss function—are used to identify parameter adjustments that will reduce loss.",
+        "Because this process traditionally requires a human in the loop to provide ground truth in the form of data annotations, it’s called “supervised” learning. As such, the use of labeled data was historically considered the definitive characteristic of supervised learning. But on the most fundamental level, the hallmark of supervised learning is the existence of some ground truth and the training objective of minimizing the output of loss function that measures divergence from it.",
+        "To accommodate a more versatile notion of supervised learning, modern ML terminology uses “supervision” or “supervisory signals” to refer generically to any source of ground truth.",
+        "Labeling data can become prohibitively costly and time-consuming for complex tasks and large datasets.Self-supervised learningentails training on tasks in which a supervisory signal is obtained directly fromunlabeleddata—hence “self” supervised.",
+        "For instance,autoencodersare trained to compress (orencode) input data, then reconstruct (ordecode) the original input using that compressed representation. Their training objective is to minimizereconstruction error, using the original input itself as ground truth. Self-supervised learning is also the primary training method for LLMs: models are provided text samples with certain words hidden or masked and tasked with predicting the missing words.",
+        "Self-supervised learning is frequently associated withtransfer learning, as it can providefoundation modelswith broad capabilities that will then befine-tunedfor more specific tasks.",
+        "Whereas self-supervised learning is essentially supervised learning on unlabeled data,semi-supervised learningmethods use both labeled data and unlabeled data. Broadly speaking, semi-supervised learning comprises techniques that use information from the available labeled data to make assumptions about the unlabeled data points so that the latter can be incorporated into supervised learning workflows.",
+        "Unsupervised machine learning algorithms discern intrinsic patterns in unlabeled data, such as similarities, correlations or potential groupings. They’re most useful in scenarios where such patterns aren’t necessarily apparent to human observers. Because unsupervised learning doesn’t assume the preexistence of a known “correct” output, they don’t require supervisory signals or conventional loss functions—hence “unsupervised.”",
+        "Most unsupervised learning methods perform one of the following functions:",
+        "As their name suggests, unsupervised learning algorithms can be broadly understood as somewhat “optimizing themselves.” For example,this animationdemonstrates how a k-means clustering algorithm iteratively optimizes the centroid of each cluster on its own. The challenge of training unsupervised models therefore focuses on effective data preprocessing and properlytuning hyperparametersthat influence the learning process but are not themselves learnable, such as thelearning rateor number of clusters.",
+        "Whereas supervised learning trains models by optimizing them to match ideal exemplars and unsupervised learning algorithms fit themselves to a dataset,reinforcement learningmodels are trained holistically through trial and error. They’re used prominently in robotics, video games,reasoning modelsand other use cases in which the space of possible solutions and approaches are particularly large, open-ended or difficult to define. In RL literature, an AI system is often referred to as an “agent.”",
+        "Rather than the independent pairs of input-output data used in supervised learning, reinforcement learning (RL) operates on interdependent state-action-reward data tuples. Instead of minimizing error, the objective of reinforcement learning is optimizing parameters to maximize reward.",
+        "A mathematical framework for reinforcement learning is built primarily on the following components:",
+        "Inpolicy-basedRL methods like proximal policy optimization (PPO), the model learns a policy directly. Invalue-basedmethods like Q-learning, the agent learns a value function that computes a score for how “good” each state is, then chooses actions that lead to higher-value states. Consider a maze: a policy-based agent might learn “at this corner, turn left,” while a value-based agent learns a score for each position and simply moves to an adjacent position with a better score. Hybrid approaches, such as actor-critic methods, learn a value function that’s then used to optimize a policy.",
+        "In deep reinforcement learning, the policy is represented as aneural network.",
+        "Deep learningemploysartificial neural networkswith many layers—hence “deep”—rather than the explicitly designed algorithms of traditional machine learning. Though neural networks were introduced early in the history of machine learning, it wasn’t until the late 2000s and early 2010s, enabled in part by advancements inGPUs, that they became dominant in most subfields of AI.",
+        "Loosely inspired by the human brain, neural networks comprise interconnected layers of “neurons” (ornodes), each of which performs its own mathematical operation (called an “activation function”). The output of each node’s activation function serves as input to each of the nodes of the following layer and so on until the final layer, where the network’s final output is computed. Crucially, the activation functions performed at each node arenonlinear, enabling neural networks to model complex patterns and dependencies.",
+        "Each connection between two neurons is assigned a uniqueweight: a multiplier that increases or decreases one neuron’s contribution to a neuron in the following layer. These weights, along with uniquebiasterms added to each neuron's activation function, are the parameters to be optimized through machine learning.",
+        "Thebackpropagationalgorithm enables the computation of howeach individual nodecontributes to the overall output of the loss function, allowing even millions or billions of model weights to be individually optimized throughgradient descentalgorithms. Because of the volume and granularity of updates required to achieve optimal results, deep learning requires very large amounts of data and computational resources compared to traditional ML.That distributed structure affords deep learning models their incredible power and versatility. Imagine training data as data points scattered on a 2-dimensional graph. Essentially, traditional machine learning aims to find a single curve that runs through every one of those data points; deep learning pieces together an arbitrary number of smaller, individually adjustable lines to form the desired shape. Neural networks areuniversal approximators: it has been theoretically proven that for any function, there exists a neural network arrangement that can reproduce it.3, 4",
+        "Having said that, just because something istheoreticallypossible doesn’t mean it’s practically achievable through existing training methods. For many years, adequate performance on certain tasks remained out of reach even for deep learning models—but over time, modifications to the standard neural network architecture have unlocked new capabilities for ML models.",
+        "Convolutional neural networks (CNNs)addconvolutional layersto neural networks. In mathematics, a convolution is an operation where one function modifies (orconvolves) the shape of another. In CNNs, convolutional layers are used to extract important features from data byapplying weighted “filters”.CNNs are primarily associated with computer vision models and image data, but have a number of other important use cases.",
+        "Recurrent neural networks (RNNs)are designed to work on sequential data. Whereas conventional feedforward neural networks map a single input to a single output, RNNs map asequenceof inputs to an output by operating in a recurrent loop in which the output for a given step in the input sequence serves as input to the computation for the following step. In effect this creates an internal “memory,” called thehidden state, that allows RNNs to understand context and order.",
+        "Transformer models, first introduced in 2017, are largely responsible for the advent of LLMs and other pillars of generative AI, achieving state-of-the-art results across most subdomains of machine learning. Like RNNs, transformers are ostensibly designed for sequential data, but clever workarounds have enabled most data modalities to be processed by transformers. The unique strength of transformer models comes from their innovativeattention mechanism, which enables the models to selectively focus on the parts of the input data most relevant at a specific moment in a sequence.",
+        "Mamba modelsare a relatively new neural network architecture, first introduced in 2023, based on a unique variation ofstate space models (SSMs). Like transformers, Mamba models provide an innovative means of selectively prioritizing the most relevant information at a given moment. Mamba has recently emerged as a rival to the transformer architecture, particularly for LLMs.",
+        "Most applications of machine learning fall into one or more of the following categories, which are defined primarily by their use cases and the data modalities they operate upon.",
+        "Computer vision is the subdomain of AI concerned with image data, video data other data modalities that require a model or machine to “see,” from healthcare diagnostics to facial recognition to self-driving cars. Notable subfields of computer vision include image classification,object detection,image segmentationandoptical character recognition (OCR).",
+        "The field ofnatural language processing (NLP)spans a diverse array of tasks concerning text, speech and other language data. Notable subdomains of NLP includechatbots,speech recognition,language translation,sentiment analysis,text generation,summarizationandAI agents. In modern NLP, large language models continue to advance the state of the art at an unprecedented pace.",
+        "Time series modelsare applied anomaly detection, market analysis and related pattern recognition or prediction tasks. They use machine learning on historical data for a variety of forecasting use cases.",
+        "Diffusion models,variational autoencoders (VAEs)andgenerative adversarial networks (GANs)can be used to generate original images that apply pixel patterns learned from training data.",
+        "Join Arvind Krishna to see how IBM is enabling AI-first enterprises through hybrid cloud and emerging quantum capabilities.",
+        "Machine learning operations (MLOps)is a set of practices for implementing an assembly line approach to building, deploying and maintaining machine learning models.",
+        "Careful curation and preprocessing of training data, as well as appropriatemodel selection, are crucial steps in the MLOps pipeline. Thoughtful post-training validation, from the design of benchmark datasets to the prioritization of particular performancemetrics, is necessary to ensure that a model generalizes well (and isn’t justoverfittingthe training data).",
+        "Following deployment, models must be monitored formodel drift, inference efficiency issues and other adverse developments. A well-defined practice ofmodel governanceis essential to continued efficacy, especially in regulated or fast-changing industries.",
+        "A number of open source tools, libraries and frameworks exist for building, training and testing machine learning projects. While such libraries offer an array of pre-configured modules and abstractions to streamline the process of building ML-based models and workflows, practitioners will need to familiarize themselves with commonly used programming languages—particularlyPython—to make full use of them.",
+        "Prominent open source libraries, particularly for building deep learning models, includePyTorch,TensorFlow, Keras and the Hugging Face Transformers library.",
+        "Notable open sourcemachine learning librariesand toolkits focused on traditional ML include Pandas,Scikit-learn,XGBoost,Matplotlib, SciPy and NumPy among many others.",
+        "IBM itself maintains and updates a significant library oftutorialsfor beginners and advanced ML practitioners alike.",
+        "Follow Techsplainers:SpotifyandApple Podcasts",
+        "Senior Staff Writer, AI Models",
+        "IBM Think",
+        "Learn why gen AI search tools still struggle with accuracy and how leading teams are improving decision-making, workflow efficiency and trust in their data without a major overhaul.",
+        "Learn fundamental concepts and build your skills with hands-on labs, courses, guided projects, trials and more.",
+        "Learn how to confidently incorporate generative AI and machine learning into your business.",
+        "Techsplainers by IBM breaks down the essentials of machine learning, from key concepts to real‑world use cases. Clear, quick episodes help you learn the fundamentals fast.",
+        "Want to get a better return on your AI investments? Learn how scaling gen AI in key areas drives change by helping your best minds build and deliver innovative new solutions.",
+        "Learn how to select the most suitable AI foundation model for your use case.",
+        "IBM® Granite® is our family of open, performant and trusted AI models, tailored for business and optimized to scale your AI applications. Explore language, code, time series and guardrail options.",
+        "Dive into the 3 critical elements of a strong AI strategy: creating a competitive edge, scaling AI across the business and advancing trustworthy AI.",
+        "Easily design scalable AI assistants and agents, automate repetitive tasks and simplify complex processes with IBM® watsonx Orchestrate™.",
+        "Move your applications from prototype to production with the help of our AI development solutions.",
+        "Reinvent critical workflows and operations by adding AI to maximize experiences, real-time decision-making and business value.",
+        "Whether you choose to customize pre-built apps and skills or build and deploy custom agentic services using an AI studio, the IBM watsonx platform has you covered.",
+        "1.“Some Studies in Machine Learning Using the Game of Checkers,”IBM Journal(accessed through MIT), 3 July 19592.“Using Decision Trees as an Expert System for Clinical Decision Support for COVID-19,“Interactive Journal of Medical Research, Vol 12, 30 January 20233.“Kolmogorov’s Mapping Neural Network Existence Theorem,“Proceedings of the IEEE First International Conference on Neural Networks(accessed through University of Waterloo),19874.“Multilayer Feedforward Networks with a Non-Polynomial Activation Function Can Approximate Any Function,“Center for Research on Information Systems (New York University), March 1992"
+      ],
+      "links": [
+        {
+          "text": "Welcome",
+          "href": "https://www.ibm.com/think/machine-learning#605511093"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/machine-learning#7281535"
+        },
+        {
+          "text": "Machine learning types",
+          "href": "https://www.ibm.com/think/topics/machine-learning-types#7281536"
+        },
+        {
+          "text": "Machine learning algorithms",
+          "href": "https://www.ibm.com/think/topics/machine-learning-algorithms#7281537"
+        },
+        {
+          "text": "Statistical machine learning",
+          "href": "https://www.ibm.com/think/topics/statistical-machine-learning#498277090"
+        },
+        {
+          "text": "Linear algebra for machine learning",
+          "href": "https://www.ibm.com/think/topics/linear-algebra-for-machine-learning#498277089"
+        },
+        {
+          "text": "Data visualization for machine learning",
+          "href": "https://www.ibm.com/think/topics/data-visualization-machine-learning#498277088"
+        },
+        {
+          "text": "Uncertainty quantification",
+          "href": "https://www.ibm.com/think/topics/uncertainty-quantification#498277087"
+        },
+        {
+          "text": "Bias variance tradeoff",
+          "href": "https://www.ibm.com/think/topics/bias-variance-tradeoff#498277086"
+        },
+        {
+          "text": "Bayesian Statistics",
+          "href": "https://www.ibm.com/think/topics/bayesian-statistics#498277085"
+        },
+        {
+          "text": "Singular value decomposition",
+          "href": "https://www.ibm.com/think/topics/singular-value-decomposition#498277084"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/feature-engineering#1003835715"
+        },
+        {
+          "text": "Feature selection",
+          "href": "https://www.ibm.com/think/topics/feature-selection#1003835714"
+        },
+        {
+          "text": "Feature extraction",
+          "href": "https://www.ibm.com/think/topics/feature-extraction#1003835713"
+        },
+        {
+          "text": "Vector embedding",
+          "href": "https://www.ibm.com/think/topics/vector-embedding#1003835712"
+        },
+        {
+          "text": "Latent space",
+          "href": "https://www.ibm.com/think/topics/latent-space#1003835711"
+        },
+        {
+          "text": "Principal component analysis",
+          "href": "https://www.ibm.com/think/topics/principal-component-analysis#1793360183"
+        },
+        {
+          "text": "Linear discriminant analysis",
+          "href": "https://www.ibm.com/think/topics/linear-discriminant-analysis#1793360182"
+        },
+        {
+          "text": "Upsampling",
+          "href": "https://www.ibm.com/think/topics/upsampling#1003835709"
+        },
+        {
+          "text": "Downsampling",
+          "href": "https://www.ibm.com/think/topics/downsampling#1003835708"
+        },
+        {
+          "text": "Synthetic data",
+          "href": "https://www.ibm.com/think/topics/synthetic-data#1003835707"
+        },
+        {
+          "text": "Data leakage",
+          "href": "https://www.ibm.com/think/topics/data-leakage-machine-learning#1003835706"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/supervised-learning#1509394340"
+        },
+        {
+          "text": "Linear regression",
+          "href": "https://www.ibm.com/think/topics/linear-regression#1190488334"
+        },
+        {
+          "text": "Lasso regression",
+          "href": "https://www.ibm.com/think/topics/lasso-regression#1190488335"
+        },
+        {
+          "text": "Ridge regression",
+          "href": "https://www.ibm.com/think/topics/ridge-regression#1190488336"
+        },
+        {
+          "text": "State space model",
+          "href": "https://www.ibm.com/think/topics/state-space-model#1190488337"
+        },
+        {
+          "text": "Time series",
+          "href": "https://www.ibm.com/think/topics/time-series-model#1190488338"
+        },
+        {
+          "text": "Autoregressive model",
+          "href": "https://www.ibm.com/think/topics/autoregressive-model#1190488339"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/classification-machine-learning#684929709"
+        },
+        {
+          "text": "Decision trees",
+          "href": "https://www.ibm.com/think/topics/decision-trees#684929710"
+        },
+        {
+          "text": "K-nearest neighbors (KNNs)",
+          "href": "https://www.ibm.com/think/topics/knn#684929711"
+        },
+        {
+          "text": "Naive bayes",
+          "href": "https://www.ibm.com/think/topics/naive-bayes#684929712"
+        },
+        {
+          "text": "Random forest",
+          "href": "https://www.ibm.com/think/topics/random-forest#684929713"
+        },
+        {
+          "text": "Support vector machine",
+          "href": "https://www.ibm.com/think/topics/support-vector-machine#684929714"
+        },
+        {
+          "text": "Logistic regression",
+          "href": "https://www.ibm.com/think/topics/logistic-regression#684929715"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/ensemble-learning#179371084"
+        },
+        {
+          "text": "Boosting",
+          "href": "https://www.ibm.com/think/topics/boosting#179371085"
+        },
+        {
+          "text": "Bagging",
+          "href": "https://www.ibm.com/think/topics/bagging#179371086"
+        },
+        {
+          "text": "Gradient boosting",
+          "href": "https://www.ibm.com/think/topics/gradient-boosting#179371087"
+        },
+        {
+          "text": "Gradient boosting classifier",
+          "href": "https://www.ibm.com/think/tutorials/gradient-boosting-classifier#179371088"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/self-supervised-learning#326187541"
+        },
+        {
+          "text": "Transfer learning",
+          "href": "https://www.ibm.com/think/topics/transfer-learning#326187540"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/unsupervised-learning#2014952965"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/clustering#2142864945"
+        },
+        {
+          "text": "K means clustering",
+          "href": "https://www.ibm.com/think/topics/k-means-clustering#2142864944"
+        },
+        {
+          "text": "Hierarchical clustering",
+          "href": "https://www.ibm.com/think/topics/hierarchical-clustering#2142864943"
+        },
+        {
+          "text": "A priori algorithm",
+          "href": "https://www.ibm.com/think/topics/apriori-algorithm#2014952963"
+        },
+        {
+          "text": "Gaussian mixture model",
+          "href": "https://www.ibm.com/think/topics/gaussian-mixture-model#2014952962"
+        },
+        {
+          "text": "Anomaly detection",
+          "href": "https://www.ibm.com/think/topics/machine-learning-for-anomaly-detection#2014952961"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/semi-supervised-learning#1774455706"
+        },
+        {
+          "text": "Collaborative filtering",
+          "href": "https://www.ibm.com/think/topics/collaborative-filtering#1181250928"
+        },
+        {
+          "text": "Content based filtering",
+          "href": "https://www.ibm.com/think/topics/content-based-filtering#1181250927"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/reinforcement-learning#1268897081"
+        },
+        {
+          "text": "Reinforcement learning human feedback",
+          "href": "https://www.ibm.com/think/topics/rlhf#1268897082"
+        },
+        {
+          "text": "Deep reinforcement learning",
+          "href": "https://www.ibm.com/think/topics/deep-reinforcement-learning#1268897083"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/deep-learning#763338456"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/neural-networks#741977106"
+        },
+        {
+          "text": "Backpropagation",
+          "href": "https://www.ibm.com/think/topics/backpropagation#741977107"
+        },
+        {
+          "text": "Encoder-decoder model",
+          "href": "https://www.ibm.com/think/topics/encoder-decoder-model#741977108"
+        },
+        {
+          "text": "Recurrent neural networks",
+          "href": "https://www.ibm.com/think/topics/recurrent-neural-networks#763338458"
+        },
+        {
+          "text": "Long short-term memory (LSTM)",
+          "href": "https://www.ibm.com/think/topics/lstm#763338459"
+        },
+        {
+          "text": "Convolutional neural networks",
+          "href": "https://www.ibm.com/think/topics/convolutional-neural-networks#763338460"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/transformer-model#1280257394"
+        },
+        {
+          "text": "Attention mechanism",
+          "href": "https://www.ibm.com/think/topics/attention-mechanism#1280257393"
+        },
+        {
+          "text": "Grouped query attention",
+          "href": "https://www.ibm.com/think/topics/grouped-query-attention#1280257392"
+        },
+        {
+          "text": "Positional encoding",
+          "href": "https://www.ibm.com/think/topics/positional-encoding#1280257391"
+        },
+        {
+          "text": "Autoencoder",
+          "href": "https://www.ibm.com/think/topics/autoencoder#763338462"
+        },
+        {
+          "text": "Mamba model",
+          "href": "https://www.ibm.com/think/topics/mamba-model#763338463"
+        },
+        {
+          "text": "Graph neural network",
+          "href": "https://www.ibm.com/think/topics/graph-neural-network#763338464"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/generative-ai#257779831"
+        },
+        {
+          "text": "Generative model",
+          "href": "https://www.ibm.com/think/topics/generative-model#257779832"
+        },
+        {
+          "text": "Generative AI vs. predictive AI",
+          "href": "https://www.ibm.com/think/topics/generative-ai-vs-predictive-ai-whats-the-difference#257779833"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/large-language-models#692473873"
+        },
+        {
+          "text": "Reasoning models",
+          "href": "https://www.ibm.com/think/topics/reasoning-model#692473874"
+        },
+        {
+          "text": "Small language models",
+          "href": "https://www.ibm.com/think/topics/small-language-models#692473875"
+        },
+        {
+          "text": "Instruction tuning",
+          "href": "https://www.ibm.com/think/topics/instruction-tuning#692473876"
+        },
+        {
+          "text": "LLM parameters",
+          "href": "https://www.ibm.com/think/topics/llm-parameters#692473877"
+        },
+        {
+          "text": "LLM temperature",
+          "href": "https://www.ibm.com/think/topics/llm-temperature#692473878"
+        },
+        {
+          "text": "LLM benchmarks",
+          "href": "https://www.ibm.com/think/topics/llm-benchmarks#692473879"
+        },
+        {
+          "text": "LLM customization",
+          "href": "https://www.ibm.com/think/topics/llm-customization#692473880"
+        },
+        {
+          "text": "LLM alignment",
+          "href": "https://www.ibm.com/think/topics/llm-alignment#692473881"
+        },
+        {
+          "text": "Tutorial: Multilingual LLM agent",
+          "href": "https://www.ibm.com/think/tutorials/multilingual-llm#692473882"
+        },
+        {
+          "text": "Diffusion models",
+          "href": "https://www.ibm.com/think/topics/diffusion-models#186915248"
+        },
+        {
+          "text": "Variational autoencoder (VAE)",
+          "href": "https://www.ibm.com/think/topics/variational-autoencoder#186915249"
+        },
+        {
+          "text": "Generative adversarial networks (GANs)",
+          "href": "https://www.ibm.com/think/topics/generative-adversarial-networks#186915250"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/multimodal-ai#318643377"
+        },
+        {
+          "text": "Vision language models",
+          "href": "https://www.ibm.com/think/topics/vision-language-models#318643376"
+        },
+        {
+          "text": "Tutorial: Build an AI stylist",
+          "href": "https://www.ibm.com/think/tutorials/build-ai-stylist-with-granite-python-watsonx-ai#318643375"
+        },
+        {
+          "text": "Tutorial: Multimodal AI queries using Llama",
+          "href": "https://www.ibm.com/think/tutorials/multimodal-ai-python-llama#318643374"
+        },
+        {
+          "text": "Tutorial: Multimodal AI queries using Pixtral",
+          "href": "https://www.ibm.com/think/tutorials/multimodal-ai-pixtral-12b-on-watsonx-ai#318643373"
+        },
+        {
+          "text": "Tutorial: Automatic podcast transcription with Granite",
+          "href": "https://www.ibm.com/think/tutorials/automatic-speech-recognition-podcast-transcript-granite-watsonx-ai#318643372"
+        },
+        {
+          "text": "Tutorial: PPT AI image analysis answering system",
+          "href": "https://www.ibm.com/think/tutorials/build-ppt-ai-image-analysis-question-answering-system-granite#318643371"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/retrieval-augmented-generation#824202002"
+        },
+        {
+          "text": "GraphRAG",
+          "href": "https://www.ibm.com/think/topics/graphrag#824202001"
+        },
+        {
+          "text": "Tutorial: Build a multimodal RAG system with Docling and Granite",
+          "href": "https://www.ibm.com/think/tutorials/build-multimodal-rag-langchain-with-docling-granite#824202000"
+        },
+        {
+          "text": "Tutorial: Evaluate RAG pipline using Ragas",
+          "href": "https://www.ibm.com/think/tutorials/evaluate-rag-pipeline-using-ragas-in-python-with-watsonx#824201999"
+        },
+        {
+          "text": "Tutorial: RAG chunking strategies",
+          "href": "https://www.ibm.com/think/tutorials/chunking-strategies-for-rag-with-langchain-watsonx-ai#824201998"
+        },
+        {
+          "text": "Tutorial: Graph RAG using knowledge graphs",
+          "href": "https://www.ibm.com/think/tutorials/knowledge-graph-rag#824201997"
+        },
+        {
+          "text": "Tutorial: Inference scaling to improve multimodal RAG",
+          "href": "https://www.ibm.com/think/tutorials/inference-scaling-improve-multimodal-rag-granite#824201996"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/ai-code-generation#1329760627"
+        },
+        {
+          "text": "Vibe coding",
+          "href": "https://www.ibm.com/think/topics/vibe-coding#1329760626"
+        },
+        {
+          "text": "Visit the 2025 Guide to AI Agents",
+          "href": "https://www.ibm.com/think/ai-agents#1835319252"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/model-training#1580786329"
+        },
+        {
+          "text": "LLM training",
+          "href": "https://www.ibm.com/think/topics/llm-training#1580786328"
+        },
+        {
+          "text": "Loss function",
+          "href": "https://www.ibm.com/think/topics/loss-function#1580786327"
+        },
+        {
+          "text": "Training data",
+          "href": "https://www.ibm.com/think/topics/training-data#1580786326"
+        },
+        {
+          "text": "Model parameters",
+          "href": "https://www.ibm.com/think/topics/model-parameters#1580786325"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/optimization-algorithms#18238369"
+        },
+        {
+          "text": "Gradient descent",
+          "href": "https://www.ibm.com/think/topics/gradient-descent#18238368"
+        },
+        {
+          "text": "Stochastic gradient descent",
+          "href": "https://www.ibm.com/think/topics/stochastic-gradient-descent#18238367"
+        },
+        {
+          "text": "Hyperparameter tuning",
+          "href": "https://www.ibm.com/think/topics/hyperparameter-tuning#523796994"
+        },
+        {
+          "text": "Learning rate",
+          "href": "https://www.ibm.com/think/topics/learning-rate#523796993"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/fine-tuning#1029355619"
+        },
+        {
+          "text": "Parameter efficient fine tuning (PEFT)",
+          "href": "https://www.ibm.com/think/topics/parameter-efficient-fine-tuning#1029355618"
+        },
+        {
+          "text": "LoRA",
+          "href": "https://www.ibm.com/think/topics/lora#1029355617"
+        },
+        {
+          "text": "Tutorial: Fine tuning Granite model with LoRA",
+          "href": "https://www.ibm.com/think/tutorials/lora-fine-tuning-granite-llm#1029355616"
+        },
+        {
+          "text": "Regularization",
+          "href": "https://www.ibm.com/think/topics/regularization#1580786321"
+        },
+        {
+          "text": "Foundation models",
+          "href": "https://www.ibm.com/think/topics/foundation-models#1580786320"
+        },
+        {
+          "text": "Overfitting",
+          "href": "https://www.ibm.com/think/topics/overfitting#1759735864"
+        },
+        {
+          "text": "Underfitting",
+          "href": "https://www.ibm.com/think/topics/underfitting#1759735863"
+        },
+        {
+          "text": "Few shot learning",
+          "href": "https://www.ibm.com/think/topics/few-shot-learning#823293247"
+        },
+        {
+          "text": "Zero shot learning",
+          "href": "https://www.ibm.com/think/topics/zero-shot-learning#823293246"
+        },
+        {
+          "text": "Knowledge distillation",
+          "href": "https://www.ibm.com/think/topics/knowledge-distillation#1759735861"
+        },
+        {
+          "text": "Meta learning",
+          "href": "https://www.ibm.com/think/topics/meta-learning#1759735860"
+        },
+        {
+          "text": "Data augmentation",
+          "href": "https://www.ibm.com/think/topics/data-augmentation#1759735859"
+        },
+        {
+          "text": "Catastrophic forgetting",
+          "href": "https://www.ibm.com/think/topics/catastrophic-forgetting#1449439549"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/machine-learning-libraries#2086344954"
+        },
+        {
+          "text": "Scikit-learn",
+          "href": "https://www.ibm.com/think/topics/scikit-learn#2086344953"
+        },
+        {
+          "text": "XGboost",
+          "href": "https://www.ibm.com/think/topics/xgboost#2086344952"
+        },
+        {
+          "text": "PyTorch",
+          "href": "https://www.ibm.com/think/topics/pytorch#2086344951"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/mlops#1703063717"
+        },
+        {
+          "text": "AI lifecyle",
+          "href": "https://www.ibm.com/think/topics/ai-lifecycle#1703063718"
+        },
+        {
+          "text": "AI inference",
+          "href": "https://www.ibm.com/think/topics/ai-inference#1703063719"
+        },
+        {
+          "text": "Model deployment",
+          "href": "https://www.ibm.com/think/topics/model-deployment#1703063720"
+        },
+        {
+          "text": "Machine learning pipeline",
+          "href": "https://www.ibm.com/think/topics/machine-learning-pipeline#1703063721"
+        },
+        {
+          "text": "Data labeling",
+          "href": "https://www.ibm.com/think/topics/data-labeling#1703063722"
+        },
+        {
+          "text": "Model risk management",
+          "href": "https://www.ibm.com/think/topics/model-risk-management#1399431040"
+        },
+        {
+          "text": "Model drift",
+          "href": "https://www.ibm.com/think/topics/model-drift#1399431041"
+        },
+        {
+          "text": "AutoML",
+          "href": "https://www.ibm.com/think/topics/automl#1703063724"
+        },
+        {
+          "text": "Model selection",
+          "href": "https://www.ibm.com/think/topics/model-selection#1703063725"
+        },
+        {
+          "text": "Federated learning",
+          "href": "https://www.ibm.com/think/topics/federated-learning#1703063726"
+        },
+        {
+          "text": "Distributed machine learning",
+          "href": "https://www.ibm.com/think/topics/distributed-machine-learning#1255367754"
+        },
+        {
+          "text": "AI stack",
+          "href": "https://www.ibm.com/think/topics/ai-stack#1255367755"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/natural-language-processing#1197505092"
+        },
+        {
+          "text": "Natural language understanding",
+          "href": "https://www.ibm.com/think/topics/natural-language-understanding#1197505093"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/text-classification#88312261"
+        },
+        {
+          "text": "Sentiment analysis",
+          "href": "https://www.ibm.com/think/topics/sentiment-analysis#88312262"
+        },
+        {
+          "text": "Tutorial: Spam text classifier with PyTorch",
+          "href": "https://www.ibm.com/think/tutorials/text-classification-pytorch#88312263"
+        },
+        {
+          "text": "Machine translation",
+          "href": "https://www.ibm.com/think/topics/machine-translation#1197505095"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/text-mining#922804989"
+        },
+        {
+          "text": "Information retrieval",
+          "href": "https://www.ibm.com/think/topics/information-retrieval#922804988"
+        },
+        {
+          "text": "Information extraction",
+          "href": "https://www.ibm.com/think/topics/information-extraction#922804987"
+        },
+        {
+          "text": "Topic modeling",
+          "href": "https://www.ibm.com/think/topics/topic-modeling#922804986"
+        },
+        {
+          "text": "Latent semantic analysis",
+          "href": "https://www.ibm.com/think/topics/latent-semantic-analysis#922804985"
+        },
+        {
+          "text": "Latent Dirichlet Allocation",
+          "href": "https://www.ibm.com/think/topics/latent-dirichlet-allocation#922804984"
+        },
+        {
+          "text": "Named entity recognition",
+          "href": "https://www.ibm.com/think/topics/named-entity-recognition#922804983"
+        },
+        {
+          "text": "Word embeddings",
+          "href": "https://www.ibm.com/think/topics/word-embeddings#1197505097"
+        },
+        {
+          "text": "Bag of words",
+          "href": "https://www.ibm.com/think/topics/bag-of-words#1197505098"
+        },
+        {
+          "text": "Intelligent search",
+          "href": "https://www.ibm.com/think/topics/intelligent-search#1197505099"
+        },
+        {
+          "text": "Speech recognition",
+          "href": "https://www.ibm.com/think/topics/speech-recognition#1197505100"
+        },
+        {
+          "text": "Stemming and lemmatization",
+          "href": "https://www.ibm.com/think/topics/stemming-lemmatization#1197505101"
+        },
+        {
+          "text": "Text summarization",
+          "href": "https://www.ibm.com/think/topics/text-summarization#1532047733"
+        },
+        {
+          "text": "Conversational AI",
+          "href": "https://www.ibm.com/think/topics/conversational-ai#1532047732"
+        },
+        {
+          "text": "Conversational analytics",
+          "href": "https://www.ibm.com/think/topics/conversational-analytics#1532047731"
+        },
+        {
+          "text": "Natural language generation",
+          "href": "https://www.ibm.com/think/topics/natural-language-generation#1532047730"
+        },
+        {
+          "text": "Overview",
+          "href": "https://www.ibm.com/think/topics/computer-vision#691946467"
+        },
+        {
+          "text": "Image classification",
+          "href": "https://www.ibm.com/think/topics/image-classification#691946468"
+        },
+        {
+          "text": "Object detection",
+          "href": "https://www.ibm.com/think/topics/object-detection#691946469"
+        },
+        {
+          "text": "Instance segmentation",
+          "href": "https://www.ibm.com/think/topics/instance-segmentation#544367653"
+        },
+        {
+          "text": "Semantic segmentation",
+          "href": "https://www.ibm.com/think/topics/semantic-segmentation#544367654"
+        },
+        {
+          "text": "Optical character recognition",
+          "href": "https://www.ibm.com/think/topics/optical-character-recognition#691946471"
+        },
+        {
+          "text": "Image recognition",
+          "href": "https://www.ibm.com/think/topics/image-recognition#691946472"
+        },
+        {
+          "text": "Visual inspection",
+          "href": "https://www.ibm.com/think/topics/visual-inspection#691946473"
+        },
+        {
+          "text": "Dave Bergmann",
+          "href": "https://www.ibm.com/think/author/dave-bergmann.html"
+        },
+        {
+          "text": "forecasting",
+          "href": "https://www.ibm.com/think/topics/forecasting"
+        },
+        {
+          "text": "large language models (LLMs)",
+          "href": "https://www.ibm.com/think/topics/large-language-models"
+        },
+        {
+          "text": "generative AI",
+          "href": "https://www.ibm.com/think/topics/generative-ai"
+        },
+        {
+          "text": "model training",
+          "href": "https://www.ibm.com/think/topics/model-training"
+        },
+        {
+          "text": "AI model",
+          "href": "https://www.ibm.com/think/topics/ai-model"
+        },
+        {
+          "text": "AI inference",
+          "href": "https://www.ibm.com/think/topics/ai-inference"
+        },
+        {
+          "text": "Deep learning",
+          "href": "https://www.ibm.com/think/topics/deep-learning"
+        },
+        {
+          "text": "artificial neural networks",
+          "href": "https://www.ibm.com/think/topics/neural-networks?"
+        },
+        {
+          "text": "“big data”",
+          "href": "https://www.ibm.com/think/topics/big-data"
+        },
+        {
+          "text": "graphics processing units (GPUs).",
+          "href": "https://www.ibm.com/think/topics/gpu"
+        },
+        {
+          "text": "data science",
+          "href": "https://www.ibm.com/think/topics/data-science"
+        },
+        {
+          "text": "artificial general intelligence (AGI)",
+          "href": "https://www.ibm.com/think/topics/artificial-general-intelligence"
+        },
+        {
+          "text": "generativeAI",
+          "href": "https://www.ibm.com/think/topics/generative-ai"
+        },
+        {
+          "text": "decision tree",
+          "href": "https://www.ibm.com/think/topics/decision-trees"
+        },
+        {
+          "text": "IBM Privacy Statement",
+          "href": "https://www.ibm.com/privacy"
+        },
+        {
+          "text": "vector embedding",
+          "href": "https://www.ibm.com/think/topics/vector-embedding"
+        },
+        {
+          "text": "feature selection",
+          "href": "https://www.ibm.com/think/topics/feature-selection"
+        },
+        {
+          "text": "Feature extraction",
+          "href": "https://www.ibm.com/think/topics/feature-extraction"
+        },
+        {
+          "text": "feature engineering",
+          "href": "https://www.ibm.com/think/topics/feature-engineering"
+        },
+        {
+          "text": "linear regression",
+          "href": "https://www.ibm.com/think/topics/linear-regression"
+        },
+        {
+          "text": "Supervised learning",
+          "href": "https://www.ibm.com/think/topics/supervised-learning"
+        },
+        {
+          "text": "ground truth,",
+          "href": "https://www.ibm.com/think/topics/ground-truth"
+        },
+        {
+          "text": "Unsupervised learning",
+          "href": "https://www.ibm.com/think/topics/unsupervised-learning"
+        },
+        {
+          "text": "Reinforcement learning (RL)",
+          "href": "https://www.ibm.com/think/topics/reinforcement-learning"
+        },
+        {
+          "text": "fine-tuning",
+          "href": "https://www.ibm.com/think/topics/fine-tuning"
+        },
+        {
+          "text": "reinforcement learning from human feedback (RLHF)",
+          "href": "https://www.ibm.com/think/topics/rlhf"
+        },
+        {
+          "text": "ensemble learning",
+          "href": "https://www.ibm.com/think/topics/ensemble-learning"
+        },
+        {
+          "text": "classification",
+          "href": "https://www.ibm.com/think/topics/classification-machine-learning"
+        },
+        {
+          "text": "linear regression",
+          "href": "https://www.ibm.com/think/topics/linear-regression"
+        },
+        {
+          "text": "state space models",
+          "href": "https://www.ibm.com/think/topics/state-space-model"
+        },
+        {
+          "text": "support vector machines (SVMs)",
+          "href": "https://www.ibm.com/think/topics/support-vector-machine"
+        },
+        {
+          "text": "Naïve Bayes",
+          "href": "https://www.ibm.com/think/topics/naive-bayes"
+        },
+        {
+          "text": "logistic regression",
+          "href": "https://www.ibm.com/think/topics/logistic-regression"
+        },
+        {
+          "text": "image segmentation",
+          "href": "https://www.ibm.com/think/topics/image-segmentation"
+        },
+        {
+          "text": "loss function",
+          "href": "https://www.ibm.com/think/topics/loss-function"
+        },
+        {
+          "text": "derivative",
+          "href": "https://www.ibm.com/think/topics/backpropagation#Key+mathematical+concepts+for+backpropagation"
+        },
+        {
+          "text": "Self-supervised learning",
+          "href": "https://www.ibm.com/think/topics/self-supervised-learning"
+        },
+        {
+          "text": "autoencoders",
+          "href": "https://www.ibm.com/think/topics/autoencoder"
+        },
+        {
+          "text": "transfer learning",
+          "href": "https://www.ibm.com/think/topics/transfer-learning?"
+        },
+        {
+          "text": "foundation models",
+          "href": "https://www.ibm.com/think/topics/foundation-models"
+        },
+        {
+          "text": "fine-tuned",
+          "href": "https://www.ibm.com/think/topics/fine-tuning"
+        },
+        {
+          "text": "semi-supervised learning",
+          "href": "https://www.ibm.com/think/topics/semi-supervised-learning"
+        },
+        {
+          "text": "Clustering",
+          "href": "https://www.ibm.com/think/topics/clustering"
+        },
+        {
+          "text": "association",
+          "href": "https://dataplatform.cloud.ibm.com/docs/content/wsd/nodes/associationrules.html?context=cpdaas"
+        },
+        {
+          "text": "Dimensionality reduction",
+          "href": "https://www.ibm.com/think/topics/dimensionality-reduction"
+        },
+        {
+          "text": "preserving their meaningful characteristics",
+          "href": "https://www.ibm.com/think/topics/latent-space"
+        },
+        {
+          "text": "autoencoders",
+          "href": "https://www.ibm.com/think/topics/autoencoder"
+        },
+        {
+          "text": "principal component analysis (PCA)",
+          "href": "https://www.ibm.com/think/topics/principal-component-analysis"
+        },
+        {
+          "text": "linear discriminant analysis (LDA)",
+          "href": "https://www.ibm.com/think/topics/linear-discriminant-analysis"
+        },
+        {
+          "text": "t-Distributed Stochastic Neighbor Embedding (t-SNE).",
+          "href": "https://lvdmaaten.github.io/tsne/"
+        },
+        {
+          "text": "this animation",
+          "href": "https://shabal.in/visuals/kmeans/6.html"
+        },
+        {
+          "text": "tuning hyperparameters",
+          "href": "https://www.ibm.com/think/topics/hyperparameter-tuning"
+        },
+        {
+          "text": "learning rate",
+          "href": "https://www.ibm.com/think/topics/learning-rate"
+        },
+        {
+          "text": "reinforcement learning",
+          "href": "https://www.ibm.com/think/topics/reinforcement-learning"
+        },
+        {
+          "text": "reasoning models",
+          "href": "https://www.ibm.com/think/topics/reasoning-model"
+        },
+        {
+          "text": "neural network",
+          "href": "https://www.ibm.com/think/topics/neural-networks"
+        },
+        {
+          "text": "Deep learning",
+          "href": "https://www.ibm.com/think/topics/deep-learning"
+        },
+        {
+          "text": "artificial neural networks",
+          "href": "https://www.ibm.com/think/topics/neural-networks"
+        },
+        {
+          "text": "GPUs",
+          "href": "https://www.ibm.com/think/topics/gpu"
+        },
+        {
+          "text": "backpropagation",
+          "href": "https://www.ibm.com/think/topics/backpropagation"
+        },
+        {
+          "text": "gradient descent",
+          "href": "https://www.ibm.com/think/topics/gradient-descent"
+        },
+        {
+          "text": "Convolutional neural networks (CNNs)",
+          "href": "https://www.ibm.com/think/topics/convolutional-neural-networks"
+        },
+        {
+          "text": "applying weighted “filters”.",
+          "href": "https://developer.ibm.com/articles/introduction-to-convolutional-neural-networks/"
+        },
+        {
+          "text": "Recurrent neural networks (RNNs)",
+          "href": "https://www.ibm.com/think/topics/recurrent-neural-networks"
+        },
+        {
+          "text": "Transformer models",
+          "href": "https://www.ibm.com/think/topics/transformer-model"
+        },
+        {
+          "text": "attention mechanism",
+          "href": "https://www.ibm.com/think/topics/attention-mechanism"
+        },
+        {
+          "text": "Mamba models",
+          "href": "https://www.ibm.com/think/topics/mamba-model"
+        },
+        {
+          "text": "state space models (SSMs)",
+          "href": "https://www.ibm.com/think/topics/state-space-model"
+        },
+        {
+          "text": "object detection",
+          "href": "https://www.ibm.com/think/topics/object-detection"
+        },
+        {
+          "text": "image segmentation",
+          "href": "https://www.ibm.com/think/topics/image-segmentation"
+        },
+        {
+          "text": "optical character recognition (OCR",
+          "href": "https://www.ibm.com/think/topics/optical-character-recognition"
+        },
+        {
+          "text": "natural language processing (NLP)",
+          "href": "https://www.ibm.com/think/topics/natural-language-processing"
+        },
+        {
+          "text": "chatbots",
+          "href": "https://www.ibm.com/think/topics/chatbots"
+        },
+        {
+          "text": "speech recognition",
+          "href": "https://www.ibm.com/think/topics/speech-recognition"
+        },
+        {
+          "text": "language translation,",
+          "href": "https://www.ibm.com/think/topics/machine-translation"
+        },
+        {
+          "text": "sentiment analysis",
+          "href": "https://www.ibm.com/think/topics/sentiment-analysis"
+        },
+        {
+          "text": "text generation",
+          "href": "https://www.ibm.com/think/topics/text-generation"
+        },
+        {
+          "text": "summarization",
+          "href": "https://www.ibm.com/think/topics/text-summarization"
+        },
+        {
+          "text": "AI agents",
+          "href": "https://www.ibm.com/think/topics/ai-agents"
+        },
+        {
+          "text": "Time series models",
+          "href": "https://www.ibm.com/think/topics/time-series-model"
+        },
+        {
+          "text": "Diffusion models",
+          "href": "https://www.ibm.com/think/topics/diffusion-models"
+        },
+        {
+          "text": "variational autoencoders (VAEs)",
+          "href": "https://www.ibm.com/think/topics/variational-autoencoder"
+        },
+        {
+          "text": "generative adversarial networks (GANs)",
+          "href": "https://www.ibm.com/think/topics/generative-adversarial-networks"
+        },
+        {
+          "text": "Get Started with watsonx Orchestrate®",
+          "href": "https://www.ibm.com/products/watsonx-orchestrate"
+        },
+        {
+          "text": "Machine learning operations (MLOps)",
+          "href": "https://www.ibm.com/think/topics/mlops"
+        },
+        {
+          "text": "model selection",
+          "href": "https://www.ibm.com/think/topics/model-selection"
+        },
+        {
+          "text": "metrics",
+          "href": "https://www.ibm.com/docs/en/watsonx/saas?topic=models-evaluation-metrics"
+        },
+        {
+          "text": "overfitting",
+          "href": "https://www.ibm.com/think/topics/overfitting"
+        },
+        {
+          "text": "model drift",
+          "href": "https://www.ibm.com/think/topics/model-drift"
+        },
+        {
+          "text": "model governance",
+          "href": "https://www.ibm.com/think/topics/model-governance"
+        },
+        {
+          "text": "Python",
+          "href": "https://developer.ibm.com/languages/python/"
+        },
+        {
+          "text": "PyTorch",
+          "href": "https://www.ibm.com/think/topics/pytorch"
+        },
+        {
+          "text": "TensorFlow",
+          "href": "https://developer.ibm.com/components/tensorflow/"
+        },
+        {
+          "text": "machine learning libraries",
+          "href": "https://www.ibm.com/think/topics/machine-learning-libraries"
+        },
+        {
+          "text": "Scikit-learn",
+          "href": "https://www.ibm.com/think/topics/scikit-learn"
+        },
+        {
+          "text": "XGBoost",
+          "href": "https://www.ibm.com/think/topics/xgboost"
+        },
+        {
+          "text": "Matplotlib",
+          "href": "https://dataplatform.cloud.ibm.com/exchange/public/entry/view/55f7f605960d9a4d578aeeaa2b62bdea"
+        },
+        {
+          "text": "tutorials",
+          "href": "https://developer.ibm.com/technologies/machine-learning/tutorials/"
+        },
+        {
+          "text": "Spotify",
+          "href": "https://open.spotify.com/show/1CuiV3XpXm68MxGpllQV4j"
+        },
+        {
+          "text": "Apple Podcasts",
+          "href": "https://podcasts.apple.com/us/podcast/techsplainers-by-ibm/id1850811611"
+        },
+        {
+          "text": "Find more episodes",
+          "href": "https://www.ibm.com/think/podcasts/techsplainers"
+        },
+        {
+          "text": "Dave Bergmann",
+          "href": "https://www.ibm.com/think/author/dave-bergmann.html"
+        },
+        {
+          "text": "Upcoming webinar—11 June 2026Fixing the accuracy gap in AI-powered searchLearn why gen AI search tools still struggle with accuracy and how leading teams are improving decision-making, workflow efficiency and trust in their data without a major overhaul.Register now",
+          "href": "https://www.ibm.com/forms/mkt-3a42e"
+        },
+        {
+          "text": "See watsonx Orchestrate in action",
+          "href": "https://www.ibm.com/products/watsonx-orchestrate"
+        },
+        {
+          "text": "Ready to scale AI the right way?",
+          "href": "https://www.ibm.com/forms/mkt-webinar-206ed"
+        },
+        {
+          "text": "TrainingLevel up your ML expertiseLearn fundamental concepts and build your skills with hands-on labs, courses, guided projects, trials and more.Explore ML courses",
+          "href": "https://developer.ibm.com/technologies/machine-learning/courses/"
+        },
+        {
+          "text": "EbookUnlock the power of generative AI + MLLearn how to confidently incorporate generative AI and machine learning into your business.Read the ebook",
+          "href": "https://www.ibm.com/forms/mkt-52356"
+        },
+        {
+          "text": "Techsplainers PodcastMachine learning explainedTechsplainers by IBM breaks down the essentials of machine learning, from key concepts to real‑world use cases. Clear, quick episodes help you learn the fundamentals fast.Listen now",
+          "href": "https://www.ibm.com/think/podcasts/techsplainers#tabs-fw-44e285b2cc-item-2f805729d7-tab"
+        },
+        {
+          "text": "GuidePut AI to work: Driving ROI with gen AIWant to get a better return on your AI investments? Learn how scaling gen AI in key areas drives change by helping your best minds build and deliver innovative new solutions.Read the guide",
+          "href": "https://www.ibm.com/forms/mkt-53137"
+        },
+        {
+          "text": "EbookHow to choose the right foundation modelLearn how to select the most suitable AI foundation model for your use case.Read the ebook",
+          "href": "https://www.ibm.com/forms/mkt-52620"
+        },
+        {
+          "text": "AI modelsExplore IBM GraniteIBM® Granite® is our family of open, performant and trusted AI models, tailored for business and optimized to scale your AI applications. Explore language, code, time series and guardrail options.Meet Granite",
+          "href": "https://www.ibm.com/granite"
+        },
+        {
+          "text": "GuideHow to thrive in this new era of AI with trust and confidenceDive into the 3 critical elements of a strong AI strategy: creating a competitive edge, scaling AI across the business and advancing trustworthy AI.Read the guide",
+          "href": "https://www.ibm.com/downloads/documents/us-en/10c31775a25403b9"
+        },
+        {
+          "text": "Explore watsonx Orchestrate",
+          "href": "https://www.ibm.com/products/watsonx-orchestrate"
+        },
+        {
+          "text": "Explore AI development tools",
+          "href": "https://www.ibm.com/solutions/ai-for-developers"
+        },
+        {
+          "text": "Explore AI services",
+          "href": "https://www.ibm.com/consulting/artificial-intelligence"
+        },
+        {
+          "text": "Explore watsonx Orchestrate",
+          "href": "https://www.ibm.com/products/watsonx-orchestrate"
+        },
+        {
+          "text": "Explore watsonx Orchestrate",
+          "href": "https://www.ibm.com/products/watsonx-orchestrate"
+        },
+        {
+          "text": "Explore watsonx.ai",
+          "href": "https://www.ibm.com/products/watsonx-ai"
+        },
+        {
+          "text": "Explore watsonx.ai",
+          "href": "https://www.ibm.com/products/watsonx-ai"
+        },
+        {
+          "text": "“Some Studies in Machine Learning Using the Game of Checkers,”",
+          "href": "https://people.csail.mit.edu/brooks/idocs/Samuel.pdf"
+        },
+        {
+          "text": "“Using Decision Trees as an Expert System for Clinical Decision Support for COVID-19,“",
+          "href": "https://www.i-jmr.org/2023/1/e42540"
+        },
+        {
+          "text": "“Kolmogorov’s Mapping Neural Network Existence Theorem,“",
+          "href": "https://cs.uwaterloo.ca/~y328yu/classics/Hecht-Nielsen.pdf"
+        },
+        {
+          "text": "“Multilayer Feedforward Networks with a Non-Polynomial Activation Function Can Approximate Any Function,“",
+          "href": "https://archive.nyu.edu/bitstream/2451/14329/1/IS-92-13.pdf"
+        }
+      ],
+      "tables": [],
+      "success": true,
+      "error": null
+    }
+  ],
+  "dataframe_path": "storage\\dataframes\\extracted_4f0f602a-8f00-4c99-8520-8d0ef24220d2.csv",
+  "metadata_path": null,
+  "logs": [
+    "Starting extraction for 1 HTML files",
+    "storage\\raw_html\\653d82d0-5e06-4936-88bc-e5be9f61f5e1.html → ok",
+    "Extraction complete",
+    "DataFrame built: 82 rows, 7 columns",
+    "DataFrame saved: storage\\dataframes\\extracted_4f0f602a-8f00-4c99-8520-8d0ef24220d2.csv"
+  ]
+}

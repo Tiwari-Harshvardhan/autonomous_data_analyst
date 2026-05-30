@@ -1,0 +1,29 @@
+{
+  "user_query": "Scrape data from https://example.com and analyze it",
+  "source_urls": [
+    "https://example.com"
+  ],
+  "raw_data_path": "storage\\raw\\raw_data_2149c9eb-4314-4226-b7a6-199663b5610b.json",
+  "metadata_path": null,
+  "logs": [
+    "Started data collection workflow",
+    "Extracted URL(s) from query: ['https://example.com']",
+    "Discovered 1 URLs",
+    "Completed web scraping",
+    "Raw data saved: storage\\raw\\raw_data_2149c9eb-4314-4226-b7a6-199663b5610b.json"
+  ],
+  "current_stage": "data_collection",
+  "raw_data_preview": [
+    {
+      "url": "https://example.com",
+      "scraping_mode": "dynamic",
+      "title": null,
+      "extracted_text": null,
+      "html_path": null,
+      "screenshot_path": null,
+      "metadata_path": null,
+      "success": false,
+      "error": "BrowserType.launch: Executable doesn't exist at C:\\Users\\harsh\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1223\\chrome-headless-shell-win64\\chrome-headless-shell.exe\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+    }
+  ]
+}

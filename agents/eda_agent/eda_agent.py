@@ -4,7 +4,7 @@ import uuid
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.use("Agg") 
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -112,7 +112,10 @@ def visualisation_tool(df: pd.DataFrame) -> List[str]:
             if numeric_data.empty:
                 plt.close(fig)
                 continue
-            numeric_data.plot(kind="kde", ax=ax, title=f"Distribution — {col}")
+            try:
+                numeric_data.plot(kind="kde", ax=ax, title=f"Distribution — {col}")
+            except Exception:
+                numeric_data.plot(kind="hist", ax=ax, title=f"Distribution (Hist) — {col}")
             ax.set_xlabel(col)
         else:
             counts = df[col].value_counts().head(20)
