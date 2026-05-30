@@ -74,72 +74,72 @@ def generate_human_readable_summary(state: Dict[str, Any]) -> str:
     query = state.get("user_query", "Data Analysis Task")
     summary_parts.append(f"<h2>Analysis Report for: <em>\"{escape_html(query)}\"</em></h2>")
 
-    artifacts = state.get("artifact_paths", {})
-    dashboard_path = artifacts.get("dashboard_html_path", "")
-
     summary_parts.append("<div class='section'>")
-    summary_parts.append("<h3>Pipeline Execution Status</h3>")
-    summary_parts.append("<ul>")
-    for log in state.get("logs", []):
-        summary_parts.append(f"<li>{escape_html(log)}</li>")
-    summary_parts.append("</ul>")
+    summary_parts.append("<h3>Key Findings</h3>")
+
+    eda = state.get("eda_state")
+    if eda and isinstance(eda, dict):
+        if eda.get("analysis_summary"):
+            summary_parts.append(f"<p>{escape_html(eda['analysis_summary'])}</p>")
+        else:
+            summary_parts.append("<p>Exploratory analysis generated a structured quality profile and measured the most important numeric and categorical patterns.</p>")
+
+    feature = state.get("feature_state")
+    if feature and isinstance(feature, dict) and feature.get("analysis_summary"):
+        summary_parts.append(f"<p>{escape_html(feature['analysis_summary'])}</p>")
+
+    visualization = state.get("visualization_state")
+    if visualization and isinstance(visualization, dict) and visualization.get("visualization_summary"):
+        summary_parts.append(f"<p>{escape_html(visualization['visualization_summary'])}</p>")
+
     summary_parts.append("</div>")
 
     cleaning = state.get("cleaning_state")
     if cleaning and isinstance(cleaning, dict):
-        report = cleaning.get("quality_report")
-        if report:
-            summary_parts.append("<div class='section'>")
-            summary_parts.append("<h3>Data Cleaning & Quality Report</h3>")
-            summary_parts.append("<table>")
-            summary_parts.append(f"<tr><td><strong>Final Row Count</strong></td><td>{escape_html(report.get('final_rows', 'N/A'))}</td></tr>")
-            summary_parts.append(f"<tr><td><strong>Final Column Count</strong></td><td>{escape_html(report.get('final_columns', 'N/A'))}</td></tr>")
-            summary_parts.append(f"<tr><td><strong>Duplicate Rows Removed</strong></td><td>{escape_html(report.get('duplicates_after_cleaning', 0))} (remaining)</td></tr>")
-            missing = report.get('missing_after_cleaning', {})
-            missing_str = ", ".join(f"'{escape_html(col)}': {count}" for col, count in missing.items() if count > 0) or "None"
-            summary_parts.append(f"<tr><td><strong>Missing Values Left</strong></td><td>{missing_str}</td></tr>")
-            summary_parts.append("</table>")
-            summary_parts.append("</div>")
-
-    feature = state.get("feature_state")
-    if feature and isinstance(feature, dict):
-        logs = feature.get("logs", [])
-        scaling_applied = any("scaling" in l.lower() or "scale" in l.lower() or "standardization" in l.lower() for l in logs)
-        date_engineered = any("date" in l.lower() or "datetime" in l.lower() for l in logs)
+        report = cleaning.get("quality_report") or {}
         summary_parts.append("<div class='section'>")
-        summary_parts.append("<h3>Feature Engineering Actions</h3>")
-        actions = []
-        if scaling_applied:
-            actions.append("Applied Z-Score standardization to numeric columns to ensure numerical stability.")
-        if date_engineered:
-            actions.append("Identified datetime fields and derived sub-features (day, month, year) to expand analytical depth.")
-        if not actions:
-            actions.append("Parsed numeric distributions and transformed coordinates successfully.")
-        summary_parts.append("<ul>" + "".join(f"<li>{escape_html(a)}</li>" for a in actions) + "</ul>")
-        summary_parts.append("</div>")
-
-    eda = state.get("eda_state")
-    if eda and isinstance(eda, dict):
-        report = eda.get("quality_report", {})
-        summary_parts.append("<div class='section'>")
-        summary_parts.append("<h3>Exploratory Data Analysis Details</h3>")
-        skewness = report.get("skewness", {})
-        skewed_cols = [col for col, data in skewness.items() if isinstance(data, dict) and data.get("skewness")]
-        if skewed_cols:
-            summary_parts.append(f"<p><strong>Skewed distributions:</strong> {', '.join(escape_html(col) for col in skewed_cols)}</p>")
+        summary_parts.append("<h3>Data Quality Summary</h3>")
         summary_parts.append("<ul>")
-        numeric_summary = report.get("numeric_summary", {})
-        if numeric_summary:
-            summary_parts.append("<li>Calculated detailed descriptive statistics for all numeric dimensions.</li>")
-        summary_parts.append("<li>Conducted bivariate analysis across dimension pairs.</li>")
+        summary_parts.append(f"<li>After cleansing, the dataset contains {escape_html(str(report.get('final_rows', 'N/A')))} rows and {escape_html(str(report.get('final_columns', 'N/A')))} columns.</li>")
+        duplicates = report.get('duplicates_after_cleaning', 0)
+        if duplicates:
+            summary_parts.append(f"<li>{escape_html(str(duplicates))} duplicate rows were removed to improve data reliability.</li>")
+        missing = report.get('missing_after_cleaning', {})
+        if any(count for count in missing.values()):
+            missing_str = ", ".join(f"{escape_html(col)}: {count}" for col, count in missing.items() if count > 0)
+            summary_parts.append(f"<li>Remaining missing values are concentrated in: {missing_str}.</li>")
+        else:
+            summary_parts.append("<li>Missing values were addressed successfully during cleaning.</li>")
         summary_parts.append("</ul>")
         summary_parts.append("</div>")
 
-    if dashboard_path:
-        rel_dash_path = f"/storage/dashboards/{os.path.basename(dashboard_path)}"
+    if visualization and visualization.get('chart_explanations'):
+        summary_parts.append("<div class='section'>")
+        summary_parts.append("<h3>Visualization Highlights</h3>")
+        chart_explanations = visualization.get('chart_explanations') or []
+        if chart_explanations:
+            summary_parts.append("<ul>")
+            for chart in chart_explanations[:3]:
+                summary_parts.append(f"<li><strong>{escape_html(chart.get('chart_title', 'Chart'))}:</strong> {escape_html(chart.get('insight', 'No insight available.'))}</li>")
+            summary_parts.append("</ul>")
+        summary_parts.append("</div>")
+
+    if visualization and visualization.get('dashboard_html_path'):
+        rel_dash_path = f"/storage/dashboards/{os.path.basename(visualization['dashboard_html_path'])}"
         summary_parts.append("<div class='dashboard-access'>")
         summary_parts.append(f"<a href='{rel_dash_path}' target='_blank' class='btn btn-primary'>Open Interactive BI Dashboard</a>")
         summary_parts.append("</div>")
+
+    summary_parts.append("<div class='section'>")
+    summary_parts.append("<h3>So what did we learn?</h3>")
+    if eda and isinstance(eda, dict) and eda.get("analysis_summary"):
+        summary_parts.append(f"<p>{escape_html(eda['analysis_summary'])}</p>")
+    elif visualization and visualization.get('visualization_summary'):
+        summary_parts.append(f"<p>{escape_html(visualization['visualization_summary'])}</p>")
+    else:
+        summary_parts.append("<p>The analysis has produced a clear, actionable view of the dataset and surfaced the strongest patterns for review.</p>")
+    summary_parts.append("</div>")
+
     return "\n".join(summary_parts)
 
 @app.get('/api/history')
@@ -187,10 +187,8 @@ async def get_run_details(run_id: str):
             'id': run_id,
             'query': state.get('user_query'),
             'stage': state.get('current_stage'),
-            'logs': state.get('logs', []),
             'plots': plots,
             'summary_html': generate_human_readable_summary(state),
-            'state': state
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f'Error reading run details: {str(e)}')
@@ -252,15 +250,17 @@ async def run_pipeline(request: QueryRequest):
         for path in plot_paths:
             name = os.path.basename(path)
             plots.append(f'/storage/plots/{name}')
-        return {
+        response_payload = {
             'id': run_id,
             'query': query,
             'stage': state.get('current_stage'),
-            'logs': state.get('logs', []),
             'plots': plots,
             'summary_html': generate_human_readable_summary(state),
-            'state': state
         }
+        dashboard_path = state.get('artifact_paths', {}).get('dashboard_html_path')
+        if dashboard_path:
+            response_payload['dashboard_url'] = f"/storage/dashboards/{os.path.basename(dashboard_path)}"
+        return response_payload
     except HTTPException:
         raise
     except Exception as e:

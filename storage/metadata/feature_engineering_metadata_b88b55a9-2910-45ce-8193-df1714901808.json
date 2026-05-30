@@ -1,0 +1,17 @@
+{
+  "input_dataframe_path": "storage\\cleaned_data\\cleaned_07cf1075-3f95-40e9-803e-22fef25a0c4e.csv",
+  "engineered_dataframe_path": "storage\\eda_data\\engineered_data_07f59904-279c-4cc7-88b4-d230dcd1fe23.csv",
+  "profile_path": "storage\\profiles\\profile_3d2a5505-db1a-4f9b-9f98-68a5ee4e32a9.json",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_07cf1075-3f95-40e9-803e-22fef25a0c4e.csv",
+    "[LOAD] DataFrame loaded successfully. Shape: 21 rows x 7 cols. Numeric features detected: ['heading_count', 'link_count', 'table_count']",
+    "Initial dataset profile created.",
+    "Skewness correction applied to numeric features.",
+    "Numeric features standardized using z-score scaling.",
+    "Date and temporal feature expansion complete. New fields added: ['url_year', 'html_source_year', 'html_source_month', 'html_source_day', 'paragraph_day', 'title_day', 'paragraph_year', 'url_month', 'title_year', 'title_month', 'paragraph_month', 'url_day'].",
+    "Transformed dataset exported with final shape 21 rows x 19 columns."
+  ],
+  "quality_report": null,
+  "analysis_summary": "Numeric features were normalized and skewed distributions were corrected. Temporal values were expanded into derived date components, yielding 12 new engineered fields."
+}

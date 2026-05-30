@@ -21,6 +21,8 @@ class VisualisationState(BaseModel):
     input_dataframe_path: str
     dashboard_html_path: Optional[str] = None
     generated_plots: List[str] = Field(default_factory=list)
+    chart_explanations: List[Dict[str, Any]] = Field(default_factory=list)
+    visualization_summary: Optional[str] = None
     metadata_path: Optional[str] = None
     logs: List[str] = Field(default_factory=list)
 
@@ -52,59 +54,150 @@ def _sanitize_for_json(obj: Any) -> Any:
 
 def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
     state = VisualisationState(input_dataframe_path=csv_path)
-    state.logs.append(f"[INIT] Started visualization generation for: {csv_path}")
-    
+    state.logs.append("[INIT] Started visualization generation.")
+
     try:
         df = pd.read_csv(csv_path)
     except Exception as e:
-        state.logs.append(f"[ERROR] Failed to read file: {str(e)}")
+        state.logs.append(f"[ERROR] Failed to read dataset: {str(e)}")
+        state.visualization_summary = "No visualizations were generated because the dataset could not be loaded."
         return state
 
-    numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
-    categorical_cols = df.select_dtypes(include=['object', 'category']).columns.tolist()
-    
-    html_components = []
-    
-    # 1. Tableau-Style Summary Cards (KPIs)
-    kpi_html = "<div style='display: flex; gap: 20px; margin-bottom: 30px;'>"
-    kpi_html += f"<div style='flex: 1; background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);'><strong>Total Rows</strong><h2 style='margin: 10px 0 0 0; color: #2c3e50;'>{df.shape[0]}</h2></div>"
-    kpi_html += f"<div style='flex: 1; background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);'><strong>Total Features</strong><h2 style='margin: 10px 0 0 0; color: #2c3e50;'>{df.shape[1]}</h2></div>"
-    kpi_html += f"<div style='flex: 1; background: #f8f9fa; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);'><strong>Numeric Columns</strong><h2 style='margin: 10px 0 0 0; color: #2c3e50;'>{len(numeric_cols)}</h2></div>"
-    kpi_html += "</div>"
-    html_components.append(kpi_html)
+    if df.empty:
+        state.logs.append("[INFO] Dataset contains no rows. Skipping visualization generation.")
+        state.visualization_summary = "The dataset was empty, so no analytical visualizations could be produced."
+        return state
 
-    # 2. Distribution Plots (Histograms for numeric data)
-    if numeric_cols:
-        for col in numeric_cols[:3]: # Limit to top 3 to keep dashboard performant
-            fig = px.histogram(df, x=col, title=f"Distribution of {col}", 
-                               template="plotly_white", color_discrete_sequence=['#4682B4'])
-            fig.update_layout(height=350, margin=dict(l=20, r=20, t=40, b=20))
-            html_components.append(pio.to_html(fig, full_html=False, include_plotlyjs='cdn' if not html_components else False))
-            state.generated_plots.append(f"Histogram: {col}")
-            state.logs.append(f"[PLOT] Generated distribution plot for {col}")
+    def meaningful_numeric(col: str) -> bool:
+        values = df[col].dropna()
+        return len(values) >= 10 and values.nunique() > 4
 
-    # 3. Relationship Plots (Scatter Matrix / Correlation heatmap placeholder)
+    def meaningful_categorical(col: str) -> bool:
+        values = df[col].dropna()
+        return len(values) >= 10 and 1 < values.nunique() <= 40
+
+    def meaningful_datetime(col: str) -> bool:
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
+            return df[col].dropna().nunique() > 1 and len(df[col].dropna()) >= 10
+        converted = pd.to_datetime(df[col], errors='coerce')
+        return converted.notna().sum() >= 10 and converted.nunique() > 1
+
+    numeric_cols = [col for col in df.select_dtypes(include=['number']).columns if meaningful_numeric(col)]
+    categorical_cols = [col for col in df.select_dtypes(include=['object', 'category']).columns if meaningful_categorical(col)]
+    datetime_cols = [col for col in df.columns if meaningful_datetime(col)]
+
+    plot_html = []
+    html_components: List[str] = []
+    chart_candidates: List[Dict[str, Any]] = []
+
+    if datetime_cols and numeric_cols:
+        date_col = datetime_cols[0]
+        value_col = numeric_cols[0]
+        chart_candidates.append({
+            'type': 'trend',
+            'columns': [date_col, value_col],
+            'title': f'Trend over time: {value_col} by {date_col}',
+            'reason': 'Time series data exists alongside a numeric measure, making a trend line meaningful.',
+            'insight': f'This chart shows how {value_col} evolves over time and highlights any directionally consistent patterns or seasonality.'
+        })
+
+    for col in numeric_cols:
+        chart_candidates.append({
+            'type': 'histogram',
+            'columns': [col],
+            'title': f'Distribution of {col}',
+            'reason': 'Numeric feature with sufficient samples and variance.',
+            'insight': f'This histogram reveals the shape of {col}, including skew, central tendency, and whether values are concentrated in one range.'
+        })
+        if df[col].dropna().nunique() > 10:
+            chart_candidates.append({
+                'type': 'boxplot',
+                'columns': [col],
+                'title': f'Boxplot for {col}',
+                'reason': 'Numeric feature with enough data for outlier and spread evaluation.',
+                'insight': f'This boxplot exposes outliers, variability, and whether the central values are tightly clustered.'
+            })
+
     if len(numeric_cols) >= 2:
-        fig = px.scatter(df, x=numeric_cols[0], y=numeric_cols[1], 
-                         title=f"Relationship: {numeric_cols[0]} vs {numeric_cols[1]}",
-                         template="plotly_white", color_discrete_sequence=['#E67E22'])
-        fig.update_layout(height=400)
-        html_components.append(pio.to_html(fig, full_html=False, include_plotlyjs=False))
-        state.generated_plots.append(f"Scatter: {numeric_cols[0]} vs {numeric_cols[1]}")
-        state.logs.append(f"[PLOT] Generated scatter plot matrix sample")
+        chart_candidates.append({
+            'type': 'scatter',
+            'columns': [numeric_cols[0], numeric_cols[1]],
+            'title': f'Relationship between {numeric_cols[0]} and {numeric_cols[1]}',
+            'reason': 'Two meaningful numeric variables exist, allowing relational analysis.',
+            'insight': f'This scatter plot helps identify correlation or groupings between {numeric_cols[0]} and {numeric_cols[1]}. '
+        })
 
-    # 4. Categorical Breakdown (Bar Charts)
-    if categorical_cols:
-        for col in categorical_cols[:2]:
-            counts = df[col].value_counts().reset_index().head(10)
-            fig = px.bar(counts, x=col, y='count', title=f"Top Categorical Breakdowns: {col}",
-                         template="plotly_white", color_discrete_sequence=['#2ECC71'])
-            fig.update_layout(height=350)
-            html_components.append(pio.to_html(fig, full_html=False, include_plotlyjs=False))
-            state.generated_plots.append(f"Bar Chart: {col}")
-            state.logs.append(f"[PLOT] Generated categorical distribution for {col}")
+    if len(numeric_cols) >= 3:
+        chart_candidates.append({
+            'type': 'heatmap',
+            'columns': numeric_cols[:4],
+            'title': 'Correlation heatmap for numeric features',
+            'reason': 'Multiple numeric variables are available, making correlation analysis valuable.',
+            'insight': 'This heatmap summarizes the strength of relationships among the strongest numeric features.'
+        })
 
-    # Construct the Final Tableau-style HTML Canvas
+    for col in categorical_cols:
+        if df[col].dropna().nunique() <= 20:
+            chart_candidates.append({
+                'type': 'bar',
+                'columns': [col],
+                'title': f'Frequency of {col}',
+                'reason': 'Categorical column with a manageable number of levels and sufficient observations.',
+                'insight': f'This bar chart highlights the most common values in {col} and reveals potential dominance or imbalance.'
+            })
+
+    if not chart_candidates:
+        state.visualization_summary = 'No meaningful visualizations could be generated because the dataset lacks numeric or categorical features with sufficient samples.'
+        state.logs.append('[INFO] No visualizations generated due to insufficient analytical signal.')
+    else:
+        for chart in chart_candidates:
+            try:
+                if chart['type'] == 'trend':
+                    series = pd.to_datetime(df[chart['columns'][0]], errors='coerce')
+                    plot_df = pd.DataFrame({
+                        chart['columns'][0]: series,
+                        chart['columns'][1]: df[chart['columns'][1]]
+                    }).dropna()
+                    if len(plot_df) < 10:
+                        continue
+                    fig = px.line(plot_df.sort_values(chart['columns'][0]), x=chart['columns'][0], y=chart['columns'][1], title=chart['title'], template='plotly_white')
+                elif chart['type'] == 'histogram':
+                    fig = px.histogram(df, x=chart['columns'][0], title=chart['title'], template='plotly_white', color_discrete_sequence=['#4682B4'])
+                elif chart['type'] == 'boxplot':
+                    fig = px.box(df, y=chart['columns'][0], title=chart['title'], template='plotly_white', color_discrete_sequence=['#5B84B1'])
+                elif chart['type'] == 'scatter':
+                    fig = px.scatter(df, x=chart['columns'][0], y=chart['columns'][1], title=chart['title'], template='plotly_white', color_discrete_sequence=['#E67E22'])
+                elif chart['type'] == 'heatmap':
+                    corr = df[chart['columns']].corr()
+                    fig = px.imshow(corr, text_auto=True, title=chart['title'], color_continuous_scale='RdBu_r')
+                else:
+                    continue
+
+                fig.update_layout(height=380, margin=dict(l=20, r=20, t=40, b=20))
+                if chart['type'] == 'heatmap':
+                    fig.update_xaxes(tickangle=45)
+                plot_html.append(pio.to_html(fig, full_html=False, include_plotlyjs='cdn' if not plot_html else False))
+                state.generated_plots.append(chart['title'])
+                state.chart_explanations.append({
+                    'chart_title': chart['title'],
+                    'reason': chart['reason'],
+                    'insight': chart['insight']
+                })
+                state.logs.append(f"[PLOT] Generated {chart['type']} chart for {', '.join(chart['columns'])}.")
+            except Exception as exc:
+                state.logs.append(f"[WARN] Skipped chart {chart['title']} due to: {exc}")
+
+        if plot_html:
+            state.visualization_summary = f"Created {len(plot_html)} meaningful visualization(s) based on dataset structure and analytical value."
+        else:
+            state.visualization_summary = 'No meaningful visualizations were created because the dataset did not meet the insight thresholds.'
+            state.logs.append('[INFO] No charts retained after relevance filtering.')
+
+    if plot_html:
+        html_components.extend(plot_html)
+
+    state.visualization_summary = state.visualization_summary or 'Visualization generation completed with a neutral insight profile.'
+
     dashboard_html = f"""
     <!DOCTYPE html>
     <html>
@@ -125,23 +218,22 @@ def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
             <header>
                 <h1>BI Dashboard Engine</h1>
                 <p class="subtitle">Automated visual discovery profile for dataset: <code>{os.path.basename(csv_path)}</code></p>
+                <p>{state.visualization_summary}</p>
             </header>
-            
-            {html_components[0]} <div class="grid">
-                {"".join([f'<div class="card">{chart}</div>' for chart in html_components[1:]])}
+            <div class="grid">
+                {"".join([f'<div class="card">{chart}</div>' for chart in html_components])}
             </div>
         </div>
     </body>
     </html>
     """
-    
+
     output_html_path = _unique_path(DASHBOARD_DIR, "tableau_dashboard", "html")
     with open(output_html_path, "w", encoding="utf-8") as f:
         f.write(dashboard_html)
-        
+
     state.dashboard_html_path = output_html_path
-    state.logs.append(f"[PERSIST] Interactive Tableau-like dashboard compiled and saved to: {output_html_path}")
-    
+    state.logs.append("Interactive dashboard compiled and persisted.")
     state.metadata_path = save_visual_metadata(state)
     return state
 

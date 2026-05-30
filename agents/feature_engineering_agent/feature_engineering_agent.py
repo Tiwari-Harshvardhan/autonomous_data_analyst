@@ -44,6 +44,7 @@ class FeatureEngineeringState(BaseModel):
     metadata_path: Optional[str] = None
     logs: List[str] = Field(default_factory=list)
     quality_report: Optional[Dict[str, Any]] = None
+    analysis_summary: Optional[str] = None
 
 def _unique_path(directory: str, prefix: str, extension: str) -> str:
     return os.path.join(directory, f"{prefix}_{uuid.uuid4()}.{extension}")
@@ -118,31 +119,34 @@ def execute_feature_engineering(csv_path: str) -> FeatureEngineeringState:
         "missing_values": df.isnull().sum().to_dict()
     }
     state.profile_path = save_profile(profile_data)
-    state.logs.append(f"[PROFILE] Initial data structure profiled and written to disk: {state.profile_path}")
+    state.logs.append("Initial dataset profile created.")
 
     # Capture original skew metrics for deep logging
     pre_skew = {col: float(df[col].skew()) for col in numeric_cols}
     df = correct_skewness(df)
     post_skew = {col: float(df[col].skew()) for col in numeric_cols}
-    state.logs.append(f"[SKEW] Variance correction applied. Pre-skewness: {pre_skew} -> Post-skewness: {post_skew}")
+    state.logs.append("Skewness correction applied to numeric features.")
 
     df = feature_scaling(df)
-    state.logs.append(f"[SCALE] Standardization (Z-Score) applied to numerical fields: {numeric_cols}")
+    state.logs.append("Numeric features standardized using z-score scaling.")
 
     initial_cols = set(df.columns)
     df = process_date_columns(df)
     new_cols = list(set(df.columns) - initial_cols)
-    state.logs.append(f"[DATETIME] Evaluated feature types. Generated engineering sub-components: {new_cols if new_cols else 'None discovered'}")
+    state.logs.append(f"Date and temporal feature expansion complete. New fields added: {new_cols if new_cols else 'None'}.")
 
     output_csv_path = _unique_path(FEATURED_DATA_DIR, "engineered_data", "csv")
     df.to_csv(output_csv_path, index=False, encoding="utf-8")
     state.engineered_dataframe_path = output_csv_path
-    state.logs.append(f"[PERSIST] Transformed dataset saved. Final distribution shape: {df.shape[0]} rows x {df.shape[1]} cols. Destination path: {output_csv_path}")
+    state.logs.append(f"Transformed dataset exported with final shape {df.shape[0]} rows x {df.shape[1]} columns.")
 
+    state.analysis_summary = (
+        "Numeric features were normalized and skewed distributions were corrected. "
+        f"Temporal values were expanded into derived date components, yielding {len(new_cols)} new engineered fields."
+    )
     state.metadata_path = save_metadata(state)
-    state.logs.append(f"[METADATA] Run trace and logs cataloged successfully at: {state.metadata_path}")
+    state.logs.append("Feature engineering metadata saved.")
 
-    print(f"Feature engineering complete. Artifacts saved to '{BASE_STORAGE_DIR}'")
     return state
 
 def run_feature_engineering_on_csv(csv_path: str) -> dict:

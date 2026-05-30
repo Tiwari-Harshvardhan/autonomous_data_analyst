@@ -52,6 +52,7 @@ class EDAState(BaseModel):
     metadata_path: Optional[str] = None
     logs: List[str] = Field(default_factory=list)
     quality_report: Optional[Dict[str, Any]] = None
+    analysis_summary: Optional[str] = None
 
 
 def _unique_path(directory: str, prefix: str, extension: str) -> str:
@@ -79,6 +80,66 @@ def _save_figure(prefix: str) -> str:
     plt.close()
     return path
 
+
+def summarize_data_insights(df: pd.DataFrame, profile: Dict[str, Any]) -> str:
+    rows = profile.get("rows", 0)
+    columns = profile.get("columns", 0)
+    numeric_count = int(df.select_dtypes(include=[np.number]).shape[1])
+    categorical_count = int(df.select_dtypes(include=["object", "category"]).shape[1])
+
+    summary_parts = [
+        f"The dataset contains {rows} rows and {columns} columns.",
+        f"There are {numeric_count} numeric features and {categorical_count} categorical features.",
+    ]
+
+    duplicates = profile.get("duplicates", 0)
+    if duplicates:
+        summary_parts.append(f"The data includes {duplicates} duplicate rows that were identified.")
+
+    missing_pct = {k: v for k, v in profile.get("missing_pct", {}).items() if v and v > 0}
+    if missing_pct:
+        top_missing = sorted(missing_pct.items(), key=lambda x: x[1], reverse=True)[:3]
+        missing_text = ", ".join(f"{col}: {round(pct, 1)}%" for col, pct in top_missing)
+        summary_parts.append(f"Missing data is most pronounced in: {missing_text}.")
+    else:
+        summary_parts.append("Missing values are minimal after the initial data quality pass.")
+
+    skewness = profile.get("skewness") or {}
+    if skewness:
+        skewed_cols = [f"{col} ({meta['direction']})" for col, meta in skewness.items()]
+        summary_parts.append(f"Detected skewed numeric distributions in: {', '.join(skewed_cols)}.")
+    else:
+        summary_parts.append("Numeric distributions are generally well-centered without strong skew.")
+
+    category_highlights = []
+    for col in df.select_dtypes(include=["object", "category"]).columns.tolist():
+        counts = df[col].dropna().value_counts(normalize=True)
+        if not counts.empty:
+            top = counts.index[0]
+            top_pct = round(counts.iloc[0] * 100, 1)
+            category_highlights.append(f"{col} is dominated by '{top}' at {top_pct}%.")
+    if category_highlights:
+        summary_parts.append(" ".join(category_highlights[:3]))
+
+    anomalies = {}
+    numeric_df = df.select_dtypes(include=[np.number])
+    for col in numeric_df.columns:
+        col_data = numeric_df[col].dropna()
+        if len(col_data) < 10:
+            continue
+        q1 = col_data.quantile(0.25)
+        q3 = col_data.quantile(0.75)
+        iqr = q3 - q1
+        lower = q1 - 1.5 * iqr
+        upper = q3 + 1.5 * iqr
+        count = int(((col_data < lower) | (col_data > upper)).sum())
+        if count > 0:
+            anomalies[col] = count
+    if anomalies:
+        anomaly_cols = sorted(anomalies.items(), key=lambda x: x[1], reverse=True)[:3]
+        summary_parts.append("Outlier counts were notable in: " + ", ".join(f"{col} ({count})" for col, count in anomaly_cols) + ".")
+
+    return " ".join(summary_parts)
 
 
 def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
@@ -282,52 +343,51 @@ def execute_eda(csv_path: str) -> EDAState:
     disk, and returns the populated EDAState.
     """
     state = EDAState(input_dataframe_path=csv_path)
-    state.logs.append(f"Loading data from: {csv_path}")
+    state.logs.append("Loading cleaned dataset for exploratory analysis.")
 
     df = pd.read_csv(csv_path, encoding="utf-8")
-    state.logs.append(f"Loaded DataFrame: {df.shape[0]} rows x {df.shape[1]} cols")
+    state.logs.append(f"Loaded DataFrame with {df.shape[0]} rows and {df.shape[1]} columns.")
 
     # profile
     profile = profile_dataframe(df)
     profile['skewness'] = skewness_detector(df)
     state.profile_path = save_profile(profile)
     state.quality_report = profile
-    state.logs.append(f"Profile saved: {state.profile_path}")
+    state.logs.append("Data profile generated.")
 
-    # descriptive stats 
+    # summarise insights
+    state.analysis_summary = summarize_data_insights(df, profile)
+    state.logs.append("High-level insight summary assembled.")
+
+    # descriptive stats
     stats = descriptive_statistics(df)
-    state.logs.append(f"Descriptive stats computed for {len(stats)} column groups")
+    state.logs.append(f"Descriptive statistics computed for {len(stats)} column groups.")
 
     # visualisations
     plot_paths = visualisation_tool(df)
     state.plot_paths = plot_paths
-    state.logs.append(f"Saved {len(plot_paths)} plot(s) to {PLOT_DIR}")
+    state.logs.append(f"Generated {len(plot_paths)} exploratory figures.")
 
     # outliers
     outliers = outlier_detector(df)
-    state.logs.append(f"Outlier detection complete: {len(outliers)} column(s) checked")
+    state.logs.append(f"Outlier detection completed across numeric columns.")
 
     # skewness
     skew = skewness_detector(df)
-    state.logs.append(f"Skewed columns (|skew|>0.5): {list(skew.keys())}")
+    state.logs.append(f"Identified skewed numeric columns: {list(skew.keys())}.")
 
     # categorical analysis
     cat_analysis = categorical_column_analysis(df)
     cat_nulls = categorical_missing(df)
-    state.logs.append("Categorical analysis complete")
+    state.logs.append("Categorical analysis completed.")
 
     # bivariate
     bivariate = bivariate_analysis(df)
-    state.logs.append(f"Bivariate analysis complete: {len(bivariate)} pair(s)")
+    state.logs.append(f"Bivariate analysis completed: {len(bivariate)} pair(s) evaluated.")
 
     # Persist full metadata
     state.metadata_path = save_metadata(state)
-    state.logs.append(f"Metadata saved: {state.metadata_path}")
-
-    print(f"\nEDA complete. Artifacts saved to '{BASE_STORAGE_DIR}/'")
-    print(f"  Profile  : {state.profile_path}")
-    print(f"  Plots    : {len(state.plot_paths)} file(s) in {PLOT_DIR}")
-    print(f"  Metadata : {state.metadata_path}")
+    state.logs.append("EDA metadata saved.")
 
     return state
 

@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://books.toscrape.com/",
+    "scraping_mode": "static",
+    "title": "All products | Books to Scrape - Sandbox",
+    "extracted_text": "\nÂ£51.77\nIn stock\n\nÂ£53.74\nIn stock\n\nÂ£50.10\nIn stock\n\nÂ£47.82\nIn stock\n\nÂ£54.23\nIn stock\n\nÂ£22.65\nIn stock\n\nÂ£33.34\nIn stock\n\nÂ£17.93\nIn stock\n\nÂ£22.60\nIn stock\n\nÂ£52.15\nIn stock\n\nÂ£13.99\nIn stock\n\nÂ£20.66\nIn stock\n\nÂ£17.46\nIn stock\n\nÂ£52.29\nIn stock\n\nÂ£35.02\nIn stock\n\nÂ£57.25\nIn stock\n\nÂ£23.88\nIn stock\n\nÂ£37.59\nIn stock\n\nÂ£51.33\nIn stock\n\nÂ£45.17\nIn stock",
+    "html_path": "storage\\raw_html\\0c645c13-d5a2-425d-9f00-ac566ac7816b.html",
+    "screenshot_path": null,
+    "metadata_path": "storage\\metadata\\d8a413ee-d0f4-4f5c-aa52-30b1dbaff259.json",
+    "success": true,
+    "error": null
+  }
+]
