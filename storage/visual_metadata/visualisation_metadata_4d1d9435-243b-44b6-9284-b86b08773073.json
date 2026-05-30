@@ -1,0 +1,19 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+  "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_57d695aa-68fe-4aa2-ac05-b37aad001d83.html",
+  "generated_plots": [
+    "Histogram: url",
+    "Histogram: title",
+    "Histogram: paragraph",
+    "Scatter: url vs title"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started visualization generation for: storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+    "[PLOT] Generated distribution plot for url",
+    "[PLOT] Generated distribution plot for title",
+    "[PLOT] Generated distribution plot for paragraph",
+    "[PLOT] Generated scatter plot matrix sample",
+    "[PERSIST] Interactive Tableau-like dashboard compiled and saved to: storage\\dashboards\\tableau_dashboard_57d695aa-68fe-4aa2-ac05-b37aad001d83.html"
+  ]
+}

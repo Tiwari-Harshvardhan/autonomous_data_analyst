@@ -24,6 +24,27 @@ for d in (EDA_DATA_DIR, PROFILE_DIR, METADATA_DIR, PLOT_DIR, LOG_DIR):
     os.makedirs(d, exist_ok=True)
 
 
+def _sanitize_for_json(obj: Any) -> Any:
+    """
+    Recursively converts NaN, Inf, and other non-JSON-serializable values to None.
+    This prevents JSON serialization errors when calling the Google API.
+    """
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if np.isnan(obj) or np.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, np.number):
+        val = float(obj)
+        if np.isnan(val) or np.isinf(val):
+            return None
+        return float(obj)
+    return obj
+
+
 class EDAState(BaseModel):
     input_dataframe_path: str
     profile_path: Optional[str] = None
@@ -40,14 +61,14 @@ def _unique_path(directory: str, prefix: str, extension: str) -> str:
 def save_profile(profile: Dict[str, Any]) -> str:
     path = _unique_path(PROFILE_DIR, "profile", "json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(profile, f, indent=2, ensure_ascii=False)
+        json.dump(_sanitize_for_json(profile), f, indent=2, ensure_ascii=False)
     return path
 
 
 def save_metadata(state: EDAState) -> str:
     path = _unique_path(METADATA_DIR, "eda_metadata", "json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(state.model_dump(), f, indent=2, ensure_ascii=False)
+        json.dump(_sanitize_for_json(state.model_dump()), f, indent=2, ensure_ascii=False)
     return path
 
 
@@ -65,7 +86,7 @@ def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
     Returns a data quality snapshot: shape, missing values, duplicates,
     dtypes, and numeric summary statistics.
     """
-    return {
+    result = {
         "rows": len(df),
         "columns": len(df.columns),
         "missing_values": df.isnull().sum().to_dict(),
@@ -78,6 +99,7 @@ def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
             else {}
         ),
     }
+    return _sanitize_for_json(result)
 
 
 def descriptive_statistics(df: pd.DataFrame) -> Dict[str, Any]:
@@ -94,7 +116,7 @@ def descriptive_statistics(df: pd.DataFrame) -> Dict[str, Any]:
     if not categorical.empty:
         result["categorical"] = categorical.describe().to_dict()
 
-    return result
+    return _sanitize_for_json(result)
 
 
 def visualisation_tool(df: pd.DataFrame) -> List[str]:
@@ -159,7 +181,7 @@ def outlier_detector(df: pd.DataFrame) -> Dict[str, Any]:
             "upper_bound": round(upper, 4),
         }
 
-    return report
+    return _sanitize_for_json(report)
 
 
 def skewness_detector(df: pd.DataFrame) -> Dict[str, Any]:
@@ -174,13 +196,13 @@ def skewness_detector(df: pd.DataFrame) -> Dict[str, Any]:
     report: Dict[str, Any] = {}
     for col in numeric_df.columns:
         skew = numeric_df[col].skew()
-        if abs(skew) > 0.5:
+        if not np.isnan(skew) and abs(skew) > 0.5:
             report[col] = {
                 "skewness": round(skew, 4),
                 "direction": "positive" if skew > 0 else "negative",
             }
 
-    return report
+    return _sanitize_for_json(report)
 
 
 def categorical_column_analysis(df: pd.DataFrame) -> Dict[str, Any]:
@@ -251,7 +273,7 @@ def bivariate_analysis(df: pd.DataFrame) -> Dict[str, Any]:
             ct = pd.crosstab(df[col1], df[col2]).to_dict()
             report[key] = {"type": "cat-cat", "contingency_table": ct}
 
-    return report
+    return _sanitize_for_json(report)
 
 
 def execute_eda(csv_path: str) -> EDAState:
@@ -313,7 +335,7 @@ def execute_eda(csv_path: str) -> EDAState:
 def run_eda_on_csv(csv_path: str) -> dict:
     """ADK-compatible tool. Runs the full EDA pipeline and returns the state."""
     state = execute_eda(csv_path)
-    return state.model_dump()
+    return _sanitize_for_json(state.model_dump())
 
 
 eda_agent = Agent(

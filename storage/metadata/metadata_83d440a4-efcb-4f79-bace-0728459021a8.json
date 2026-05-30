@@ -1,0 +1,29 @@
+{
+  "user_query": "scrape data from https://books.toscrape.com/",
+  "source_urls": [
+    "https://books.toscrape.com/"
+  ],
+  "raw_data_path": "storage\\raw\\raw_data_dcaa625c-0152-4f5e-b218-c0a201d781b8.json",
+  "metadata_path": null,
+  "logs": [
+    "Started data collection workflow",
+    "Extracted URL(s) from query: ['https://books.toscrape.com/']",
+    "Discovered 1 URLs",
+    "Completed web scraping",
+    "Raw data saved: storage\\raw\\raw_data_dcaa625c-0152-4f5e-b218-c0a201d781b8.json"
+  ],
+  "current_stage": "data_collection",
+  "raw_data_preview": [
+    {
+      "url": "https://books.toscrape.com/",
+      "scraping_mode": "static",
+      "title": "All products | Books to Scrape - Sandbox",
+      "extracted_text": "\nÂ£51.77\nIn stock\n\nÂ£53.74\nIn stock\n\nÂ£50.10\nIn stock\n\nÂ£47.82\nIn stock\n\nÂ£54.23\nIn stock\n\nÂ£22.65\nIn stock\n\nÂ£33.34\nIn stock\n\nÂ£17.93\nIn stock\n\nÂ£22.60\nIn stock\n\nÂ£52.15\nIn stock\n\nÂ£13.99\nIn stock\n\nÂ£20.66\nIn stock\n\nÂ£17.46\nIn stock\n\nÂ£52.29\nIn stock\n\nÂ£35.02\nIn stock\n\nÂ£57.25\nIn stock\n\nÂ£23.88\nIn stock\n\nÂ£37.59\nIn stock\n\nÂ£51.33\nIn stock\n\nÂ£45.17\nIn stock",
+      "html_path": "storage\\raw_html\\a3565688-8c7a-4f1b-b0d8-dc6f355d7425.html",
+      "screenshot_path": null,
+      "metadata_path": "storage\\metadata\\3d65373f-8f25-487a-a4b8-597710ce9e42.json",
+      "success": true,
+      "error": null
+    }
+  ]
+}

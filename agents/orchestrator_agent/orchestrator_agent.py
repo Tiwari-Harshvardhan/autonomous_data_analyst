@@ -1,6 +1,8 @@
 import asyncio
+import concurrent.futures
 import json
 import os
+import threading
 import uuid
 from typing import Any, Dict, List, Optional
 
@@ -61,8 +63,39 @@ def _extract_html_paths_from_raw_data(raw_data_path: str) -> (List[str], Dict[st
     return html_paths, url_map
 
 
+def _sanitize_for_json(obj: Any) -> Any:
+    """Recursively convert NaN/Inf values to None for strict JSON."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if obj != obj or obj == float('inf') or obj == float('-inf'):
+            return None
+        return obj
+    elif isinstance(obj, (int, str, bool)) or obj is None:
+        return obj
+    elif hasattr(obj, 'tolist'):
+        return _sanitize_for_json(obj.tolist())
+    return str(obj)
+
+
 def _run_async(coro: Any) -> Any:
-    return asyncio.run(coro)
+    """
+    Run an async coroutine, handling both fresh and existing event loops.
+    """
+    try:
+        # Try to get the currently running event loop
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        # No running loop, so we can use asyncio.run()
+        return asyncio.run(coro)
+    else:
+        # Loop is already running, create a task instead
+        # Run in a new thread to avoid "running in running loop" error
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            future = pool.submit(asyncio.run, coro)
+            return future.result()
 
 
 def plan_data_pipeline(user_query: str, start_from_csv_path: Optional[str] = None) -> dict:
@@ -186,12 +219,13 @@ def orchestrate_full_pipeline(user_query: str, start_from_csv_path: Optional[str
     state.add_log("Full pipeline execution finished.")
 
     metadata_path = os.path.join(PIPELINE_METADATA_DIR, f"orchestrator_state_{os.path.basename(str(uuid.uuid4()))}.json")
+    sanitized_state = _sanitize_for_json(state.model_dump())
     with open(metadata_path, "w", encoding="utf-8") as f:
-        json.dump(state.model_dump(), f, indent=2, ensure_ascii=False)
+        json.dump(sanitized_state, f, indent=2, ensure_ascii=False)
     state.add_log(f"Orchestration metadata saved: {metadata_path}")
     state.artifact_paths["orchestration_metadata_path"] = metadata_path
 
-    return state.model_dump()
+    return sanitized_state
 
 
 orchestrator_agent = Agent(
@@ -233,5 +267,5 @@ if __name__ == "__main__":
         user_query="Collect, clean, analyze, and visualize web-based machine learning content",
         start_from_csv_path=None,
     )
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2, ensure_ascii=False, allow_nan=False))
 

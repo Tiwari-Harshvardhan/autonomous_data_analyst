@@ -1,0 +1,16 @@
+{
+  "input_dataframe_path": "storage\\cleaned_data\\cleaned_d8a53236-f18d-44c6-8495-d3fa304f1021.csv",
+  "engineered_dataframe_path": "storage\\eda_data\\engineered_data_7e85e2d3-a173-44c1-8227-02dd065b1d85.csv",
+  "profile_path": "storage\\profiles\\profile_88e6d114-e9c0-43d3-8c74-eec342f3e813.json",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_d8a53236-f18d-44c6-8495-d3fa304f1021.csv",
+    "[LOAD] DataFrame loaded successfully. Shape: 2 rows x 7 cols. Numeric features detected: ['heading_count', 'link_count', 'table_count']",
+    "[PROFILE] Initial data structure profiled and written to disk: storage\\profiles\\profile_88e6d114-e9c0-43d3-8c74-eec342f3e813.json",
+    "[SKEW] Variance correction applied. Pre-skewness: {'heading_count': nan, 'link_count': nan, 'table_count': nan} -> Post-skewness: {'heading_count': nan, 'link_count': nan, 'table_count': nan}",
+    "[SCALE] Standardization (Z-Score) applied to numerical fields: ['heading_count', 'link_count', 'table_count']",
+    "[DATETIME] Evaluated feature types. Generated engineering sub-components: ['paragraph_month', 'url_day', 'html_source_year', 'html_source_day', 'title_month', 'title_day', 'paragraph_year', 'url_year', 'paragraph_day', 'title_year', 'url_month', 'html_source_month']",
+    "[PERSIST] Transformed dataset saved. Final distribution shape: 2 rows x 19 cols. Destination path: storage\\eda_data\\engineered_data_7e85e2d3-a173-44c1-8227-02dd065b1d85.csv"
+  ],
+  "quality_report": null
+}

@@ -1,0 +1,29 @@
+{
+  "user_query": "scrape https://example.com",
+  "source_urls": [
+    "https://example.com"
+  ],
+  "raw_data_path": "storage\\raw\\raw_data_8ea98706-ae84-4745-9d84-160e54acd6f5.json",
+  "metadata_path": null,
+  "logs": [
+    "Started data collection workflow",
+    "Extracted URL(s) from query: ['https://example.com']",
+    "Discovered 1 URLs",
+    "Completed web scraping",
+    "Raw data saved: storage\\raw\\raw_data_8ea98706-ae84-4745-9d84-160e54acd6f5.json"
+  ],
+  "current_stage": "data_collection",
+  "raw_data_preview": [
+    {
+      "url": "https://example.com",
+      "scraping_mode": "dynamic",
+      "title": "Example Domain",
+      "extracted_text": "This domain is for use in documentation examples without needing permission. Avoid use in operations.\nLearn more",
+      "html_path": "storage\\raw_html\\8735d465-771c-410f-9a2d-2aa09b070c46.html",
+      "screenshot_path": "storage\\screenshots\\eea7c01c-8184-46c9-85d0-05aae32b44e5.png",
+      "metadata_path": "storage\\metadata\\a05b0046-dc1a-4e6a-ac9c-bc7217227eb8.json",
+      "success": true,
+      "error": null
+    }
+  ]
+}

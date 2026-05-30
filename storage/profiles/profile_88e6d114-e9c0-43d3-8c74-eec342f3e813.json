@@ -1,0 +1,24 @@
+{
+  "shape": [
+    2,
+    7
+  ],
+  "columns": [
+    "url",
+    "title",
+    "paragraph",
+    "heading_count",
+    "link_count",
+    "table_count",
+    "html_source"
+  ],
+  "missing_values": {
+    "url": 0,
+    "title": 0,
+    "paragraph": 0,
+    "heading_count": 0,
+    "link_count": 0,
+    "table_count": 0,
+    "html_source": 0
+  }
+}

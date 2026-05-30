@@ -1,0 +1,13 @@
+[
+  {
+    "url": "https://example.com",
+    "scraping_mode": "dynamic",
+    "title": "Example Domain",
+    "extracted_text": "This domain is for use in documentation examples without needing permission. Avoid use in operations.\nLearn more",
+    "html_path": "storage\\raw_html\\8735d465-771c-410f-9a2d-2aa09b070c46.html",
+    "screenshot_path": "storage\\screenshots\\eea7c01c-8184-46c9-85d0-05aae32b44e5.png",
+    "metadata_path": "storage\\metadata\\a05b0046-dc1a-4e6a-ac9c-bc7217227eb8.json",
+    "success": true,
+    "error": null
+  }
+]

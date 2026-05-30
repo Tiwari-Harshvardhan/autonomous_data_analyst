@@ -4,11 +4,46 @@ import json
 import uuid
 import asyncio
 import subprocess
+import traceback
+import numpy as np
 from pathlib import Path
 from typing import Dict, Any
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+
+
+class SafeJSONEncoder(json.JSONEncoder):
+    """Custom JSON encoder that converts NaN and Inf to null."""
+    def encode(self, o):
+        if isinstance(o, float):
+            if np.isnan(o) or np.isinf(o):
+                return 'null'
+        return super().encode(o)
+    
+    def iterencode(self, o, _one_shot=False):
+        """Override iterencode to handle NaN/Inf values."""
+        for chunk in super().iterencode(o, _one_shot):
+            yield chunk
+
+
+def _sanitize_for_json(obj: Any) -> Any:
+    """Recursively converts NaN, Inf, and other non-JSON-serializable values to None."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if np.isnan(obj) or np.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, np.number):
+        val = float(obj)
+        if np.isnan(val) or np.isinf(val):
+            return None
+        return float(obj)
+    return obj
+
 
 app = FastAPI(title="Autonomous Data Analyst Server")
 
@@ -170,27 +205,45 @@ async def run_pipeline(request: QueryRequest):
         f"import json, sys; "
         f"from agents.orchestrator_agent.orchestrator_agent import orchestrate_full_pipeline; "
         f"res = orchestrate_full_pipeline({json.dumps(query)}); "
-        f"print('###RESULT###' + json.dumps(res))"
+        f"sys.stdout.buffer.write(b'###RESULT_START###'); "
+        f"sys.stdout.buffer.write(json.dumps(res, ensure_ascii=False, allow_nan=False).encode('utf-8')); "
+        f"sys.stdout.buffer.write(b'###RESULT_END###')"
     )
     cmd = [sys.executable, '-c', python_cmd]
-    try:
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
+    env = {**os.environ, "PYTHONUTF8": "1"}
+    
+    def run_subprocess():
+        """Run subprocess in thread pool to avoid asyncio limitations on Windows."""
+        proc = subprocess.Popen(
+            cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            cwd=str(BASE_DIR)
+            cwd=str(BASE_DIR),
+            env=env,
         )
-        stdout, stderr = await proc.communicate()
-        stdout_str = stdout.decode('utf-8', errors='ignore')
-        stderr_str = stderr.decode('utf-8', errors='ignore')
-        if proc.returncode != 0:
+        stdout, stderr = proc.communicate(timeout=300)
+        return proc.returncode, stdout, stderr
+    
+    try:
+        returncode, stdout, stderr = await asyncio.to_thread(run_subprocess)
+        stdout_str = stdout.decode('utf-8', errors='replace')
+        stderr_str = stderr.decode('utf-8', errors='replace')
+        if returncode != 0:
             print(f'Subprocess Error:\n{stderr_str}')
-            raise HTTPException(status_code=500, detail=f'Pipeline execution failed:\n{stderr_str}')
-        if '###RESULT###' not in stdout_str:
+            raise RuntimeError(f'Pipeline execution failed:\n{stderr_str}')
+        start_marker = '###RESULT_START###'
+        end_marker = '###RESULT_END###'
+        if start_marker not in stdout_str or end_marker not in stdout_str:
             print(f'Subprocess Output:\n{stdout_str}')
-            raise HTTPException(status_code=500, detail='Pipeline completed but did not output structured result.')
-        result_json = stdout_str.split('###RESULT###')[1].strip()
+            raise RuntimeError('Pipeline completed but did not output structured result.')
+        result_section = stdout_str.rsplit(start_marker, 1)[1]
+        result_json = result_section.split(end_marker, 1)[0].strip()
+        if not result_json:
+            print(f'Subprocess Output:\n{stdout_str}')
+            raise RuntimeError('Pipeline completed but returned an empty result payload.')
         state = json.loads(result_json)
+        # Sanitize the state to remove NaN/Inf values
+        state = _sanitize_for_json(state)
         meta_path = state.get('artifact_paths', {}).get('orchestration_metadata_path', '')
         run_id = Path(meta_path).stem.replace('orchestrator_state_', '') if meta_path else str(uuid.uuid4())
         plots = []
@@ -208,9 +261,12 @@ async def run_pipeline(request: QueryRequest):
             'summary_html': generate_human_readable_summary(state),
             'state': state
         }
+    except HTTPException:
+        raise
     except Exception as e:
         print(f'Exception during pipeline execution: {e}')
-        raise HTTPException(status_code=500, detail=str(e))
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e) or 'Unknown pipeline execution error')
 
 app.mount('/storage', StaticFiles(directory=str(STORAGE_DIR)), name='storage')
 frontend_dir = BASE_DIR / 'frontend'

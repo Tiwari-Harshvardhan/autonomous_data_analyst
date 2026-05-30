@@ -3,6 +3,7 @@ import json
 import uuid
 import asyncio
 import requests
+import numpy as np
 
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
@@ -11,6 +12,25 @@ from pydantic import BaseModel, Field
 
 from google.adk.agents import Agent
 from google.adk.tools import google_search
+
+
+def _sanitize_for_json(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if np.isnan(obj) or np.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, np.number):
+        val = float(obj)
+        if np.isnan(val) or np.isinf(val):
+            return None
+        return float(obj)
+    elif isinstance(obj, (int, str, bool)) or obj is None:
+        return obj
+    return str(obj)
 
 
 # ---------------------------------------------------------------------------
@@ -212,14 +232,14 @@ def save_raw_data(scraped_results: List[ScraperResult]) -> str:
     path = os.path.join(RAW_DATA_DIR, f"raw_data_{uuid.uuid4()}.json")
     records = [r.model_dump() for r in scraped_results]
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(records, f, indent=2, ensure_ascii=False)
+        json.dump(_sanitize_for_json(records), f, indent=2, ensure_ascii=False)
     return path
 
 
 def save_workflow_metadata(state: WorkflowState) -> str:
     path = os.path.join(METADATA_DIR, f"metadata_{uuid.uuid4()}.json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(state.model_dump(), f, indent=2, ensure_ascii=False)
+        json.dump(_sanitize_for_json(state.model_dump()), f, indent=2, ensure_ascii=False)
     return path
 
 
@@ -236,7 +256,7 @@ async def scrape_url(url: str) -> dict:
     """
     scraper = UniversalScraper()
     result = await scraper.scrape(url)
-    return result.model_dump()
+    return _sanitize_for_json(result.model_dump())
 
 
 # ---------------------------------------------------------------------------

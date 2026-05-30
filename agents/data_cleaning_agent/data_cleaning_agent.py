@@ -21,6 +21,24 @@ for d in (CLEANED_DATA_DIR,PROFILE_DIR,METADATA_DIR,LOG_DIR):
     os.makedirs(d, exist_ok=True)
 
 
+def _sanitize_for_json(obj: Any) -> Any:
+    """Recursively converts NaN, Inf, and other non-JSON-serializable values to None."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if np.isnan(obj) or np.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, np.number):
+        val = float(obj)
+        if np.isnan(val) or np.isinf(val):
+            return None
+        return float(obj)
+    return obj
+
+
 class CleaningState(BaseModel):
     input_dataframe_path: str
     cleaned_dataframe_path: Optional[str] = None
@@ -58,7 +76,7 @@ def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
         )
     }
 
-    return profile
+    return _sanitize_for_json(profile)
 
 
 
@@ -67,7 +85,7 @@ def save_profile(profile: Dict[str, Any]) -> str:
     path = os.path.join(PROFILE_DIR,f"profile_{uuid.uuid4()}.json")
 
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(profile,f,indent=4,ensure_ascii=False)
+        json.dump(_sanitize_for_json(profile),f,indent=4,ensure_ascii=False)
     return path
 
 
@@ -119,7 +137,7 @@ def save_cleaned_dataframe(df: pd.DataFrame) -> str:
 def save_metadata(state: CleaningState) -> str:
     path = os.path.join(METADATA_DIR,f"cleaning_metadata_{uuid.uuid4()}.json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(state.model_dump(),f,indent=4,ensure_ascii=False)
+        json.dump(_sanitize_for_json(state.model_dump()),f,indent=4,ensure_ascii=False)
     return path
 
 #main cleaning pipeline
@@ -169,7 +187,7 @@ def execute_cleaning_pipeline(dataframe_path: str) -> CleaningState:
 
 def clean_dataframe_tool(dataframe_path: str) -> dict:
     result = execute_cleaning_pipeline(dataframe_path)
-    return result.model_dump()
+    return _sanitize_for_json(result.model_dump())
 
 data_cleaning_agent = Agent(
     model="gemini-2.0-flash",

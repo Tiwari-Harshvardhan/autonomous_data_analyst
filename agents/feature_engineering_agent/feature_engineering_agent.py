@@ -18,6 +18,25 @@ LOG_DIR = os.path.join(BASE_STORAGE_DIR, "logs")
 for d in (FEATURED_DATA_DIR, PROFILE_DIR, METADATA_DIR, LOG_DIR):
     os.makedirs(d, exist_ok=True)
 
+def _sanitize_for_json(obj: Any) -> Any:
+    """Recursively converts NaN, Inf, tuples and other non-JSON-serializable values to JSON-safe values."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if np.isnan(obj) or np.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, np.number):
+        val = float(obj)
+        if np.isnan(val) or np.isinf(val):
+            return None
+        return val
+    elif isinstance(obj, (int, str, bool)) or obj is None:
+        return obj
+    return str(obj)
+
 class FeatureEngineeringState(BaseModel):
     input_dataframe_path: str
     engineered_dataframe_path: Optional[str] = None
@@ -32,13 +51,13 @@ def _unique_path(directory: str, prefix: str, extension: str) -> str:
 def save_profile(profile: Dict[str, Any]) -> str:
     path = _unique_path(PROFILE_DIR, "profile", "json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(profile, f, indent=2, ensure_ascii=False)
+        json.dump(_sanitize_for_json(profile), f, indent=2, ensure_ascii=False)
     return path
 
 def save_metadata(state: FeatureEngineeringState) -> str:
     path = _unique_path(METADATA_DIR, "feature_engineering_metadata", "json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(state.model_dump(), f, indent=2, ensure_ascii=False)
+        json.dump(_sanitize_for_json(state.model_dump()), f, indent=2, ensure_ascii=False)
     return path
 
 def feature_scaling(df: pd.DataFrame) -> pd.DataFrame:
@@ -94,7 +113,7 @@ def execute_feature_engineering(csv_path: str) -> FeatureEngineeringState:
     state.logs.append(f"[LOAD] DataFrame loaded successfully. Shape: {initial_shape[0]} rows x {initial_shape[1]} cols. Numeric features detected: {numeric_cols}")
 
     profile_data = {
-        "shape": initial_shape,
+        "shape": list(initial_shape),
         "columns": list(df.columns),
         "missing_values": df.isnull().sum().to_dict()
     }
@@ -128,7 +147,7 @@ def execute_feature_engineering(csv_path: str) -> FeatureEngineeringState:
 
 def run_feature_engineering_on_csv(csv_path: str) -> dict:
     state = execute_feature_engineering(csv_path)
-    return state.model_dump()
+    return _sanitize_for_json(state.model_dump())
 
 feature_engineering_agent = Agent(
     name="feature_engineering_agent",

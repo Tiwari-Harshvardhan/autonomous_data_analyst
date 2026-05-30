@@ -11,6 +11,22 @@ from pydantic import BaseModel, Field
 from google.adk.agents import Agent
 
 
+def _sanitize_for_json(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if obj != obj or obj == float('inf') or obj == float('-inf'):
+            return None
+        return obj
+    elif isinstance(obj, (int, str, bool)) or obj is None:
+        return obj
+    elif hasattr(obj, 'tolist'):
+        return _sanitize_for_json(obj.tolist())
+    return str(obj)
+
+
 # ---------------------------------------------------------------------------
 # Storage setup
 # ---------------------------------------------------------------------------
@@ -238,7 +254,7 @@ def extract_from_html_file(html_path: str, url: Optional[str] = None) -> dict:
     """
     extractor = HTMLExtractor()
     result = extractor.extract(html_path, url=url)
-    return result.model_dump()
+    return _sanitize_for_json(result.model_dump())
 
 
 # ---------------------------------------------------------------------------

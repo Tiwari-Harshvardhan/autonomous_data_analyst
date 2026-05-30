@@ -1,0 +1,282 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_f8d2f777-ac21-4c47-9b89-53cbc7c3478e.csv",
+  "profile_path": "storage\\profiles\\profile_b986b661-c9cf-4ab0-a86f-d7b2e9629dfb.json",
+  "plot_paths": [
+    "storage\\plots\\plot_heading_count_1f6f8233-96cb-412b-a36f-6374abb086c1.png",
+    "storage\\plots\\plot_link_count_ffc6b224-0a7b-4716-a8d6-baba2b98eb4b.png",
+    "storage\\plots\\plot_table_count_fefc1657-4f14-46a8-a9f7-f144135c8818.png"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "Loading data from: storage\\eda_data\\engineered_data_f8d2f777-ac21-4c47-9b89-53cbc7c3478e.csv",
+    "Loaded DataFrame: 109 rows x 19 cols",
+    "Profile saved: storage\\profiles\\profile_b986b661-c9cf-4ab0-a86f-d7b2e9629dfb.json",
+    "Descriptive stats computed for 1 column groups",
+    "Saved 3 plot(s) to storage\\plots",
+    "Outlier detection complete: 19 column(s) checked",
+    "Skewed columns (|skew|>0.5): []",
+    "Categorical analysis complete",
+    "Bivariate analysis complete: 171 pair(s)"
+  ],
+  "quality_report": {
+    "rows": 109,
+    "columns": 19,
+    "missing_values": {
+      "url": 109,
+      "title": 109,
+      "paragraph": 109,
+      "heading_count": 0,
+      "link_count": 0,
+      "table_count": 0,
+      "html_source": 109,
+      "url_day": 109,
+      "url_month": 109,
+      "url_year": 109,
+      "title_day": 109,
+      "title_month": 109,
+      "title_year": 109,
+      "paragraph_day": 109,
+      "paragraph_month": 109,
+      "paragraph_year": 109,
+      "html_source_day": 109,
+      "html_source_month": 109,
+      "html_source_year": 109
+    },
+    "missing_pct": {
+      "url": 100.0,
+      "title": 100.0,
+      "paragraph": 100.0,
+      "heading_count": 0.0,
+      "link_count": 0.0,
+      "table_count": 0.0,
+      "html_source": 100.0,
+      "url_day": 100.0,
+      "url_month": 100.0,
+      "url_year": 100.0,
+      "title_day": 100.0,
+      "title_month": 100.0,
+      "title_year": 100.0,
+      "paragraph_day": 100.0,
+      "paragraph_month": 100.0,
+      "paragraph_year": 100.0,
+      "html_source_day": 100.0,
+      "html_source_month": 100.0,
+      "html_source_year": 100.0
+    },
+    "duplicates": 108,
+    "dtypes": {
+      "url": "float64",
+      "title": "float64",
+      "paragraph": "float64",
+      "heading_count": "int64",
+      "link_count": "int64",
+      "table_count": "int64",
+      "html_source": "float64",
+      "url_day": "float64",
+      "url_month": "float64",
+      "url_year": "float64",
+      "title_day": "float64",
+      "title_month": "float64",
+      "title_year": "float64",
+      "paragraph_day": "float64",
+      "paragraph_month": "float64",
+      "paragraph_year": "float64",
+      "html_source_day": "float64",
+      "html_source_month": "float64",
+      "html_source_year": "float64"
+    },
+    "numeric_summary": {
+      "url": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "title": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "paragraph": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "heading_count": {
+        "count": 109.0,
+        "mean": 53.0,
+        "std": 0.0,
+        "min": 53.0,
+        "25%": 53.0,
+        "50%": 53.0,
+        "75%": 53.0,
+        "max": 53.0
+      },
+      "link_count": {
+        "count": 109.0,
+        "mean": 2662.0,
+        "std": 0.0,
+        "min": 2662.0,
+        "25%": 2662.0,
+        "50%": 2662.0,
+        "75%": 2662.0,
+        "max": 2662.0
+      },
+      "table_count": {
+        "count": 109.0,
+        "mean": 7.0,
+        "std": 0.0,
+        "min": 7.0,
+        "25%": 7.0,
+        "50%": 7.0,
+        "75%": 7.0,
+        "max": 7.0
+      },
+      "html_source": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "url_day": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "url_month": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "url_year": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "title_day": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "title_month": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "title_year": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "paragraph_day": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "paragraph_month": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "paragraph_year": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "html_source_day": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "html_source_month": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      },
+      "html_source_year": {
+        "count": 0.0,
+        "mean": null,
+        "std": null,
+        "min": null,
+        "25%": null,
+        "50%": null,
+        "75%": null,
+        "max": null
+      }
+    },
+    "skewness": {}
+  }
+}

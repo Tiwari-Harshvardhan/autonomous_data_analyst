@@ -1,0 +1,803 @@
+{
+  "user_query": "scrape data from https://books.toscrape.com/",
+  "current_stage": "finished",
+  "pipeline_plan": [
+    "data_collection",
+    "extraction",
+    "clean_data",
+    "feature_engineering",
+    "exploratory_data_analysis",
+    "visualization"
+  ],
+  "raw_data_state": {
+    "user_query": "scrape data from https://books.toscrape.com/",
+    "source_urls": [
+      "https://books.toscrape.com/"
+    ],
+    "raw_data_path": "storage\\raw\\raw_data_dcaa625c-0152-4f5e-b218-c0a201d781b8.json",
+    "metadata_path": "storage\\metadata\\metadata_83d440a4-efcb-4f79-bace-0728459021a8.json",
+    "logs": [
+      "Started data collection workflow",
+      "Extracted URL(s) from query: ['https://books.toscrape.com/']",
+      "Discovered 1 URLs",
+      "Completed web scraping",
+      "Raw data saved: storage\\raw\\raw_data_dcaa625c-0152-4f5e-b218-c0a201d781b8.json",
+      "Metadata saved: storage\\metadata\\metadata_83d440a4-efcb-4f79-bace-0728459021a8.json"
+    ],
+    "current_stage": "data_collection",
+    "raw_data_preview": [
+      {
+        "url": "https://books.toscrape.com/",
+        "scraping_mode": "static",
+        "title": "All products | Books to Scrape - Sandbox",
+        "extracted_text": "\nÂ£51.77\nIn stock\n\nÂ£53.74\nIn stock\n\nÂ£50.10\nIn stock\n\nÂ£47.82\nIn stock\n\nÂ£54.23\nIn stock\n\nÂ£22.65\nIn stock\n\nÂ£33.34\nIn stock\n\nÂ£17.93\nIn stock\n\nÂ£22.60\nIn stock\n\nÂ£52.15\nIn stock\n\nÂ£13.99\nIn stock\n\nÂ£20.66\nIn stock\n\nÂ£17.46\nIn stock\n\nÂ£52.29\nIn stock\n\nÂ£35.02\nIn stock\n\nÂ£57.25\nIn stock\n\nÂ£23.88\nIn stock\n\nÂ£37.59\nIn stock\n\nÂ£51.33\nIn stock\n\nÂ£45.17\nIn stock",
+        "html_path": "storage\\raw_html\\a3565688-8c7a-4f1b-b0d8-dc6f355d7425.html",
+        "screenshot_path": null,
+        "metadata_path": "storage\\metadata\\3d65373f-8f25-487a-a4b8-597710ce9e42.json",
+        "success": true,
+        "error": null
+      }
+    ]
+  },
+  "extraction_state": {
+    "html_paths": [
+      "storage\\raw_html\\a3565688-8c7a-4f1b-b0d8-dc6f355d7425.html"
+    ],
+    "parsed_pages": [
+      {
+        "source_html_path": "storage\\raw_html\\a3565688-8c7a-4f1b-b0d8-dc6f355d7425.html",
+        "url": "https://books.toscrape.com/",
+        "title": "All products | Books to Scrape - Sandbox",
+        "headings": [
+          "All products",
+          "A Light in the ...",
+          "Tipping the Velvet",
+          "Soumission",
+          "Sharp Objects",
+          "Sapiens: A Brief History ...",
+          "The Requiem Red",
+          "The Dirty Little Secrets ...",
+          "The Coming Woman: A ...",
+          "The Boys in the ...",
+          "The Black Maria",
+          "Starving Hearts (Triangular Trade ...",
+          "Shakespeare's Sonnets",
+          "Set Me Free",
+          "Scott Pilgrim's Precious Little ...",
+          "Rip it Up and ...",
+          "Our Band Could Be ...",
+          "Olio",
+          "Mesaerion: The Best Science ...",
+          "Libertarianism for Beginners",
+          "It's Only the Himalayas"
+        ],
+        "paragraphs": [
+          "Â£51.77",
+          "In stock",
+          "Â£53.74",
+          "In stock",
+          "Â£50.10",
+          "In stock",
+          "Â£47.82",
+          "In stock",
+          "Â£54.23",
+          "In stock",
+          "Â£22.65",
+          "In stock",
+          "Â£33.34",
+          "In stock",
+          "Â£17.93",
+          "In stock",
+          "Â£22.60",
+          "In stock",
+          "Â£52.15",
+          "In stock",
+          "Â£13.99",
+          "In stock",
+          "Â£20.66",
+          "In stock",
+          "Â£17.46",
+          "In stock",
+          "Â£52.29",
+          "In stock",
+          "Â£35.02",
+          "In stock",
+          "Â£57.25",
+          "In stock",
+          "Â£23.88",
+          "In stock",
+          "Â£37.59",
+          "In stock",
+          "Â£51.33",
+          "In stock",
+          "Â£45.17",
+          "In stock"
+        ],
+        "links": [
+          {
+            "text": "Books to Scrape",
+            "href": "index.html"
+          },
+          {
+            "text": "Home",
+            "href": "index.html"
+          },
+          {
+            "text": "Books",
+            "href": "catalogue/category/books_1/index.html"
+          },
+          {
+            "text": "Travel",
+            "href": "catalogue/category/books/travel_2/index.html"
+          },
+          {
+            "text": "Mystery",
+            "href": "catalogue/category/books/mystery_3/index.html"
+          },
+          {
+            "text": "Historical Fiction",
+            "href": "catalogue/category/books/historical-fiction_4/index.html"
+          },
+          {
+            "text": "Sequential Art",
+            "href": "catalogue/category/books/sequential-art_5/index.html"
+          },
+          {
+            "text": "Classics",
+            "href": "catalogue/category/books/classics_6/index.html"
+          },
+          {
+            "text": "Philosophy",
+            "href": "catalogue/category/books/philosophy_7/index.html"
+          },
+          {
+            "text": "Romance",
+            "href": "catalogue/category/books/romance_8/index.html"
+          },
+          {
+            "text": "Womens Fiction",
+            "href": "catalogue/category/books/womens-fiction_9/index.html"
+          },
+          {
+            "text": "Fiction",
+            "href": "catalogue/category/books/fiction_10/index.html"
+          },
+          {
+            "text": "Childrens",
+            "href": "catalogue/category/books/childrens_11/index.html"
+          },
+          {
+            "text": "Religion",
+            "href": "catalogue/category/books/religion_12/index.html"
+          },
+          {
+            "text": "Nonfiction",
+            "href": "catalogue/category/books/nonfiction_13/index.html"
+          },
+          {
+            "text": "Music",
+            "href": "catalogue/category/books/music_14/index.html"
+          },
+          {
+            "text": "Default",
+            "href": "catalogue/category/books/default_15/index.html"
+          },
+          {
+            "text": "Science Fiction",
+            "href": "catalogue/category/books/science-fiction_16/index.html"
+          },
+          {
+            "text": "Sports and Games",
+            "href": "catalogue/category/books/sports-and-games_17/index.html"
+          },
+          {
+            "text": "Add a comment",
+            "href": "catalogue/category/books/add-a-comment_18/index.html"
+          },
+          {
+            "text": "Fantasy",
+            "href": "catalogue/category/books/fantasy_19/index.html"
+          },
+          {
+            "text": "New Adult",
+            "href": "catalogue/category/books/new-adult_20/index.html"
+          },
+          {
+            "text": "Young Adult",
+            "href": "catalogue/category/books/young-adult_21/index.html"
+          },
+          {
+            "text": "Science",
+            "href": "catalogue/category/books/science_22/index.html"
+          },
+          {
+            "text": "Poetry",
+            "href": "catalogue/category/books/poetry_23/index.html"
+          },
+          {
+            "text": "Paranormal",
+            "href": "catalogue/category/books/paranormal_24/index.html"
+          },
+          {
+            "text": "Art",
+            "href": "catalogue/category/books/art_25/index.html"
+          },
+          {
+            "text": "Psychology",
+            "href": "catalogue/category/books/psychology_26/index.html"
+          },
+          {
+            "text": "Autobiography",
+            "href": "catalogue/category/books/autobiography_27/index.html"
+          },
+          {
+            "text": "Parenting",
+            "href": "catalogue/category/books/parenting_28/index.html"
+          },
+          {
+            "text": "Adult Fiction",
+            "href": "catalogue/category/books/adult-fiction_29/index.html"
+          },
+          {
+            "text": "Humor",
+            "href": "catalogue/category/books/humor_30/index.html"
+          },
+          {
+            "text": "Horror",
+            "href": "catalogue/category/books/horror_31/index.html"
+          },
+          {
+            "text": "History",
+            "href": "catalogue/category/books/history_32/index.html"
+          },
+          {
+            "text": "Food and Drink",
+            "href": "catalogue/category/books/food-and-drink_33/index.html"
+          },
+          {
+            "text": "Christian Fiction",
+            "href": "catalogue/category/books/christian-fiction_34/index.html"
+          },
+          {
+            "text": "Business",
+            "href": "catalogue/category/books/business_35/index.html"
+          },
+          {
+            "text": "Biography",
+            "href": "catalogue/category/books/biography_36/index.html"
+          },
+          {
+            "text": "Thriller",
+            "href": "catalogue/category/books/thriller_37/index.html"
+          },
+          {
+            "text": "Contemporary",
+            "href": "catalogue/category/books/contemporary_38/index.html"
+          },
+          {
+            "text": "Spirituality",
+            "href": "catalogue/category/books/spirituality_39/index.html"
+          },
+          {
+            "text": "Academic",
+            "href": "catalogue/category/books/academic_40/index.html"
+          },
+          {
+            "text": "Self Help",
+            "href": "catalogue/category/books/self-help_41/index.html"
+          },
+          {
+            "text": "Historical",
+            "href": "catalogue/category/books/historical_42/index.html"
+          },
+          {
+            "text": "Christian",
+            "href": "catalogue/category/books/christian_43/index.html"
+          },
+          {
+            "text": "Suspense",
+            "href": "catalogue/category/books/suspense_44/index.html"
+          },
+          {
+            "text": "Short Stories",
+            "href": "catalogue/category/books/short-stories_45/index.html"
+          },
+          {
+            "text": "Novels",
+            "href": "catalogue/category/books/novels_46/index.html"
+          },
+          {
+            "text": "Health",
+            "href": "catalogue/category/books/health_47/index.html"
+          },
+          {
+            "text": "Politics",
+            "href": "catalogue/category/books/politics_48/index.html"
+          },
+          {
+            "text": "Cultural",
+            "href": "catalogue/category/books/cultural_49/index.html"
+          },
+          {
+            "text": "Erotica",
+            "href": "catalogue/category/books/erotica_50/index.html"
+          },
+          {
+            "text": "Crime",
+            "href": "catalogue/category/books/crime_51/index.html"
+          },
+          {
+            "text": "A Light in the ...",
+            "href": "catalogue/a-light-in-the-attic_1000/index.html"
+          },
+          {
+            "text": "Tipping the Velvet",
+            "href": "catalogue/tipping-the-velvet_999/index.html"
+          },
+          {
+            "text": "Soumission",
+            "href": "catalogue/soumission_998/index.html"
+          },
+          {
+            "text": "Sharp Objects",
+            "href": "catalogue/sharp-objects_997/index.html"
+          },
+          {
+            "text": "Sapiens: A Brief History ...",
+            "href": "catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
+          },
+          {
+            "text": "The Requiem Red",
+            "href": "catalogue/the-requiem-red_995/index.html"
+          },
+          {
+            "text": "The Dirty Little Secrets ...",
+            "href": "catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html"
+          },
+          {
+            "text": "The Coming Woman: A ...",
+            "href": "catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html"
+          },
+          {
+            "text": "The Boys in the ...",
+            "href": "catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html"
+          },
+          {
+            "text": "The Black Maria",
+            "href": "catalogue/the-black-maria_991/index.html"
+          },
+          {
+            "text": "Starving Hearts (Triangular Trade ...",
+            "href": "catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html"
+          },
+          {
+            "text": "Shakespeare's Sonnets",
+            "href": "catalogue/shakespeares-sonnets_989/index.html"
+          },
+          {
+            "text": "Set Me Free",
+            "href": "catalogue/set-me-free_988/index.html"
+          },
+          {
+            "text": "Scott Pilgrim's Precious Little ...",
+            "href": "catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+          },
+          {
+            "text": "Rip it Up and ...",
+            "href": "catalogue/rip-it-up-and-start-again_986/index.html"
+          },
+          {
+            "text": "Our Band Could Be ...",
+            "href": "catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html"
+          },
+          {
+            "text": "Olio",
+            "href": "catalogue/olio_984/index.html"
+          },
+          {
+            "text": "Mesaerion: The Best Science ...",
+            "href": "catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html"
+          },
+          {
+            "text": "Libertarianism for Beginners",
+            "href": "catalogue/libertarianism-for-beginners_982/index.html"
+          },
+          {
+            "text": "It's Only the Himalayas",
+            "href": "catalogue/its-only-the-himalayas_981/index.html"
+          },
+          {
+            "text": "next",
+            "href": "catalogue/page-2.html"
+          }
+        ],
+        "tables": [],
+        "success": true,
+        "error": null
+      }
+    ],
+    "dataframe_path": "storage\\dataframes\\extracted_914fcb77-ae36-460c-afed-8d10d30b7156.csv",
+    "metadata_path": "storage\\metadata\\extraction_metadata_ce8f29b3-8d43-4fd6-ac47-02b431432c21.json",
+    "logs": [
+      "Starting extraction for 1 HTML files",
+      "storage\\raw_html\\a3565688-8c7a-4f1b-b0d8-dc6f355d7425.html → ok",
+      "Extraction complete",
+      "DataFrame built: 40 rows, 7 columns",
+      "DataFrame saved: storage\\dataframes\\extracted_914fcb77-ae36-460c-afed-8d10d30b7156.csv",
+      "Metadata saved: storage\\metadata\\extraction_metadata_ce8f29b3-8d43-4fd6-ac47-02b431432c21.json"
+    ]
+  },
+  "cleaning_state": {
+    "input_dataframe_path": "storage\\dataframes\\extracted_914fcb77-ae36-460c-afed-8d10d30b7156.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_e48d4324-c4bc-4058-9813-85492fea0ae4.csv",
+    "profile_path": "storage\\profiles\\profile_50558686-5fe9-4128-a3c7-43c929ac44ad.json",
+    "metadata_path": "storage\\metadata\\cleaning_metadata_e358675a-53f8-4a20-847a-f0843a1d74b8.json",
+    "logs": [
+      "Loading dataframe",
+      "Loaded dataframe with shape (40, 7)",
+      "Data profiling completed",
+      "Missing values handled",
+      "Duplicates removed",
+      "Text standardized",
+      "Numeric validation completed",
+      "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_e48d4324-c4bc-4058-9813-85492fea0ae4.csv",
+      "Metadata saved at storage\\metadata\\cleaning_metadata_e358675a-53f8-4a20-847a-f0843a1d74b8.json"
+    ],
+    "quality_report": {
+      "final_rows": 21,
+      "final_columns": 7,
+      "missing_after_cleaning": {
+        "url": 0,
+        "title": 0,
+        "paragraph": 0,
+        "heading_count": 0,
+        "link_count": 0,
+        "table_count": 0,
+        "html_source": 0
+      },
+      "duplicates_after_cleaning": 0
+    }
+  },
+  "feature_state": {
+    "input_dataframe_path": "storage\\cleaned_data\\cleaned_e48d4324-c4bc-4058-9813-85492fea0ae4.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+    "profile_path": "storage\\profiles\\profile_c7de5577-1e85-4717-89b1-2dbd45ec5207.json",
+    "metadata_path": "storage\\metadata\\feature_engineering_metadata_76ab563d-a622-4887-80bd-4d4212d62e93.json",
+    "logs": [
+      "[INIT] Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_e48d4324-c4bc-4058-9813-85492fea0ae4.csv",
+      "[LOAD] DataFrame loaded successfully. Shape: 21 rows x 7 cols. Numeric features detected: ['heading_count', 'link_count', 'table_count']",
+      "[PROFILE] Initial data structure profiled and written to disk: storage\\profiles\\profile_c7de5577-1e85-4717-89b1-2dbd45ec5207.json",
+      "[SKEW] Variance correction applied. Pre-skewness: {'heading_count': 0.0, 'link_count': 0.0, 'table_count': 0.0} -> Post-skewness: {'heading_count': 0.0, 'link_count': 0.0, 'table_count': 0.0}",
+      "[SCALE] Standardization (Z-Score) applied to numerical fields: ['heading_count', 'link_count', 'table_count']",
+      "[DATETIME] Evaluated feature types. Generated engineering sub-components: ['title_day', 'html_source_month', 'url_year', 'url_month', 'html_source_day', 'title_month', 'paragraph_month', 'title_year', 'html_source_year', 'paragraph_year', 'paragraph_day', 'url_day']",
+      "[PERSIST] Transformed dataset saved. Final distribution shape: 21 rows x 19 cols. Destination path: storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+      "[METADATA] Run trace and logs cataloged successfully at: storage\\metadata\\feature_engineering_metadata_76ab563d-a622-4887-80bd-4d4212d62e93.json"
+    ],
+    "quality_report": null
+  },
+  "eda_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+    "profile_path": "storage\\profiles\\profile_548bf464-2305-4e15-8eed-85acee86fe09.json",
+    "plot_paths": [
+      "storage\\plots\\plot_heading_count_1b26835a-bada-4f3e-ac5c-5bae9e165007.png",
+      "storage\\plots\\plot_link_count_4774bba4-a378-433a-8fcc-7e07ff67509b.png",
+      "storage\\plots\\plot_table_count_2996dbe9-0a18-4c4a-8afa-c71a4378aeed.png"
+    ],
+    "metadata_path": "storage\\metadata\\eda_metadata_f8a5e601-162e-4c43-bb31-b18642776279.json",
+    "logs": [
+      "Loading data from: storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+      "Loaded DataFrame: 21 rows x 19 cols",
+      "Profile saved: storage\\profiles\\profile_548bf464-2305-4e15-8eed-85acee86fe09.json",
+      "Descriptive stats computed for 1 column groups",
+      "Saved 3 plot(s) to storage\\plots",
+      "Outlier detection complete: 19 column(s) checked",
+      "Skewed columns (|skew|>0.5): []",
+      "Categorical analysis complete",
+      "Bivariate analysis complete: 171 pair(s)",
+      "Metadata saved: storage\\metadata\\eda_metadata_f8a5e601-162e-4c43-bb31-b18642776279.json"
+    ],
+    "quality_report": {
+      "rows": 21,
+      "columns": 19,
+      "missing_values": {
+        "url": 21,
+        "title": 21,
+        "paragraph": 21,
+        "heading_count": 0,
+        "link_count": 0,
+        "table_count": 0,
+        "html_source": 21,
+        "url_day": 21,
+        "url_month": 21,
+        "url_year": 21,
+        "title_day": 21,
+        "title_month": 21,
+        "title_year": 21,
+        "paragraph_day": 21,
+        "paragraph_month": 21,
+        "paragraph_year": 21,
+        "html_source_day": 21,
+        "html_source_month": 21,
+        "html_source_year": 21
+      },
+      "missing_pct": {
+        "url": 100.0,
+        "title": 100.0,
+        "paragraph": 100.0,
+        "heading_count": 0.0,
+        "link_count": 0.0,
+        "table_count": 0.0,
+        "html_source": 100.0,
+        "url_day": 100.0,
+        "url_month": 100.0,
+        "url_year": 100.0,
+        "title_day": 100.0,
+        "title_month": 100.0,
+        "title_year": 100.0,
+        "paragraph_day": 100.0,
+        "paragraph_month": 100.0,
+        "paragraph_year": 100.0,
+        "html_source_day": 100.0,
+        "html_source_month": 100.0,
+        "html_source_year": 100.0
+      },
+      "duplicates": 20,
+      "dtypes": {
+        "url": "float64",
+        "title": "float64",
+        "paragraph": "float64",
+        "heading_count": "int64",
+        "link_count": "int64",
+        "table_count": "int64",
+        "html_source": "float64",
+        "url_day": "float64",
+        "url_month": "float64",
+        "url_year": "float64",
+        "title_day": "float64",
+        "title_month": "float64",
+        "title_year": "float64",
+        "paragraph_day": "float64",
+        "paragraph_month": "float64",
+        "paragraph_year": "float64",
+        "html_source_day": "float64",
+        "html_source_month": "float64",
+        "html_source_year": "float64"
+      },
+      "numeric_summary": {
+        "url": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "title": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "paragraph": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "heading_count": {
+          "count": 21.0,
+          "mean": 21.0,
+          "std": 0.0,
+          "min": 21.0,
+          "25%": 21.0,
+          "50%": 21.0,
+          "75%": 21.0,
+          "max": 21.0
+        },
+        "link_count": {
+          "count": 21.0,
+          "mean": 74.0,
+          "std": 0.0,
+          "min": 74.0,
+          "25%": 74.0,
+          "50%": 74.0,
+          "75%": 74.0,
+          "max": 74.0
+        },
+        "table_count": {
+          "count": 21.0,
+          "mean": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "25%": 0.0,
+          "50%": 0.0,
+          "75%": 0.0,
+          "max": 0.0
+        },
+        "html_source": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "url_day": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "url_month": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "url_year": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "title_day": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "title_month": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "title_year": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "paragraph_day": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "paragraph_month": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "paragraph_year": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "html_source_day": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "html_source_month": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        },
+        "html_source_year": {
+          "count": 0.0,
+          "mean": null,
+          "std": null,
+          "min": null,
+          "25%": null,
+          "50%": null,
+          "75%": null,
+          "max": null
+        }
+      },
+      "skewness": {}
+    }
+  },
+  "visualization_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_57d695aa-68fe-4aa2-ac05-b37aad001d83.html",
+    "generated_plots": [
+      "Histogram: url",
+      "Histogram: title",
+      "Histogram: paragraph",
+      "Scatter: url vs title"
+    ],
+    "metadata_path": "storage\\visual_metadata\\visualisation_metadata_4d1d9435-243b-44b6-9284-b86b08773073.json",
+    "logs": [
+      "[INIT] Started visualization generation for: storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+      "[PLOT] Generated distribution plot for url",
+      "[PLOT] Generated distribution plot for title",
+      "[PLOT] Generated distribution plot for paragraph",
+      "[PLOT] Generated scatter plot matrix sample",
+      "[PERSIST] Interactive Tableau-like dashboard compiled and saved to: storage\\dashboards\\tableau_dashboard_57d695aa-68fe-4aa2-ac05-b37aad001d83.html"
+    ]
+  },
+  "logs": [
+    "Created execution plan.",
+    "Starting data collection stage.",
+    "Data collection completed: storage\\raw\\raw_data_dcaa625c-0152-4f5e-b218-c0a201d781b8.json",
+    "Starting extraction stage.",
+    "Extraction completed: storage\\dataframes\\extracted_914fcb77-ae36-460c-afed-8d10d30b7156.csv",
+    "Starting data cleaning stage.",
+    "Data cleaning completed: storage\\cleaned_data\\cleaned_e48d4324-c4bc-4058-9813-85492fea0ae4.csv",
+    "Feature engineering completed: storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+    "Starting exploratory data analysis stage.",
+    "EDA completed: storage\\metadata\\eda_metadata_f8a5e601-162e-4c43-bb31-b18642776279.json",
+    "Starting visualization stage.",
+    "Visualization completed: storage\\dashboards\\tableau_dashboard_57d695aa-68fe-4aa2-ac05-b37aad001d83.html",
+    "Full pipeline execution finished."
+  ],
+  "artifact_paths": {
+    "raw_data_path": "storage\\raw\\raw_data_dcaa625c-0152-4f5e-b218-c0a201d781b8.json",
+    "extracted_dataframe_path": "storage\\dataframes\\extracted_914fcb77-ae36-460c-afed-8d10d30b7156.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_e48d4324-c4bc-4058-9813-85492fea0ae4.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_dac8fe54-322b-451d-a08b-8cf709843881.csv",
+    "eda_metadata_path": "storage\\metadata\\eda_metadata_f8a5e601-162e-4c43-bb31-b18642776279.json",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_57d695aa-68fe-4aa2-ac05-b37aad001d83.html"
+  }
+}

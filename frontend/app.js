@@ -306,4 +306,3 @@ function escapeHtml(unsafe) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 }
-"""; Path('frontend/app_new.js').write_text(content, encoding='utf-8')

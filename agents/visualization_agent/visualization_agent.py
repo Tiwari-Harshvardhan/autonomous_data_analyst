@@ -30,8 +30,25 @@ def _unique_path(directory: str, prefix: str, extension: str) -> str:
 def save_visual_metadata(state: VisualisationState) -> str:
     path = _unique_path(VISUAL_METADATA_DIR, "visualisation_metadata", "json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(state.model_dump(), f, indent=2, ensure_ascii=False)
+        json.dump(_sanitize_for_json(state.model_dump()), f, indent=2, ensure_ascii=False)
     return path
+
+
+def _sanitize_for_json(obj: Any) -> Any:
+    if isinstance(obj, dict):
+        return {k: _sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_sanitize_for_json(item) for item in obj]
+    elif isinstance(obj, float):
+        if obj != obj or obj == float('inf') or obj == float('-inf'):
+            return None
+        return obj
+    elif isinstance(obj, (int, str, bool)) or obj is None:
+        return obj
+    elif hasattr(obj, 'tolist'):
+        return _sanitize_for_json(obj.tolist())
+    return str(obj)
+
 
 def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
     state = VisualisationState(input_dataframe_path=csv_path)
@@ -130,7 +147,7 @@ def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
 
 def run_visualisation_pipeline(csv_path: str) -> dict:
     state = generate_interactive_dashboard(csv_path)
-    return state.model_dump()
+    return _sanitize_for_json(state.model_dump())
 
 # Define the Visualisation Agent
 visualisation_agent = Agent(
