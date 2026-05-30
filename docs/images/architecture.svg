@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+  <style>
+    .title { font: bold 20px sans-serif; fill:#1f2937; }
+    .box { fill:#f8fafc; stroke:#2563eb; stroke-width:2; rx:14; }
+    .text { font: 13px sans-serif; fill:#111827; }
+    .line { stroke:#64748b; stroke-width:2; marker-end:url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <text x="30" y="30" class="title">Autonomous Data Analyst Architecture</text>
+  <rect x="30" y="60" width="200" height="80" class="box" />
+  <text x="45" y="90" class="text">FastAPI Server</text>
+  <text x="45" y="108" class="text">`server.py`</text>
+  <text x="45" y="126" class="text">REST API + Static UI</text>
+
+  <rect x="340" y="40" width="220" height="120" class="box" />
+  <text x="360" y="70" class="text">Orchestration Agent</text>
+  <text x="360" y="90" class="text">`agents/orchestrator_agent/`</text>
+  <text x="360" y="108" class="text">Plans pipeline stages</text>
+
+  <rect x="340" y="190" width="220" height="190" class="box" />
+  <text x="362" y="220" class="text">Stage Agents</text>
+  <text x="362" y="240" class="text">data_collection</text>
+  <text x="362" y="258" class="text">extraction</text>
+  <text x="362" y="276" class="text">cleaning</text>
+  <text x="362" y="294" class="text">feature_engineering</n">  
+  <text x="362" y="312" class="text">eda</text>
+  <text x="362" y="330" class="text">visualization</text>
+
+  <rect x="680" y="60" width="190" height="140" class="box" />
+  <text x="700" y="90" class="text">Storage / Artifacts</text>
+  <text x="700" y="110" class="text">`storage/`</text>
+  <text x="700" y="128" class="text">raw_html, dataframes, plots</text>
+  <text x="700" y="146" class="text">dashboards, metadata</text>
+
+  <rect x="30" y="190" width="200" height="190" class="box" />
+  <text x="45" y="220" class="text">Frontend UI</text>
+  <text x="45" y="240" class="text">`frontend/`</text>
+  <text x="45" y="258" class="text">Live logs, history,</text>
+  <text x="45" y="276" class="text">summaries, dashboards</text>
+
+  <line x1="230" y1="100" x2="340" y2="100" class="line" />
+  <line x1="230" y1="250" x2="340" y2="250" class="line" />
+  <line x1="560" y1="100" x2="680" y2="100" class="line" />
+  <line x1="230" y1="235" x2="270" y2="235" class="line" />
+  <line x1="230" y1="265" x2="270" y2="265" class="line" />
+</svg>
