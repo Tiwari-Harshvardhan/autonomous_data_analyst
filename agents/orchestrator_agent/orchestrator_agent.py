@@ -48,9 +48,6 @@ class TaskPlanner(BaseModel):
     execution_order: list[str]
     reasoning: str
 
-
-
-
 def _read_json_file(path: str) -> Any:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -268,6 +265,19 @@ orchestrator_agent = Agent(
         orchestrate_full_pipeline,
         scrape_url,
     ],
+)
+
+reasoning_agent = Agent(
+    model = "gemini-2.5-flash",
+    name = "reasoning_agent",
+    description = "Reasoning agent that evaluates user goals and creates a structured execution plan",
+    instruction = """
+    You are the reasoning agent. Your job is to evaluate user goals, create a structured execution plan, and 
+    delegate the work to specialized agents. If the user query contains words like 'scrape data' or 'collect data',
+    then you should delegate the work to the data collection agent. If the user query contains words like
+    'analyze' or 'visualize', then you should delegate the work to visualization agent.
+    if the user query contains a csv file or a csv path, then, you should start the pipeline from data cleaning agent
+"""
 )
 
 
