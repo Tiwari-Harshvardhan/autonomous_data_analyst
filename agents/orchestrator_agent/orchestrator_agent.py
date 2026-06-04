@@ -41,6 +41,15 @@ class OrchestratorState(BaseModel):
     def add_log(self, message: str) -> None:
         self.logs.append(message)
 
+class TaskPlanner(BaseModel):
+    user_goal: str
+    problem_type: str
+    required_agents: list[str]
+    execution_order: list[str]
+    reasoning: str
+
+
+
 
 def _read_json_file(path: str) -> Any:
     with open(path, "r", encoding="utf-8") as f:
