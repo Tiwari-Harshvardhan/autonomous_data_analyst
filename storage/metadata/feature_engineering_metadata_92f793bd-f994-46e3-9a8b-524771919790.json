@@ -1,0 +1,38 @@
+{
+  "input_dataframe_path": "storage\\cleaned_data\\cleaned_6bfc4893-4e80-4cc9-9808-4e5816e1d90c.csv",
+  "engineered_dataframe_path": "storage\\eda_data\\engineered_data_2145d80e-b3d1-41b3-8fd0-373c14ae1ba6.csv",
+  "profile_path": "storage\\profiles\\profile_00cfbbae-ce3e-4776-b1da-754d4c33976e.json",
+  "metadata_path": null,
+  "logs": [
+    "Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_6bfc4893-4e80-4cc9-9808-4e5816e1d90c.csv",
+    "Loaded DataFrame: 21 rows × 7 cols. Numeric columns: ['heading_count', 'link_count', 'table_count']",
+    "Skewness correction applied.",
+    "Z-score scaling applied to numeric features.",
+    "DateTime expansion complete. New columns: none",
+    "[interaction] Attempt 1/3",
+    "[interaction] LLM call failed: GEMINI_API_KEY environment variable is not set.",
+    "Feature interaction complete. Added: none",
+    "Engineered DataFrame saved: 21 rows × 7 cols → storage\\eda_data\\engineered_data_2145d80e-b3d1-41b3-8fd0-373c14ae1ba6.csv"
+  ],
+  "quality_report": {
+    "pre_skewness": {
+      "heading_count": 0.0,
+      "link_count": 0.0,
+      "table_count": 0.0
+    },
+    "post_skewness": {
+      "heading_count": 0.0,
+      "link_count": 0.0,
+      "table_count": 0.0
+    },
+    "datetime_features_added": [],
+    "interaction_features_added": [],
+    "final_shape": [
+      21,
+      7
+    ]
+  },
+  "analysis_summary": "Skewness corrected, z-score scaling applied. DateTime expansion added 0 signals. LLM-proposed interaction features accepted: 0.",
+  "interaction_features_added": [],
+  "datetime_features_added": []
+}

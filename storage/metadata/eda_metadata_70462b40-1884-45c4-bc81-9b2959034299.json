@@ -1,0 +1,92 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_4565137b-29fb-4b9d-a4cd-cbfca782ac5a.csv",
+  "profile_path": "storage\\profiles\\profile_52f2bc76-5d11-44c3-8e62-cc161d5d0fb2.json",
+  "plot_paths": [
+    "storage\\plots\\plot_url_ba33cdb4-a0a5-4799-b841-8f8af5e5c2cb.png",
+    "storage\\plots\\plot_title_27e77314-921e-4c01-9d0a-45315f27657d.png",
+    "storage\\plots\\plot_paragraph_a2c1373b-b9c4-47ec-ad22-ae18782b1c9a.png",
+    "storage\\plots\\plot_heading_count_4ac44673-0321-48a3-8175-69d6f48d0554.png",
+    "storage\\plots\\plot_link_count_a2d5674e-84a7-459d-9770-240ac2f8ec8d.png",
+    "storage\\plots\\plot_table_count_04f98c10-c79e-4d5e-9312-74861f1b4315.png",
+    "storage\\plots\\plot_html_source_ef618aa2-a565-4bc9-9b0d-d8bdcd4d931c.png"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "Loading cleaned dataset for exploratory analysis.",
+    "Loaded DataFrame with 21 rows and 7 columns.",
+    "Data profile generated.",
+    "High-level insight summary assembled.",
+    "Descriptive statistics computed for 2 column groups.",
+    "Generated 7 exploratory figures.",
+    "Outlier detection completed across numeric columns.",
+    "Identified skewed numeric columns: [].",
+    "Categorical analysis completed.",
+    "Bivariate analysis completed: 21 pair(s) evaluated."
+  ],
+  "quality_report": {
+    "rows": 21,
+    "columns": 7,
+    "missing_values": {
+      "url": 0,
+      "title": 0,
+      "paragraph": 0,
+      "heading_count": 0,
+      "link_count": 0,
+      "table_count": 0,
+      "html_source": 0
+    },
+    "missing_pct": {
+      "url": 0.0,
+      "title": 0.0,
+      "paragraph": 0.0,
+      "heading_count": 0.0,
+      "link_count": 0.0,
+      "table_count": 0.0,
+      "html_source": 0.0
+    },
+    "duplicates": 0,
+    "dtypes": {
+      "url": "str",
+      "title": "str",
+      "paragraph": "str",
+      "heading_count": "int64",
+      "link_count": "int64",
+      "table_count": "int64",
+      "html_source": "str"
+    },
+    "numeric_summary": {
+      "heading_count": {
+        "count": 21.0,
+        "mean": 21.0,
+        "std": 0.0,
+        "min": 21.0,
+        "25%": 21.0,
+        "50%": 21.0,
+        "75%": 21.0,
+        "max": 21.0
+      },
+      "link_count": {
+        "count": 21.0,
+        "mean": 74.0,
+        "std": 0.0,
+        "min": 74.0,
+        "25%": 74.0,
+        "50%": 74.0,
+        "75%": 74.0,
+        "max": 74.0
+      },
+      "table_count": {
+        "count": 21.0,
+        "mean": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "25%": 0.0,
+        "50%": 0.0,
+        "75%": 0.0,
+        "max": 0.0
+      }
+    },
+    "skewness": {}
+  },
+  "analysis_summary": "The dataset contains 21 rows and 7 columns. There are 3 numeric features and 4 categorical features. Missing values are minimal after the initial data quality pass. Numeric distributions are generally well-centered without strong skew. url is dominated by 'https://books.toscrape.com' at 100.0%. title is dominated by 'all products | books to scrape - sandbox' at 100.0%. paragraph is dominated by 'â£51.77' at 4.8%."
+}

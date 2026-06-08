@@ -1,0 +1,13 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_4565137b-29fb-4b9d-a4cd-cbfca782ac5a.csv",
+  "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_29bdd1a7-fd7c-409e-8bba-00f850eacb01.html",
+  "generated_plots": [],
+  "chart_explanations": [],
+  "visualization_summary": "No meaningful visualizations could be generated because the dataset lacks numeric or categorical features with sufficient samples.",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started visualization generation.",
+    "[INFO] No visualizations generated due to insufficient analytical signal.",
+    "Interactive dashboard compiled and persisted."
+  ]
+}

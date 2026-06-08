@@ -1,0 +1,153 @@
+{
+  "user_query": "analyze and scrape data from the website https://books.toscrape.com",
+  "source_urls": [
+    "https://books.toscrape.com"
+  ],
+  "raw_data_path": "storage\\raw\\raw_data_c3fc4f3a-7e2e-4701-a478-ce084c22c9fb.json",
+  "metadata_path": null,
+  "logs": [
+    "Started data collection workflow",
+    "Extracted URL(s) from query: ['https://books.toscrape.com']",
+    "Discovered 1 URLs",
+    "Completed web scraping",
+    "  https://books.toscrape.com → page_type=product_listing, structured_records=20, success=True",
+    "Raw data saved: storage\\raw\\raw_data_c3fc4f3a-7e2e-4701-a478-ce084c22c9fb.json"
+  ],
+  "current_stage": "data_collection",
+  "raw_data_preview": [
+    {
+      "url": "https://books.toscrape.com",
+      "scraping_mode": "static",
+      "title": "All products | Books to Scrape - Sandbox",
+      "extracted_text": "name: A Light in the ... | price: Â£51.77In stockAdd to basket | rating:  | url: catalogue/a-light-in-the-attic_1000/index.html\nname: Tipping the Velvet | price: Â£53.74In stockAdd to basket | rating:  | url: catalogue/tipping-the-velvet_999/index.html\nname: Soumission | price: Â£50.10In stockAdd to basket | rating:  | url: catalogue/soumission_998/index.html\nname: Sharp Objects | price: Â£47.82In stockAdd to basket | rating:  | url: catalogue/sharp-objects_997/index.html\nname: Sapiens: A Brief History ... | price: Â£54.23In stockAdd to basket | rating:  | url: catalogue/sapiens-a-brief-history-of-humankind_996/index.html\nname: The Requiem Red | price: Â£22.65In stockAdd to basket | rating:  | url: catalogue/the-requiem-red_995/index.html\nname: The Dirty Little Secrets ... | price: Â£33.34In stockAdd to basket | rating:  | url: catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html\nname: The Coming Woman: A ... | price: Â£17.93In stockAdd to basket | rating:  | url: catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html\nname: The Boys in the ... | price: Â£22.60In stockAdd to basket | rating:  | url: catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html\nname: The Black Maria | price: Â£52.15In stockAdd to basket | rating:  | url: catalogue/the-black-maria_991/index.html\nname: Starving Hearts (Triangular Trade ... | price: Â£13.99In stockAdd to basket | rating:  | url: catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html\nname: Shakespeare's Sonnets | price: Â£20.66In stockAdd to basket | rating:  | url: catalogue/shakespeares-sonnets_989/index.html\nname: Set Me Free | price: Â£17.46In stockAdd to basket | rating:  | url: catalogue/set-me-free_988/index.html\nname: Scott Pilgrim's Precious Little ... | price: Â£52.29In stockAdd to basket | rating:  | url: catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html\nname: Rip it Up and ... | price: Â£35.02In stockAdd to basket | rating:  | url: catalogue/rip-it-up-and-start-again_986/index.html\nname: Our Band Could Be ... | price: Â£57.25In stockAdd to basket | rating:  | url: catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html\nname: Olio | price: Â£23.88In stockAdd to basket | rating:  | url: catalogue/olio_984/index.html\nname: Mesaerion: The Best Science ... | price: Â£37.59In stockAdd to basket | rating:  | url: catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html\nname: Libertarianism for Beginners | price: Â£51.33In stockAdd to basket | rating:  | url: catalogue/libertarianism-for-beginners_982/index.html\nname: It's Only the Himalayas | price: Â£45.17In stockAdd to basket | rating:  | url: catalogue/its-only-the-himalayas_981/index.html",
+      "structured_data": [
+        {
+          "name": "A Light in the ...",
+          "price": "Â£51.77In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/a-light-in-the-attic_1000/index.html"
+        },
+        {
+          "name": "Tipping the Velvet",
+          "price": "Â£53.74In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/tipping-the-velvet_999/index.html"
+        },
+        {
+          "name": "Soumission",
+          "price": "Â£50.10In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/soumission_998/index.html"
+        },
+        {
+          "name": "Sharp Objects",
+          "price": "Â£47.82In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/sharp-objects_997/index.html"
+        },
+        {
+          "name": "Sapiens: A Brief History ...",
+          "price": "Â£54.23In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
+        },
+        {
+          "name": "The Requiem Red",
+          "price": "Â£22.65In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/the-requiem-red_995/index.html"
+        },
+        {
+          "name": "The Dirty Little Secrets ...",
+          "price": "Â£33.34In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html"
+        },
+        {
+          "name": "The Coming Woman: A ...",
+          "price": "Â£17.93In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html"
+        },
+        {
+          "name": "The Boys in the ...",
+          "price": "Â£22.60In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html"
+        },
+        {
+          "name": "The Black Maria",
+          "price": "Â£52.15In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/the-black-maria_991/index.html"
+        },
+        {
+          "name": "Starving Hearts (Triangular Trade ...",
+          "price": "Â£13.99In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html"
+        },
+        {
+          "name": "Shakespeare's Sonnets",
+          "price": "Â£20.66In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/shakespeares-sonnets_989/index.html"
+        },
+        {
+          "name": "Set Me Free",
+          "price": "Â£17.46In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/set-me-free_988/index.html"
+        },
+        {
+          "name": "Scott Pilgrim's Precious Little ...",
+          "price": "Â£52.29In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+        },
+        {
+          "name": "Rip it Up and ...",
+          "price": "Â£35.02In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/rip-it-up-and-start-again_986/index.html"
+        },
+        {
+          "name": "Our Band Could Be ...",
+          "price": "Â£57.25In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html"
+        },
+        {
+          "name": "Olio",
+          "price": "Â£23.88In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/olio_984/index.html"
+        },
+        {
+          "name": "Mesaerion: The Best Science ...",
+          "price": "Â£37.59In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html"
+        },
+        {
+          "name": "Libertarianism for Beginners",
+          "price": "Â£51.33In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/libertarianism-for-beginners_982/index.html"
+        },
+        {
+          "name": "It's Only the Himalayas",
+          "price": "Â£45.17In stockAdd to basket",
+          "rating": "",
+          "url": "catalogue/its-only-the-himalayas_981/index.html"
+        }
+      ],
+      "page_type": "product_listing",
+      "html_path": "storage\\raw_html\\8d401071-baf3-431e-9424-c0f74d61c9e3.html",
+      "screenshot_path": null,
+      "metadata_path": "storage\\metadata\\e5af76b5-d145-4684-b961-c222c01a623c.json",
+      "success": true,
+      "error": null
+    }
+  ]
+}
