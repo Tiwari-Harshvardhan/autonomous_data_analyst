@@ -106,7 +106,7 @@ def summarize_data_insights(df: pd.DataFrame, profile: Dict[str, Any]) -> str:
 
     skewness = profile.get("skewness") or {}
     if skewness:
-        skewed_cols = [f"{col} ({meta['direction']})" for col, meta in skewness.items()]
+        skewed_cols = [f"{col} ({meta['direction']})" if isinstance(meta,dict) else f"{col}"  for col, meta in skewness.items()]
         summary_parts.append(f"Detected skewed numeric distributions in: {', '.join(skewed_cols)}.")
     else:
         summary_parts.append("Numeric distributions are generally well-centered without strong skew.")

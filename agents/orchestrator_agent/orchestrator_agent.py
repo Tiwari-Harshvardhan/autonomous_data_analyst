@@ -35,7 +35,7 @@ BASE_STORAGE_DIR = "storage"
 PIPELINE_METADATA_DIR = os.path.join(BASE_STORAGE_DIR, "pipeline")
 os.makedirs(PIPELINE_METADATA_DIR, exist_ok=True)
 
-MAX_RETRY_ATTEMPTS = 2   # how many times the analyzer can trigger a re-run
+MAX_RETRY_ATTEMPTS = 2
 
 
 # ---------------------------------------------------------------------------
@@ -43,23 +43,18 @@ MAX_RETRY_ATTEMPTS = 2   # how many times the analyzer can trigger a re-run
 # ---------------------------------------------------------------------------
 
 class ExecutionPlan(BaseModel):
-    """
-    The reasoning agent's output. Describes exactly which stages to run
-    and why, so the orchestrator doesn't have to guess.
-    """
     user_query: str
-    stages: List[str]           # ordered list of stage keys to execute
+    stages: List[str]
     start_csv_path: Optional[str] = None
-    reasoning: str              # why these stages were chosen
-    data_goal: str              # e.g. "trend analysis", "scrape + visualize"
-    expected_output: str        # what a correct final output should look like
+    reasoning: str
+    data_goal: str
+    expected_output: str
 
 
 class AnalysisVerdict(BaseModel):
-    """The analyzer agent's verdict on a completed pipeline run."""
     is_correct: bool
     issues: List[str] = Field(default_factory=list)
-    correction_instruction: Optional[str] = None  # passed back to orchestrator on retry
+    correction_instruction: Optional[str] = None
 
 
 class OrchestratorState(BaseModel):
@@ -75,7 +70,7 @@ class OrchestratorState(BaseModel):
     logs: List[str] = Field(default_factory=list)
     artifact_paths: Dict[str, str] = Field(default_factory=dict)
     attempt: int = 1
-    correction_instruction: Optional[str] = None  # set on retry
+    correction_instruction: Optional[str] = None
 
     def log(self, message: str) -> None:
         print(f"  [{self.current_stage}] {message}")
@@ -92,7 +87,6 @@ def _read_json(path: str) -> Any:
 
 
 def _sanitize_for_json(obj: Any) -> Any:
-    """Recursively replace NaN/Inf with None so json.dumps never raises."""
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
     if isinstance(obj, list):
@@ -103,6 +97,7 @@ def _sanitize_for_json(obj: Any) -> Any:
         return _sanitize_for_json(obj.tolist())
     return obj
 
+
 def _run_async(awaitable: Any) -> Any:
     """Run a coroutine safely whether or not a loop exists."""
     try:
@@ -111,6 +106,7 @@ def _run_async(awaitable: Any) -> Any:
             return pool.submit(lambda: asyncio.run(awaitable)).result()
     except RuntimeError:
         return asyncio.run(awaitable)
+
 
 def _extract_html_paths(raw_data_path: str):
     records = _read_json(raw_data_path)
@@ -131,70 +127,72 @@ def _save_orchestrator_metadata(state: OrchestratorState) -> str:
         json.dump(sanitized, f, indent=2, ensure_ascii=False)
     return path
 
-async def _run_adk_agent(agent, prompt: str) -> str:
+
+# ---------------------------------------------------------------------------
+# ADK runner helper
+# YOUR working version — kept exactly as-is.
+# ---------------------------------------------------------------------------
+
+_session_service = InMemorySessionService()
+
+
+async def _run_adk_agent(agent: Agent, prompt: str) -> str:
+    """
+    Drains the ADK async-generator returned by runner.run_async() and
+    returns the final accumulated text. Retries up to 5 times on 503s.
+    """
     final_text = ""
     max_attempts = 5
+
     for attempt in range(max_attempts):
         try:
-            session = await _session_service.create_session(app_name = "autonomous-data-analyst", user_id = "system_user")
-            runner = Runner(agent = agent, app_name = "autonomous_data_analyst", session_service = _session_service)
-            return final_text
+            session = await _session_service.create_session(
+                app_name="autonomous_data_analyst",
+                user_id="system_user",
+            )
+            runner = Runner(
+                agent=agent,
+                app_name="autonomous_data_analyst",
+                session_service=_session_service,
+            )
+            content = types.Content(
+                role="user",
+                parts=[types.Part(text=prompt)],
+            )
+
+            async for event in runner.run_async(
+                user_id="system_user",
+                session_id=session.id,
+                new_message=content,
+            ):
+                if (
+                    hasattr(event, "content")
+                    and event.content
+                    and event.content.parts
+                ):
+                    for part in event.content.parts:
+                        if hasattr(part, "text") and part.text:
+                            final_text += part.text
+
+            return final_text.strip()
+
         except Exception as e:
             error_text = str(e)
             if "503" in error_text:
-                wait_time = (2 ** attempt + random.uniform(0,1))
-                print(f"Gemini overloaded. Retrying in {wait_time:.1f} seconds...")
+                wait_time = 2 ** attempt + random.uniform(0, 1)
+                print(f"Gemini overloaded. Retrying in {wait_time:.1f}s...")
                 await asyncio.sleep(wait_time)
+                final_text = ""   # reset accumulator before retry
                 continue
             raise
-        raise RuntimeError("Gemini unavailable after multiple retries")
 
-    session = await _session_service.create_session(
-        app_name="autonomous_data_analyst",
-        user_id="system_user"
-    )
-
-    runner = Runner(
-        agent=agent,
-        app_name="autonomous_data_analyst",
-        session_service=_session_service,
-    )
-
-    content = types.Content(
-        role="user",
-        parts=[
-            types.Part(text=prompt)
-        ]
-    )
-
-    async for event in runner.run_async(
-        user_id="system_user",
-        session_id=session.id,
-        new_message=content
-    ):
-
-        if (
-            hasattr(event, "content")
-            and event.content
-            and event.content.parts
-        ):
-
-            for part in event.content.parts:
-
-                if hasattr(part, "text") and part.text:
-                    final_text += part.text
-
-    return final_text.strip()
+    raise RuntimeError("Gemini unavailable after multiple retries.")
 
 
 # ---------------------------------------------------------------------------
 # Reasoning agent
-#
-# Analyzes the user's prompt and decides which pipeline stages are needed.
-# Returns a structured ExecutionPlan that the orchestrator follows exactly.
 # ---------------------------------------------------------------------------
 
-_session_service = InMemorySessionService()
 _reasoning_agent = Agent(
     model="gemini-2.5-flash",
     name="pipeline_reasoning_agent",
@@ -241,24 +239,18 @@ _reasoning_agent = Agent(
 def plan_pipeline(user_query: str, start_csv_path: Optional[str] = None) -> ExecutionPlan:
     """
     Calls the reasoning agent to produce a structured execution plan.
-    Falls back to a sensible default if the agent response cannot be parsed.
+    Falls back to a safe default if the response can't be parsed.
     """
     prompt = f'User query: "{user_query}"'
     if start_csv_path:
         prompt += f'\nThe user has provided a CSV file at: {start_csv_path}'
 
-    # The reasoning agent returns plain JSON — parse it directly.
-    response = _run_async(
-        _run_adk_agent(_reasoning_agent, prompt)  # adjust to your ADK run method
-    )
-
-    final_text=""
+    response = _run_async(_run_adk_agent(_reasoning_agent, prompt))
 
     try:
         raw = response if isinstance(response, dict) else json.loads(response)
         return ExecutionPlan(**raw)
     except Exception:
-        # Safe fallback: if parsing fails, run the full pipeline.
         stages = (
             ["data_cleaning", "feature_engineering", "eda", "visualization"]
             if start_csv_path
@@ -277,10 +269,6 @@ def plan_pipeline(user_query: str, start_csv_path: Optional[str] = None) -> Exec
 
 # ---------------------------------------------------------------------------
 # Analyzer agent
-#
-# Inspects the pipeline's final output and decides whether it actually
-# satisfies the user's original goal. If not, it issues a correction
-# instruction that gets passed back to the orchestrator for a retry.
 # ---------------------------------------------------------------------------
 
 _analyzer_agent = Agent(
@@ -308,9 +296,7 @@ _analyzer_agent = Agent(
        - User asked for trend analysis, but output is a frequency bar of IDs.
        - EDA report shows all columns are non-numeric when the goal needs numbers.
     3. If the output is wrong, set is_correct=false and write a specific
-       correction_instruction explaining what the pipeline should do differently
-       (e.g. "Re-run extraction focusing on <price> and <category> columns;
-       drop URL and ID columns before visualization").
+       correction_instruction explaining what the pipeline should do differently.
 
     Respond ONLY with a JSON object (no markdown fences):
     {
@@ -327,10 +313,6 @@ def analyze_output(
     eda_state: Optional[Dict[str, Any]],
     visualization_state: Optional[Dict[str, Any]],
 ) -> AnalysisVerdict:
-    """
-    Asks the analyzer agent whether the pipeline output matches the user's goal.
-    Returns an AnalysisVerdict with is_correct and optional correction_instruction.
-    """
     eda_summary = {}
     if eda_state:
         qr = eda_state.get("quality_report", {})
@@ -354,23 +336,20 @@ def analyze_output(
         ),
     }, indent=2)
 
-    response = _run_async(
-        _run_adk_agent(_analyzer_agent, prompt)
-    )
+    response = _run_async(_run_adk_agent(_analyzer_agent, prompt))
 
     try:
         raw = response if isinstance(response, dict) else json.loads(response)
         return AnalysisVerdict(**raw)
     except Exception:
-        # If we can't parse the verdict, assume it's correct to avoid infinite loops.
-        return AnalysisVerdict(is_correct=True, issues=["Analyzer response unparseable — assuming correct."])
+        return AnalysisVerdict(
+            is_correct=True,
+            issues=["Analyzer response unparseable — assuming correct."],
+        )
 
 
 # ---------------------------------------------------------------------------
 # Stage executors
-#
-# Each function runs exactly one pipeline stage and returns its state dict.
-# The orchestrator calls these in the order specified by the ExecutionPlan.
 # ---------------------------------------------------------------------------
 
 VALID_STAGES = {
@@ -384,7 +363,7 @@ VALID_STAGES = {
 
 
 def _run_data_collection(state: OrchestratorState) -> str:
-    """Returns raw_data_path."""
+    """Scrapes URLs and returns raw_data_path."""
     raw_state = _run_async(
         execute_data_collection(CollectionWorkflowState(user_query=state.user_query))
     )
@@ -396,11 +375,21 @@ def _run_data_collection(state: OrchestratorState) -> str:
 
 
 def _run_extraction(state: OrchestratorState, raw_data_path: str) -> str:
-    """Returns extracted CSV path."""
+    """
+    Parses HTML files into a structured CSV.
+    Passes raw_data_path to the extractor so it can read structured_data
+    (pre-extracted product cards) directly from the scraper's JSON output
+    instead of always re-parsing HTML from scratch.
+    """
     html_paths, url_map = _extract_html_paths(raw_data_path)
     if not html_paths:
         raise ValueError("Extraction stage: no HTML paths found in raw data output.")
-    extraction_state = execute_extraction(html_paths, url_map=url_map)
+
+    extraction_state = execute_extraction(
+        html_paths,
+        url_map=url_map,
+        raw_data_path=raw_data_path,   # ← critical: lets extractor use structured_data
+    )
     state.extraction_state = extraction_state.model_dump()
     path = extraction_state.dataframe_path
     state.artifact_paths["extracted_dataframe_path"] = path
@@ -448,16 +437,16 @@ def _run_visualization(state: OrchestratorState, input_csv: str) -> Dict[str, An
 
 # ---------------------------------------------------------------------------
 # Core pipeline runner
-#
-# Executes stages in the order given by the ExecutionPlan.
-# Returns the completed OrchestratorState.
 # ---------------------------------------------------------------------------
 
-def _execute_plan(plan: ExecutionPlan, attempt: int = 1,
-                  correction: Optional[str] = None) -> OrchestratorState:
+def _execute_plan(
+    plan: ExecutionPlan,
+    attempt: int = 1,
+    correction: Optional[str] = None,
+) -> OrchestratorState:
     """
-    Runs the pipeline stages listed in `plan.stages` in order, threading
-    each stage's output path into the next stage's input.
+    Executes stages in the order given by the ExecutionPlan, threading each
+    stage's output path into the next stage's input via `current_csv`.
     """
     state = OrchestratorState(
         user_query=plan.user_query,
@@ -469,8 +458,6 @@ def _execute_plan(plan: ExecutionPlan, attempt: int = 1,
     if correction:
         state.log(f"Retry attempt {attempt}. Correction: {correction}")
 
-    # The "cursor" tracks the most recent CSV produced so each stage
-    # knows what to read. Starts as the user-supplied CSV (may be None).
     current_csv: Optional[str] = plan.start_csv_path
     raw_data_path: Optional[str] = None
 
@@ -535,8 +522,6 @@ def orchestrate_full_pipeline(
       3. Analyzer agent checks the output.
       4. If output is wrong and retries remain, re-runs with correction.
     """
-
-    # Step 1 — plan
     print("\n[Reasoning] Analyzing user query...")
     plan = plan_pipeline(user_query, start_csv_path=start_from_csv_path)
     print(f"[Reasoning] Stages selected: {plan.stages}")
@@ -545,12 +530,10 @@ def orchestrate_full_pipeline(
 
     correction: Optional[str] = None
 
-    for attempt in range(1, MAX_RETRY_ATTEMPTS + 2):  # +2 so last attempt still runs
-        # Step 2 — execute
+    for attempt in range(1, MAX_RETRY_ATTEMPTS + 2):
         print(f"\n[Orchestrator] Executing pipeline (attempt {attempt})...")
         orch_state = _execute_plan(plan, attempt=attempt, correction=correction)
 
-        # Step 3 — analyze
         print("\n[Analyzer] Reviewing output quality...")
         verdict = analyze_output(plan, orch_state.eda_state, orch_state.visualization_state)
 
@@ -565,27 +548,22 @@ def orchestrate_full_pipeline(
             orch_state.log("Max retries reached. Output may be imperfect.")
             break
 
-        # Feed the correction back into the next attempt
         correction = verdict.correction_instruction
         print(f"[Analyzer] Retrying with correction: {correction}")
 
-        # Update the plan's expected_output with the correction so the
-        # reasoning context improves on the next pass.
         plan = ExecutionPlan(
             **{**plan.model_dump(), "expected_output": correction or plan.expected_output}
         )
 
-    # Save combined metadata
     metadata_path = _save_orchestrator_metadata(orch_state)
     orch_state.artifact_paths["orchestration_metadata_path"] = metadata_path
     orch_state.log(f"Orchestration metadata saved: {metadata_path}")
 
-    result = _sanitize_for_json(orch_state.model_dump())
-    return result
+    return _sanitize_for_json(orch_state.model_dump())
 
 
 # ---------------------------------------------------------------------------
-# ADK tool wrappers (thin — just call the pipeline functions above)
+# ADK tool wrappers
 # ---------------------------------------------------------------------------
 
 def execute_data_collection_tool(user_query: str) -> dict:
@@ -597,11 +575,18 @@ def execute_data_collection_tool(user_query: str) -> dict:
 
 
 def execute_extraction_tool(raw_data_path: str) -> dict:
-    """ADK tool: runs extraction from a raw_data JSON path."""
+    """
+    ADK tool: runs extraction from a raw_data JSON path.
+    Passes raw_data_path through so structured_data is used when available.
+    """
     html_paths, url_map = _extract_html_paths(raw_data_path)
     if not html_paths:
         raise ValueError("No HTML paths found in the provided raw data file.")
-    state = execute_extraction(html_paths, url_map=url_map)
+    state = execute_extraction(
+        html_paths,
+        url_map=url_map,
+        raw_data_path=raw_data_path,   # ← same fix as _run_extraction
+    )
     return state.model_dump()
 
 

@@ -1,0 +1,30 @@
+{
+    "input_dataframe_path": "storage\\dataframes\\extracted_8e75c3b7-de04-4b4c-8049-7ca6a4dc43df.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv",
+    "profile_path": "storage\\profiles\\profile_a423a2f8-1382-46b6-8393-eebebb01e625.json",
+    "metadata_path": null,
+    "logs": [
+        "Loading dataframe",
+        "Loaded dataframe with shape (40, 7)",
+        "Data profiling completed",
+        "Missing values handled",
+        "Duplicates removed",
+        "Text standardized",
+        "Numeric validation completed",
+        "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv"
+    ],
+    "quality_report": {
+        "final_rows": 21,
+        "final_columns": 7,
+        "missing_after_cleaning": {
+            "url": 0,
+            "title": 0,
+            "paragraph": 0,
+            "heading_count": 0,
+            "link_count": 0,
+            "table_count": 0,
+            "html_source": 0
+        },
+        "duplicates_after_cleaning": 0
+    }
+}

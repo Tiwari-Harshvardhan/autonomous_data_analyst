@@ -1,0 +1,762 @@
+{
+  "user_query": "scrape and analyze data from the website https://books.toscrape.com",
+  "current_stage": "finished",
+  "execution_plan": {
+    "user_query": "scrape and analyze data from the website https://books.toscrape.com",
+    "stages": [
+      "data_collection",
+      "extraction",
+      "data_cleaning",
+      "feature_engineering",
+      "eda",
+      "visualization"
+    ],
+    "start_csv_path": null,
+    "reasoning": "Fallback plan — reasoning agent response could not be parsed.",
+    "data_goal": "Complete data analysis",
+    "expected_output": "A dashboard and EDA report derived from the input data."
+  },
+  "raw_data_state": {
+    "user_query": "scrape and analyze data from the website https://books.toscrape.com",
+    "source_urls": [
+      "https://books.toscrape.com"
+    ],
+    "raw_data_path": "storage\\raw\\raw_data_fcb9ef46-55dd-461c-b10c-2b1b4b0c1250.json",
+    "metadata_path": "storage\\metadata\\metadata_e08ac7ee-a064-4450-a765-14d2cd82667a.json",
+    "logs": [
+      "Started data collection workflow",
+      "Extracted URL(s) from query: ['https://books.toscrape.com']",
+      "Discovered 1 URLs",
+      "Completed web scraping",
+      "  https://books.toscrape.com → page_type=product_listing, structured_records=20, success=True",
+      "Raw data saved: storage\\raw\\raw_data_fcb9ef46-55dd-461c-b10c-2b1b4b0c1250.json",
+      "Metadata saved: storage\\metadata\\metadata_e08ac7ee-a064-4450-a765-14d2cd82667a.json"
+    ],
+    "current_stage": "data_collection",
+    "raw_data_preview": [
+      {
+        "url": "https://books.toscrape.com",
+        "scraping_mode": "static",
+        "title": "All products | Books to Scrape - Sandbox",
+        "extracted_text": "name: A Light in the ... | price: Â£51.77In stockAdd to basket | rating:  | url: catalogue/a-light-in-the-attic_1000/index.html\nname: Tipping the Velvet | price: Â£53.74In stockAdd to basket | rating:  | url: catalogue/tipping-the-velvet_999/index.html\nname: Soumission | price: Â£50.10In stockAdd to basket | rating:  | url: catalogue/soumission_998/index.html\nname: Sharp Objects | price: Â£47.82In stockAdd to basket | rating:  | url: catalogue/sharp-objects_997/index.html\nname: Sapiens: A Brief History ... | price: Â£54.23In stockAdd to basket | rating:  | url: catalogue/sapiens-a-brief-history-of-humankind_996/index.html\nname: The Requiem Red | price: Â£22.65In stockAdd to basket | rating:  | url: catalogue/the-requiem-red_995/index.html\nname: The Dirty Little Secrets ... | price: Â£33.34In stockAdd to basket | rating:  | url: catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html\nname: The Coming Woman: A ... | price: Â£17.93In stockAdd to basket | rating:  | url: catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html\nname: The Boys in the ... | price: Â£22.60In stockAdd to basket | rating:  | url: catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html\nname: The Black Maria | price: Â£52.15In stockAdd to basket | rating:  | url: catalogue/the-black-maria_991/index.html\nname: Starving Hearts (Triangular Trade ... | price: Â£13.99In stockAdd to basket | rating:  | url: catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html\nname: Shakespeare's Sonnets | price: Â£20.66In stockAdd to basket | rating:  | url: catalogue/shakespeares-sonnets_989/index.html\nname: Set Me Free | price: Â£17.46In stockAdd to basket | rating:  | url: catalogue/set-me-free_988/index.html\nname: Scott Pilgrim's Precious Little ... | price: Â£52.29In stockAdd to basket | rating:  | url: catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html\nname: Rip it Up and ... | price: Â£35.02In stockAdd to basket | rating:  | url: catalogue/rip-it-up-and-start-again_986/index.html\nname: Our Band Could Be ... | price: Â£57.25In stockAdd to basket | rating:  | url: catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html\nname: Olio | price: Â£23.88In stockAdd to basket | rating:  | url: catalogue/olio_984/index.html\nname: Mesaerion: The Best Science ... | price: Â£37.59In stockAdd to basket | rating:  | url: catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html\nname: Libertarianism for Beginners | price: Â£51.33In stockAdd to basket | rating:  | url: catalogue/libertarianism-for-beginners_982/index.html\nname: It's Only the Himalayas | price: Â£45.17In stockAdd to basket | rating:  | url: catalogue/its-only-the-himalayas_981/index.html",
+        "structured_data": [
+          {
+            "name": "A Light in the ...",
+            "price": "Â£51.77In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/a-light-in-the-attic_1000/index.html"
+          },
+          {
+            "name": "Tipping the Velvet",
+            "price": "Â£53.74In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/tipping-the-velvet_999/index.html"
+          },
+          {
+            "name": "Soumission",
+            "price": "Â£50.10In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/soumission_998/index.html"
+          },
+          {
+            "name": "Sharp Objects",
+            "price": "Â£47.82In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/sharp-objects_997/index.html"
+          },
+          {
+            "name": "Sapiens: A Brief History ...",
+            "price": "Â£54.23In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
+          },
+          {
+            "name": "The Requiem Red",
+            "price": "Â£22.65In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/the-requiem-red_995/index.html"
+          },
+          {
+            "name": "The Dirty Little Secrets ...",
+            "price": "Â£33.34In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html"
+          },
+          {
+            "name": "The Coming Woman: A ...",
+            "price": "Â£17.93In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html"
+          },
+          {
+            "name": "The Boys in the ...",
+            "price": "Â£22.60In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html"
+          },
+          {
+            "name": "The Black Maria",
+            "price": "Â£52.15In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/the-black-maria_991/index.html"
+          },
+          {
+            "name": "Starving Hearts (Triangular Trade ...",
+            "price": "Â£13.99In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html"
+          },
+          {
+            "name": "Shakespeare's Sonnets",
+            "price": "Â£20.66In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/shakespeares-sonnets_989/index.html"
+          },
+          {
+            "name": "Set Me Free",
+            "price": "Â£17.46In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/set-me-free_988/index.html"
+          },
+          {
+            "name": "Scott Pilgrim's Precious Little ...",
+            "price": "Â£52.29In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+          },
+          {
+            "name": "Rip it Up and ...",
+            "price": "Â£35.02In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/rip-it-up-and-start-again_986/index.html"
+          },
+          {
+            "name": "Our Band Could Be ...",
+            "price": "Â£57.25In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html"
+          },
+          {
+            "name": "Olio",
+            "price": "Â£23.88In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/olio_984/index.html"
+          },
+          {
+            "name": "Mesaerion: The Best Science ...",
+            "price": "Â£37.59In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html"
+          },
+          {
+            "name": "Libertarianism for Beginners",
+            "price": "Â£51.33In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/libertarianism-for-beginners_982/index.html"
+          },
+          {
+            "name": "It's Only the Himalayas",
+            "price": "Â£45.17In stockAdd to basket",
+            "rating": "",
+            "url": "catalogue/its-only-the-himalayas_981/index.html"
+          }
+        ],
+        "page_type": "product_listing",
+        "html_path": "storage\\raw_html\\992fc22d-b559-4fcc-9392-d36717440d53.html",
+        "screenshot_path": null,
+        "metadata_path": "storage\\metadata\\b4d76394-e2d5-43e9-a60d-5cc6d392e0ba.json",
+        "success": true,
+        "error": null
+      }
+    ]
+  },
+  "extraction_state": {
+    "html_paths": [
+      "storage\\raw_html\\992fc22d-b559-4fcc-9392-d36717440d53.html"
+    ],
+    "parsed_pages": [
+      {
+        "source_html_path": "storage\\raw_html\\992fc22d-b559-4fcc-9392-d36717440d53.html",
+        "url": "https://books.toscrape.com",
+        "title": "All products | Books to Scrape - Sandbox",
+        "headings": [
+          "All products",
+          "A Light in the ...",
+          "Tipping the Velvet",
+          "Soumission",
+          "Sharp Objects",
+          "Sapiens: A Brief History ...",
+          "The Requiem Red",
+          "The Dirty Little Secrets ...",
+          "The Coming Woman: A ...",
+          "The Boys in the ...",
+          "The Black Maria",
+          "Starving Hearts (Triangular Trade ...",
+          "Shakespeare's Sonnets",
+          "Set Me Free",
+          "Scott Pilgrim's Precious Little ...",
+          "Rip it Up and ...",
+          "Our Band Could Be ...",
+          "Olio",
+          "Mesaerion: The Best Science ...",
+          "Libertarianism for Beginners",
+          "It's Only the Himalayas"
+        ],
+        "paragraphs": [
+          "Â£51.77",
+          "In stock",
+          "Â£53.74",
+          "In stock",
+          "Â£50.10",
+          "In stock",
+          "Â£47.82",
+          "In stock",
+          "Â£54.23",
+          "In stock",
+          "Â£22.65",
+          "In stock",
+          "Â£33.34",
+          "In stock",
+          "Â£17.93",
+          "In stock",
+          "Â£22.60",
+          "In stock",
+          "Â£52.15",
+          "In stock",
+          "Â£13.99",
+          "In stock",
+          "Â£20.66",
+          "In stock",
+          "Â£17.46",
+          "In stock",
+          "Â£52.29",
+          "In stock",
+          "Â£35.02",
+          "In stock",
+          "Â£57.25",
+          "In stock",
+          "Â£23.88",
+          "In stock",
+          "Â£37.59",
+          "In stock",
+          "Â£51.33",
+          "In stock",
+          "Â£45.17",
+          "In stock"
+        ],
+        "links": [
+          {
+            "text": "Books to Scrape",
+            "href": "index.html"
+          },
+          {
+            "text": "Home",
+            "href": "index.html"
+          },
+          {
+            "text": "Books",
+            "href": "catalogue/category/books_1/index.html"
+          },
+          {
+            "text": "Travel",
+            "href": "catalogue/category/books/travel_2/index.html"
+          },
+          {
+            "text": "Mystery",
+            "href": "catalogue/category/books/mystery_3/index.html"
+          },
+          {
+            "text": "Historical Fiction",
+            "href": "catalogue/category/books/historical-fiction_4/index.html"
+          },
+          {
+            "text": "Sequential Art",
+            "href": "catalogue/category/books/sequential-art_5/index.html"
+          },
+          {
+            "text": "Classics",
+            "href": "catalogue/category/books/classics_6/index.html"
+          },
+          {
+            "text": "Philosophy",
+            "href": "catalogue/category/books/philosophy_7/index.html"
+          },
+          {
+            "text": "Romance",
+            "href": "catalogue/category/books/romance_8/index.html"
+          },
+          {
+            "text": "Womens Fiction",
+            "href": "catalogue/category/books/womens-fiction_9/index.html"
+          },
+          {
+            "text": "Fiction",
+            "href": "catalogue/category/books/fiction_10/index.html"
+          },
+          {
+            "text": "Childrens",
+            "href": "catalogue/category/books/childrens_11/index.html"
+          },
+          {
+            "text": "Religion",
+            "href": "catalogue/category/books/religion_12/index.html"
+          },
+          {
+            "text": "Nonfiction",
+            "href": "catalogue/category/books/nonfiction_13/index.html"
+          },
+          {
+            "text": "Music",
+            "href": "catalogue/category/books/music_14/index.html"
+          },
+          {
+            "text": "Default",
+            "href": "catalogue/category/books/default_15/index.html"
+          },
+          {
+            "text": "Science Fiction",
+            "href": "catalogue/category/books/science-fiction_16/index.html"
+          },
+          {
+            "text": "Sports and Games",
+            "href": "catalogue/category/books/sports-and-games_17/index.html"
+          },
+          {
+            "text": "Add a comment",
+            "href": "catalogue/category/books/add-a-comment_18/index.html"
+          },
+          {
+            "text": "Fantasy",
+            "href": "catalogue/category/books/fantasy_19/index.html"
+          },
+          {
+            "text": "New Adult",
+            "href": "catalogue/category/books/new-adult_20/index.html"
+          },
+          {
+            "text": "Young Adult",
+            "href": "catalogue/category/books/young-adult_21/index.html"
+          },
+          {
+            "text": "Science",
+            "href": "catalogue/category/books/science_22/index.html"
+          },
+          {
+            "text": "Poetry",
+            "href": "catalogue/category/books/poetry_23/index.html"
+          },
+          {
+            "text": "Paranormal",
+            "href": "catalogue/category/books/paranormal_24/index.html"
+          },
+          {
+            "text": "Art",
+            "href": "catalogue/category/books/art_25/index.html"
+          },
+          {
+            "text": "Psychology",
+            "href": "catalogue/category/books/psychology_26/index.html"
+          },
+          {
+            "text": "Autobiography",
+            "href": "catalogue/category/books/autobiography_27/index.html"
+          },
+          {
+            "text": "Parenting",
+            "href": "catalogue/category/books/parenting_28/index.html"
+          },
+          {
+            "text": "Adult Fiction",
+            "href": "catalogue/category/books/adult-fiction_29/index.html"
+          },
+          {
+            "text": "Humor",
+            "href": "catalogue/category/books/humor_30/index.html"
+          },
+          {
+            "text": "Horror",
+            "href": "catalogue/category/books/horror_31/index.html"
+          },
+          {
+            "text": "History",
+            "href": "catalogue/category/books/history_32/index.html"
+          },
+          {
+            "text": "Food and Drink",
+            "href": "catalogue/category/books/food-and-drink_33/index.html"
+          },
+          {
+            "text": "Christian Fiction",
+            "href": "catalogue/category/books/christian-fiction_34/index.html"
+          },
+          {
+            "text": "Business",
+            "href": "catalogue/category/books/business_35/index.html"
+          },
+          {
+            "text": "Biography",
+            "href": "catalogue/category/books/biography_36/index.html"
+          },
+          {
+            "text": "Thriller",
+            "href": "catalogue/category/books/thriller_37/index.html"
+          },
+          {
+            "text": "Contemporary",
+            "href": "catalogue/category/books/contemporary_38/index.html"
+          },
+          {
+            "text": "Spirituality",
+            "href": "catalogue/category/books/spirituality_39/index.html"
+          },
+          {
+            "text": "Academic",
+            "href": "catalogue/category/books/academic_40/index.html"
+          },
+          {
+            "text": "Self Help",
+            "href": "catalogue/category/books/self-help_41/index.html"
+          },
+          {
+            "text": "Historical",
+            "href": "catalogue/category/books/historical_42/index.html"
+          },
+          {
+            "text": "Christian",
+            "href": "catalogue/category/books/christian_43/index.html"
+          },
+          {
+            "text": "Suspense",
+            "href": "catalogue/category/books/suspense_44/index.html"
+          },
+          {
+            "text": "Short Stories",
+            "href": "catalogue/category/books/short-stories_45/index.html"
+          },
+          {
+            "text": "Novels",
+            "href": "catalogue/category/books/novels_46/index.html"
+          },
+          {
+            "text": "Health",
+            "href": "catalogue/category/books/health_47/index.html"
+          },
+          {
+            "text": "Politics",
+            "href": "catalogue/category/books/politics_48/index.html"
+          },
+          {
+            "text": "Cultural",
+            "href": "catalogue/category/books/cultural_49/index.html"
+          },
+          {
+            "text": "Erotica",
+            "href": "catalogue/category/books/erotica_50/index.html"
+          },
+          {
+            "text": "Crime",
+            "href": "catalogue/category/books/crime_51/index.html"
+          },
+          {
+            "text": "A Light in the ...",
+            "href": "catalogue/a-light-in-the-attic_1000/index.html"
+          },
+          {
+            "text": "Tipping the Velvet",
+            "href": "catalogue/tipping-the-velvet_999/index.html"
+          },
+          {
+            "text": "Soumission",
+            "href": "catalogue/soumission_998/index.html"
+          },
+          {
+            "text": "Sharp Objects",
+            "href": "catalogue/sharp-objects_997/index.html"
+          },
+          {
+            "text": "Sapiens: A Brief History ...",
+            "href": "catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
+          },
+          {
+            "text": "The Requiem Red",
+            "href": "catalogue/the-requiem-red_995/index.html"
+          },
+          {
+            "text": "The Dirty Little Secrets ...",
+            "href": "catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html"
+          },
+          {
+            "text": "The Coming Woman: A ...",
+            "href": "catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html"
+          },
+          {
+            "text": "The Boys in the ...",
+            "href": "catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html"
+          },
+          {
+            "text": "The Black Maria",
+            "href": "catalogue/the-black-maria_991/index.html"
+          },
+          {
+            "text": "Starving Hearts (Triangular Trade ...",
+            "href": "catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html"
+          },
+          {
+            "text": "Shakespeare's Sonnets",
+            "href": "catalogue/shakespeares-sonnets_989/index.html"
+          },
+          {
+            "text": "Set Me Free",
+            "href": "catalogue/set-me-free_988/index.html"
+          },
+          {
+            "text": "Scott Pilgrim's Precious Little ...",
+            "href": "catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+          },
+          {
+            "text": "Rip it Up and ...",
+            "href": "catalogue/rip-it-up-and-start-again_986/index.html"
+          },
+          {
+            "text": "Our Band Could Be ...",
+            "href": "catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html"
+          },
+          {
+            "text": "Olio",
+            "href": "catalogue/olio_984/index.html"
+          },
+          {
+            "text": "Mesaerion: The Best Science ...",
+            "href": "catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html"
+          },
+          {
+            "text": "Libertarianism for Beginners",
+            "href": "catalogue/libertarianism-for-beginners_982/index.html"
+          },
+          {
+            "text": "It's Only the Himalayas",
+            "href": "catalogue/its-only-the-himalayas_981/index.html"
+          },
+          {
+            "text": "next",
+            "href": "catalogue/page-2.html"
+          }
+        ],
+        "tables": [],
+        "success": true,
+        "error": null
+      }
+    ],
+    "dataframe_path": "storage\\dataframes\\extracted_8e75c3b7-de04-4b4c-8049-7ca6a4dc43df.csv",
+    "metadata_path": "storage\\metadata\\extraction_metadata_75cc7968-6ecb-4ac9-a0d5-ed262bfc8d1f.json",
+    "logs": [
+      "Starting extraction for 1 HTML files",
+      "storage\\raw_html\\992fc22d-b559-4fcc-9392-d36717440d53.html → ok",
+      "Extraction complete",
+      "DataFrame built: 40 rows, 7 columns",
+      "DataFrame saved: storage\\dataframes\\extracted_8e75c3b7-de04-4b4c-8049-7ca6a4dc43df.csv",
+      "Metadata saved: storage\\metadata\\extraction_metadata_75cc7968-6ecb-4ac9-a0d5-ed262bfc8d1f.json"
+    ]
+  },
+  "cleaning_state": {
+    "input_dataframe_path": "storage\\dataframes\\extracted_8e75c3b7-de04-4b4c-8049-7ca6a4dc43df.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv",
+    "profile_path": "storage\\profiles\\profile_a423a2f8-1382-46b6-8393-eebebb01e625.json",
+    "metadata_path": "storage\\metadata\\cleaning_metadata_83f4134f-b542-4b37-b865-7271a775354e.json",
+    "logs": [
+      "Loading dataframe",
+      "Loaded dataframe with shape (40, 7)",
+      "Data profiling completed",
+      "Missing values handled",
+      "Duplicates removed",
+      "Text standardized",
+      "Numeric validation completed",
+      "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv",
+      "Metadata saved at storage\\metadata\\cleaning_metadata_83f4134f-b542-4b37-b865-7271a775354e.json"
+    ],
+    "quality_report": {
+      "final_rows": 21,
+      "final_columns": 7,
+      "missing_after_cleaning": {
+        "url": 0,
+        "title": 0,
+        "paragraph": 0,
+        "heading_count": 0,
+        "link_count": 0,
+        "table_count": 0,
+        "html_source": 0
+      },
+      "duplicates_after_cleaning": 0
+    }
+  },
+  "feature_state": {
+    "input_dataframe_path": "storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_02737257-08d7-476e-aebf-9a728d72e8ff.csv",
+    "profile_path": "storage\\profiles\\profile_a420a66c-60e4-4d03-bc7d-112e85ef136f.json",
+    "metadata_path": "storage\\metadata\\feature_engineering_metadata_c33be2fe-af30-48be-a8f2-05f2a3b1971a.json",
+    "logs": [
+      "Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv",
+      "Loaded DataFrame: 21 rows × 7 cols. Numeric columns: ['heading_count', 'link_count', 'table_count']",
+      "Skewness correction applied.",
+      "Z-score scaling applied to numeric features.",
+      "DateTime expansion complete. New columns: none",
+      "[interaction] Attempt 1/3",
+      "[interaction] LLM call failed: GEMINI_API_KEY environment variable is not set.",
+      "Feature interaction complete. Added: none",
+      "Engineered DataFrame saved: 21 rows × 7 cols → storage\\eda_data\\engineered_data_02737257-08d7-476e-aebf-9a728d72e8ff.csv",
+      "Metadata saved."
+    ],
+    "quality_report": {
+      "pre_skewness": {
+        "heading_count": 0.0,
+        "link_count": 0.0,
+        "table_count": 0.0
+      },
+      "post_skewness": {
+        "heading_count": 0.0,
+        "link_count": 0.0,
+        "table_count": 0.0
+      },
+      "datetime_features_added": [],
+      "interaction_features_added": [],
+      "final_shape": [
+        21,
+        7
+      ]
+    },
+    "analysis_summary": "Skewness corrected, z-score scaling applied. DateTime expansion added 0 signals. LLM-proposed interaction features accepted: 0.",
+    "interaction_features_added": [],
+    "datetime_features_added": []
+  },
+  "eda_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_02737257-08d7-476e-aebf-9a728d72e8ff.csv",
+    "profile_path": "storage\\profiles\\profile_316b788b-4ed8-40e9-8f28-237105d5d948.json",
+    "plot_paths": [
+      "storage\\plots\\plot_url_2a5c7d2a-4a98-4eb5-99ef-46d3d5b92902.png",
+      "storage\\plots\\plot_title_b579bb54-9b57-490e-b288-78647e3eb9fb.png",
+      "storage\\plots\\plot_paragraph_53fa4b04-e0c9-4cb5-9170-08c16a1d839e.png",
+      "storage\\plots\\plot_heading_count_0939ec47-7c0b-4897-8b8e-3f6fd81da644.png",
+      "storage\\plots\\plot_link_count_32043576-59fc-4b62-8d36-3bde505b6598.png",
+      "storage\\plots\\plot_table_count_e243a664-f962-46dd-aea1-52ed8d898f77.png",
+      "storage\\plots\\plot_html_source_b703fec7-040c-4866-8d6e-b57120ee1111.png"
+    ],
+    "metadata_path": "storage\\metadata\\eda_metadata_d2670413-2707-41ce-9a65-430513f49761.json",
+    "logs": [
+      "Loading cleaned dataset for exploratory analysis.",
+      "Loaded DataFrame with 21 rows and 7 columns.",
+      "Data profile generated.",
+      "High-level insight summary assembled.",
+      "Descriptive statistics computed for 2 column groups.",
+      "Generated 7 exploratory figures.",
+      "Outlier detection completed across numeric columns.",
+      "Identified skewed numeric columns: [].",
+      "Categorical analysis completed.",
+      "Bivariate analysis completed: 21 pair(s) evaluated.",
+      "EDA metadata saved."
+    ],
+    "quality_report": {
+      "rows": 21,
+      "columns": 7,
+      "missing_values": {
+        "url": 0,
+        "title": 0,
+        "paragraph": 0,
+        "heading_count": 0,
+        "link_count": 0,
+        "table_count": 0,
+        "html_source": 0
+      },
+      "missing_pct": {
+        "url": 0.0,
+        "title": 0.0,
+        "paragraph": 0.0,
+        "heading_count": 0.0,
+        "link_count": 0.0,
+        "table_count": 0.0,
+        "html_source": 0.0
+      },
+      "duplicates": 0,
+      "dtypes": {
+        "url": "str",
+        "title": "str",
+        "paragraph": "str",
+        "heading_count": "int64",
+        "link_count": "int64",
+        "table_count": "int64",
+        "html_source": "str"
+      },
+      "numeric_summary": {
+        "heading_count": {
+          "count": 21.0,
+          "mean": 21.0,
+          "std": 0.0,
+          "min": 21.0,
+          "25%": 21.0,
+          "50%": 21.0,
+          "75%": 21.0,
+          "max": 21.0
+        },
+        "link_count": {
+          "count": 21.0,
+          "mean": 74.0,
+          "std": 0.0,
+          "min": 74.0,
+          "25%": 74.0,
+          "50%": 74.0,
+          "75%": 74.0,
+          "max": 74.0
+        },
+        "table_count": {
+          "count": 21.0,
+          "mean": 0.0,
+          "std": 0.0,
+          "min": 0.0,
+          "25%": 0.0,
+          "50%": 0.0,
+          "75%": 0.0,
+          "max": 0.0
+        }
+      },
+      "skewness": {}
+    },
+    "analysis_summary": "The dataset contains 21 rows and 7 columns. There are 3 numeric features and 4 categorical features. Missing values are minimal after the initial data quality pass. Numeric distributions are generally well-centered without strong skew. url is dominated by 'https://books.toscrape.com' at 100.0%. title is dominated by 'all products | books to scrape - sandbox' at 100.0%. paragraph is dominated by 'â£51.77' at 4.8%."
+  },
+  "visualization_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_02737257-08d7-476e-aebf-9a728d72e8ff.csv",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_0f06d3cc-dfd5-4ccf-be4c-c6f865156dbd.html",
+    "generated_plots": [],
+    "chart_explanations": [],
+    "visualization_summary": "No meaningful visualizations could be generated because the dataset lacks numeric or categorical features with sufficient samples.",
+    "metadata_path": "storage\\visual_metadata\\visualisation_metadata_c5159906-37ce-48da-a197-06499dd88594.json",
+    "logs": [
+      "[INIT] Started visualization generation.",
+      "[INFO] No visualizations generated due to insufficient analytical signal.",
+      "Interactive dashboard compiled and persisted."
+    ]
+  },
+  "logs": [
+    "Starting stage: data_collection",
+    "Raw data saved: storage\\raw\\raw_data_fcb9ef46-55dd-461c-b10c-2b1b4b0c1250.json",
+    "Starting stage: extraction",
+    "Extracted CSV saved: storage\\dataframes\\extracted_8e75c3b7-de04-4b4c-8049-7ca6a4dc43df.csv",
+    "Starting stage: data_cleaning",
+    "Cleaned CSV saved: storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv",
+    "Starting stage: feature_engineering",
+    "Engineered CSV saved: storage\\eda_data\\engineered_data_02737257-08d7-476e-aebf-9a728d72e8ff.csv",
+    "Starting stage: eda",
+    "EDA metadata saved: storage\\metadata\\eda_metadata_d2670413-2707-41ce-9a65-430513f49761.json",
+    "Starting stage: visualization",
+    "Dashboard saved: storage\\dashboards\\tableau_dashboard_0f06d3cc-dfd5-4ccf-be4c-c6f865156dbd.html",
+    "All stages complete."
+  ],
+  "artifact_paths": {
+    "raw_data_path": "storage\\raw\\raw_data_fcb9ef46-55dd-461c-b10c-2b1b4b0c1250.json",
+    "extracted_dataframe_path": "storage\\dataframes\\extracted_8e75c3b7-de04-4b4c-8049-7ca6a4dc43df.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_aba9e316-172c-4886-a08b-51fc1914d700.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_02737257-08d7-476e-aebf-9a728d72e8ff.csv",
+    "eda_metadata_path": "storage\\metadata\\eda_metadata_d2670413-2707-41ce-9a65-430513f49761.json",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_0f06d3cc-dfd5-4ccf-be4c-c6f865156dbd.html"
+  },
+  "attempt": 1,
+  "correction_instruction": null
+}

@@ -1,0 +1,47 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_043bd5d2-f2d5-489b-96be-cd7cf0c360f1.csv",
+  "profile_path": "storage\\profiles\\profile_19d013ed-197b-4913-9e86-e48640a7a73d.json",
+  "plot_paths": [
+    "storage\\plots\\plot_name_e4f98e91-b5bc-493e-a756-ea0a73cd0636.png",
+    "storage\\plots\\plot_price_e5c6d3af-2574-4c7a-8b4a-4843ec73cbe2.png",
+    "storage\\plots\\plot_url_75c51835-ae82-4d86-be78-bb878dc4f04f.png"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "Loading cleaned dataset for exploratory analysis.",
+    "Loaded DataFrame with 20 rows and 3 columns.",
+    "Data profile generated.",
+    "High-level insight summary assembled.",
+    "Descriptive statistics computed for 1 column groups.",
+    "Generated 3 exploratory figures.",
+    "Outlier detection completed across numeric columns.",
+    "Identified skewed numeric columns: ['error'].",
+    "Categorical analysis completed.",
+    "Bivariate analysis completed: 3 pair(s) evaluated."
+  ],
+  "quality_report": {
+    "rows": 20,
+    "columns": 3,
+    "missing_values": {
+      "name": 0,
+      "price": 0,
+      "url": 0
+    },
+    "missing_pct": {
+      "name": 0.0,
+      "price": 0.0,
+      "url": 0.0
+    },
+    "duplicates": 0,
+    "dtypes": {
+      "name": "str",
+      "price": "str",
+      "url": "str"
+    },
+    "numeric_summary": {},
+    "skewness": {
+      "error": "No numeric columns found"
+    }
+  },
+  "analysis_summary": "The dataset contains 20 rows and 3 columns. There are 0 numeric features and 3 categorical features. Missing values are minimal after the initial data quality pass. Detected skewed numeric distributions in: error. name is dominated by 'a light in the ...' at 5.0%. price is dominated by '£51.77in stockadd to basket' at 5.0%. url is dominated by 'catalogue/a-light-in-the-attic_1000/index.html' at 5.0%."
+}
