@@ -1,0 +1,24 @@
+{
+  "rows": 20,
+  "columns": 3,
+  "missing_values": {
+    "name": 0,
+    "price": 0,
+    "url": 0
+  },
+  "missing_pct": {
+    "name": 0.0,
+    "price": 0.0,
+    "url": 0.0
+  },
+  "duplicates": 0,
+  "dtypes": {
+    "name": "str",
+    "price": "str",
+    "url": "str"
+  },
+  "numeric_summary": {},
+  "skewness": {
+    "error": "No numeric columns found"
+  }
+}

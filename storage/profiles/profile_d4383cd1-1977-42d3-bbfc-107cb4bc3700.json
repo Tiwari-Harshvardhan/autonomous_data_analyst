@@ -1,0 +1,16 @@
+{
+  "shape": [
+    20,
+    3
+  ],
+  "columns": [
+    "name",
+    "price",
+    "url"
+  ],
+  "missing_values": {
+    "name": 0,
+    "price": 0,
+    "url": 0
+  }
+}
