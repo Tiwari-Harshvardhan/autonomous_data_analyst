@@ -171,10 +171,6 @@ def correct_skewness(df: pd.DataFrame) -> pd.DataFrame:
     return df_out
 
 
-# ===========================================================================
-# UPGRADE A — Advanced DateTime Expansion Module
-# ===========================================================================
-
 def expand_datetime_column(df: pd.DataFrame, col: str) -> Tuple[pd.DataFrame, List[str]]:
     """
     Expands a single parsed datetime column into up to 9 derived signals.
@@ -254,11 +250,6 @@ def process_date_columns(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
             all_new_cols.extend(new_cols)
 
     return df, all_new_cols
-
-
-# ===========================================================================
-# UPGRADE B — Semantic Reasoner & Statistical Validation Pipeline
-# ===========================================================================
 
 # ---------------------------------------------------------------------------
 # Step 1 — Semantic Intent Tagging & Metadata Payload
@@ -569,7 +560,7 @@ def run_feature_interaction(
 
 
 # ===========================================================================
-# Main pipeline — unchanged entry/exit contract for downstream agents
+# Main pipeline
 # ===========================================================================
 
 def execute_feature_engineering(
