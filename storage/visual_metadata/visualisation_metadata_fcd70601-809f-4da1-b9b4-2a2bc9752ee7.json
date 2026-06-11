@@ -1,0 +1,49 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_101900d8-46e7-41e1-80ad-ca4d6340e198.csv",
+  "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_463d69a6-7044-490c-bc74-15a223813f59.html",
+  "generated_plots": [
+    "Distribution of country_population",
+    "Boxplot for country_population",
+    "Distribution of country_area",
+    "Boxplot for country_area",
+    "Relationship between country_population and country_area"
+  ],
+  "chart_explanations": [
+    {
+      "chart_title": "Distribution of country_population",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of country_population, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for country_population",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Distribution of country_area",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of country_area, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for country_area",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Relationship between country_population and country_area",
+      "reason": "Two meaningful numeric variables exist, allowing relational analysis.",
+      "insight": "This scatter plot helps identify correlation or groupings between country_population and country_area. "
+    }
+  ],
+  "visualization_summary": "Created 5 meaningful visualization(s) based on dataset structure and analytical value.",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started visualization generation.",
+    "[PLOT] Generated histogram chart for country_population.",
+    "[PLOT] Generated boxplot chart for country_population.",
+    "[PLOT] Generated histogram chart for country_area.",
+    "[PLOT] Generated boxplot chart for country_area.",
+    "[PLOT] Generated scatter chart for country_population, country_area.",
+    "Interactive dashboard compiled and persisted."
+  ]
+}

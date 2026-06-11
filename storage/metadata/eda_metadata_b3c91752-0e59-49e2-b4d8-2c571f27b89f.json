@@ -1,0 +1,88 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_101900d8-46e7-41e1-80ad-ca4d6340e198.csv",
+  "profile_path": "storage\\profiles\\profile_4da29d8c-f786-4538-8397-8a997e69d454.json",
+  "plot_paths": [
+    "storage\\plots\\plot_text_strong_caf460d5-34fa-4fd3-98a3-41066508b483.png",
+    "storage\\plots\\plot_country_population_7f06fe2d-cbf4-4359-b561-baf61c3a4b1f.png",
+    "storage\\plots\\plot_country_area_b28ba034-cb20-48f1-8209-0ee9c1c8a393.png"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "Loading data from: storage\\eda_data\\engineered_data_101900d8-46e7-41e1-80ad-ca4d6340e198.csv",
+    "Loaded DataFrame: 85 rows × 8 cols",
+    "Profile saved: storage\\profiles\\profile_4da29d8c-f786-4538-8397-8a997e69d454.json",
+    "Descriptive stats computed for 2 column groups",
+    "Saved 3 plot(s) to storage\\plots",
+    "Outlier detection complete: 3 column(s) checked",
+    "Skewed columns (|skew|>0.5): ['country_population']",
+    "Categorical analysis complete",
+    "Bivariate analysis complete: 28 pair(s)"
+  ],
+  "quality_report": {
+    "rows": 85,
+    "columns": 8,
+    "missing_values": {
+      "col_md_4_country": 0,
+      "country_name": 0,
+      "country_info": 0,
+      "text_strong": 0,
+      "country_capital": 0,
+      "country_population": 0,
+      "text_sup": 1,
+      "country_area": 0
+    },
+    "missing_pct": {
+      "col_md_4_country": 0.0,
+      "country_name": 0.0,
+      "country_info": 0.0,
+      "text_strong": 0.0,
+      "country_capital": 0.0,
+      "country_population": 0.0,
+      "text_sup": 1.18,
+      "country_area": 0.0
+    },
+    "duplicates": 0,
+    "dtypes": {
+      "col_md_4_country": "str",
+      "country_name": "str",
+      "country_info": "str",
+      "text_strong": "str",
+      "country_capital": "str",
+      "country_population": "float64",
+      "text_sup": "float64",
+      "country_area": "float64"
+    },
+    "numeric_summary": {
+      "country_population": {
+        "count": 85.0,
+        "mean": 1.436759208338438e-17,
+        "std": 0.9999999999999999,
+        "min": -0.223148490605299,
+        "25%": -0.2227668677400353,
+        "50%": -0.2069695322874943,
+        "75%": -0.1456288965224665,
+        "max": 6.747793541818718
+      },
+      "text_sup": {
+        "count": 84.0,
+        "mean": 2.0,
+        "std": 0.0,
+        "min": 2.0,
+        "25%": 2.0,
+        "50%": 2.0,
+        "75%": 2.0,
+        "max": 2.0
+      },
+      "country_area": {
+        "count": 85.0,
+        "mean": -3.004132890162188e-17,
+        "std": 1.0,
+        "min": -2.0721645818831247,
+        "25%": -1.030823821318264,
+        "50%": 0.1681767357326843,
+        "75%": 0.7480914158607076,
+        "max": 2.316808968290313
+      }
+    }
+  }
+}

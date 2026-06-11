@@ -1,0 +1,32 @@
+{
+  "user_query": "scrape and analyze data from the website https://www.books.toscrape.com/pages/simple/",
+  "source_urls": [
+    "https://www.books.toscrape.com/pages/simple/"
+  ],
+  "raw_data_path": "storage\\raw\\raw_data_f5cd66a3-f7f3-43b0-896c-6476a41e9cb7.json",
+  "metadata_path": null,
+  "logs": [
+    "Started data collection workflow",
+    "Extracted URL(s) from query: ['https://www.books.toscrape.com/pages/simple/']",
+    "Discovered 1 URLs",
+    "Completed web scraping",
+    "  https://www.books.toscrape.com/pages/simple/ → page_type=None, structured_records=0, success=False",
+    "Raw data saved: storage\\raw\\raw_data_f5cd66a3-f7f3-43b0-896c-6476a41e9cb7.json"
+  ],
+  "current_stage": "data_collection",
+  "raw_data_preview": [
+    {
+      "url": "https://www.books.toscrape.com/pages/simple/",
+      "scraping_mode": "dynamic",
+      "title": null,
+      "extracted_text": null,
+      "structured_data": null,
+      "page_type": null,
+      "html_path": null,
+      "screenshot_path": null,
+      "metadata_path": null,
+      "success": false,
+      "error": "Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://www.books.toscrape.com/pages/simple/\nCall log:\n  - navigating to \"https://www.books.toscrape.com/pages/simple/\", waiting until \"networkidle\"\n"
+    }
+  ]
+}

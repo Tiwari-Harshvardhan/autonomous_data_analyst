@@ -1,0 +1,15 @@
+[
+  {
+    "url": "https://www.books.toscrape.com/pages/simple/",
+    "scraping_mode": "dynamic",
+    "title": null,
+    "extracted_text": null,
+    "structured_data": null,
+    "page_type": null,
+    "html_path": null,
+    "screenshot_path": null,
+    "metadata_path": null,
+    "success": false,
+    "error": "Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://www.books.toscrape.com/pages/simple/\nCall log:\n  - navigating to \"https://www.books.toscrape.com/pages/simple/\", waiting until \"networkidle\"\n"
+  }
+]
