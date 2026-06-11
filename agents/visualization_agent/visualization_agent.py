@@ -1,5 +1,6 @@
 import os
 import json
+import re
 import uuid
 import pandas as pd
 import plotly.express as px
@@ -77,14 +78,31 @@ def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
         return len(values) >= 10 and 1 < values.nunique() <= 40
 
     def meaningful_datetime(col: str) -> bool:
+        # Guard: never coerce already-numeric columns (z-scores, ints) as dates.
+        # pd.to_datetime(0) == 1970-01-01 — this would generate spurious trends.
+        if pd.api.types.is_numeric_dtype(df[col]):
+            return False
         if pd.api.types.is_datetime64_any_dtype(df[col]):
             return df[col].dropna().nunique() > 1 and len(df[col].dropna()) >= 10
+        # Only attempt string-to-datetime coercion for object/string columns
+        if df[col].dtype != object:
+            return False
         converted = pd.to_datetime(df[col], errors='coerce')
         return converted.notna().sum() >= 10 and converted.nunique() > 1
 
     numeric_cols = [col for col in df.select_dtypes(include=['number']).columns if meaningful_numeric(col)]
     categorical_cols = [col for col in df.select_dtypes(include=['object', 'category']).columns if meaningful_categorical(col)]
     datetime_cols = [col for col in df.columns if meaningful_datetime(col)]
+
+    # Semantic guard: only accept a datetime column whose NAME suggests
+    # it actually represents time (year, date, month, timestamp, etc.).
+    # This prevents z-score columns like 'population_days_since_min' from
+    # accidentally triggering a time-trend chart.
+    _DATE_KEYWORDS_RE = re.compile(
+        r"\b(date|time|year|month|day|period|timestamp|created|updated|when|at|since)\b",
+        re.I,
+    )
+    datetime_cols = [c for c in datetime_cols if _DATE_KEYWORDS_RE.search(c)]
 
     plot_html = []
     html_components: List[str] = []

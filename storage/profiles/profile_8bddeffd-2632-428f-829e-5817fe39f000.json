@@ -1,0 +1,67 @@
+{
+  "rows": 85,
+  "columns": 8,
+  "missing_values": {
+    "col_md_4_country": 0,
+    "country_name": 0,
+    "country_info": 0,
+    "text_strong": 0,
+    "country_capital": 0,
+    "country_population": 0,
+    "text_sup": 1,
+    "country_area": 0
+  },
+  "missing_pct": {
+    "col_md_4_country": 0.0,
+    "country_name": 0.0,
+    "country_info": 0.0,
+    "text_strong": 0.0,
+    "country_capital": 0.0,
+    "country_population": 0.0,
+    "text_sup": 1.18,
+    "country_area": 0.0
+  },
+  "duplicates": 0,
+  "dtypes": {
+    "col_md_4_country": "str",
+    "country_name": "str",
+    "country_info": "str",
+    "text_strong": "str",
+    "country_capital": "str",
+    "country_population": "float64",
+    "text_sup": "float64",
+    "country_area": "float64"
+  },
+  "numeric_summary": {
+    "country_population": {
+      "count": 85.0,
+      "mean": 1.436759208338438e-17,
+      "std": 0.9999999999999999,
+      "min": -0.223148490605299,
+      "25%": -0.2227668677400353,
+      "50%": -0.2069695322874943,
+      "75%": -0.1456288965224665,
+      "max": 6.747793541818718
+    },
+    "text_sup": {
+      "count": 84.0,
+      "mean": 2.0,
+      "std": 0.0,
+      "min": 2.0,
+      "25%": 2.0,
+      "50%": 2.0,
+      "75%": 2.0,
+      "max": 2.0
+    },
+    "country_area": {
+      "count": 85.0,
+      "mean": -3.004132890162188e-17,
+      "std": 1.0,
+      "min": -2.0721645818831247,
+      "25%": -1.030823821318264,
+      "50%": 0.1681767357326843,
+      "75%": 0.7480914158607076,
+      "max": 2.316808968290313
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+    "input_dataframe_path": "storage\\dataframes\\extracted_a0590bc7-aa14-478a-870f-aec5db3651e2.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_9ed8a290-62de-4102-a5da-a16fd172951b.csv",
+    "profile_path": "storage\\profiles\\profile_36a42f19-7319-4561-9dee-efef222c6c71.json",
+    "metadata_path": null,
+    "logs": [
+        "Loading dataframe",
+        "Loaded dataframe with shape (86, 8)",
+        "Data profiling completed",
+        "Numeric string recovery applied.",
+        "Missing values handled",
+        "Duplicates removed",
+        "Text standardized",
+        "Numeric validation completed (LLM outlier arbiter applied)",
+        "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_9ed8a290-62de-4102-a5da-a16fd172951b.csv"
+    ],
+    "quality_report": {
+        "final_rows": 85,
+        "final_columns": 8,
+        "missing_after_cleaning": {
+            "col_md_4_country": 0,
+            "country_name": 0,
+            "country_info": 0,
+            "text_strong": 0,
+            "country_capital": 0,
+            "country_population": 0,
+            "text_sup": 1,
+            "country_area": 0
+        },
+        "duplicates_after_cleaning": 0
+    }
+}

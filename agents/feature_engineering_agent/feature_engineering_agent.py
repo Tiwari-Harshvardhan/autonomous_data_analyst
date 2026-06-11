@@ -35,6 +35,51 @@ def _unique_path(directory: str, prefix: str, extension: str) -> str:
     return os.path.join(directory, f"{prefix}_{uuid.uuid4()}.{extension}")
 
 
+# ---------------------------------------------------------------------------
+# Numeric string recovery (pre-pass safety net)
+# ---------------------------------------------------------------------------
+
+_FE_STRIP_RE = re.compile(
+    r"[\$\£\€\₹\¥,%]"
+    r"|(\s*(km\u00b2?|mi\u00b2?|sq\s*km|lbs?|kg|m\u00b2?|mph|kph|ft|in|cm|mm|ha|ac|oz|ml|l|gb|mb|tb))\b",
+    re.I,
+)
+
+
+def _recover_numeric_strings_fe(
+    df: pd.DataFrame,
+) -> Tuple[pd.DataFrame, List[str]]:
+    """
+    Safety-net numeric coercion for the Feature Engineering pipeline.
+
+    Applies the same logic as the cleaning agent's recover_numeric_columns()
+    but as an independent pre-pass, in case numeric-looking strings slipped
+    through or the cleaning agent was skipped.
+
+    Returns (df_with_coerced_cols, list_of_recovered_column_names).
+    """
+    recovered: List[str] = []
+    for col in df.select_dtypes(include=["object"]).columns:
+        sample = df[col].dropna().astype(str).str.strip()
+        if sample.empty:
+            continue
+        cleaned = (
+            sample
+            .str.replace(_FE_STRIP_RE, "", regex=True)
+            .str.replace(",", "", regex=False)
+        )
+        parsed = pd.to_numeric(cleaned, errors="coerce")
+        if parsed.notna().mean() >= 0.60:
+            df[col] = pd.to_numeric(
+                df[col].astype(str).str.strip()
+                    .str.replace(_FE_STRIP_RE, "", regex=True)
+                    .str.replace(",", "", regex=False),
+                errors="coerce",
+            )
+            recovered.append(col)
+    return df, recovered
+
+
 def _sanitize_for_json(obj: Any) -> Any:
     """Recursively converts NaN, Inf, tuples and numpy scalars to JSON-safe types."""
     if isinstance(obj, dict):
@@ -542,6 +587,16 @@ def execute_feature_engineering(
     state.logs.append(f"Started feature engineering pipeline for: {csv_path}")
 
     df = pd.read_csv(csv_path, encoding="utf-8")
+
+    # Pre-pass: recover numeric values stored as strings
+    df, recovered_cols = _recover_numeric_strings_fe(df)
+    if recovered_cols:
+        state.logs.append(
+            f"Numeric string recovery (FE pre-pass): coerced columns {recovered_cols}"
+        )
+    else:
+        state.logs.append("Numeric string recovery (FE pre-pass): no string-numeric columns found.")
+
     numeric_cols = list(df.select_dtypes(include=[np.number]).columns)
     state.logs.append(
         f"Loaded DataFrame: {df.shape[0]} rows × {df.shape[1]} cols. "

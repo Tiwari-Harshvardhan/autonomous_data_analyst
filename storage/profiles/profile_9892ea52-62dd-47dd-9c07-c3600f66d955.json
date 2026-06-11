@@ -1,0 +1,26 @@
+{
+  "shape": [
+    85,
+    8
+  ],
+  "columns": [
+    "col_md_4_country",
+    "country_name",
+    "country_info",
+    "text_strong",
+    "country_capital",
+    "country_population",
+    "text_sup",
+    "country_area"
+  ],
+  "missing_values": {
+    "col_md_4_country": 0,
+    "country_name": 0,
+    "country_info": 0,
+    "text_strong": 0,
+    "country_capital": 0,
+    "country_population": 0,
+    "text_sup": 1,
+    "country_area": 0
+  }
+}
