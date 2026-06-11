@@ -1,0 +1,18 @@
+{
+    "rows": 20,
+    "columns": 4,
+    "missing_values": {
+        "name": 0,
+        "price": 0,
+        "rating": 0,
+        "product_url": 0
+    },
+    "duplicates": 0,
+    "dtypes": {
+        "name": "str",
+        "price": "str",
+        "rating": "str",
+        "product_url": "str"
+    },
+    "numeric_summary": {}
+}

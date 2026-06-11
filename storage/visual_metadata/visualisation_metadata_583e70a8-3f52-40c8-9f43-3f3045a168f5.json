@@ -1,0 +1,56 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+  "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_e46875cf-fa5e-46c5-b188-a0ad3fc23131.html",
+  "generated_plots": [
+    "Trend over time: text_span_country_population by text_span_country_population",
+    "Distribution of text_span_country_population",
+    "Boxplot for text_span_country_population",
+    "Distribution of text_span_country_area",
+    "Boxplot for text_span_country_area",
+    "Relationship between text_span_country_population and text_span_country_area"
+  ],
+  "chart_explanations": [
+    {
+      "chart_title": "Trend over time: text_span_country_population by text_span_country_population",
+      "reason": "Time series data exists alongside a numeric measure, making a trend line meaningful.",
+      "insight": "This chart shows how text_span_country_population evolves over time and highlights any directionally consistent patterns or seasonality."
+    },
+    {
+      "chart_title": "Distribution of text_span_country_population",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of text_span_country_population, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for text_span_country_population",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Distribution of text_span_country_area",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of text_span_country_area, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for text_span_country_area",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Relationship between text_span_country_population and text_span_country_area",
+      "reason": "Two meaningful numeric variables exist, allowing relational analysis.",
+      "insight": "This scatter plot helps identify correlation or groupings between text_span_country_population and text_span_country_area. "
+    }
+  ],
+  "visualization_summary": "Created 6 meaningful visualization(s) based on dataset structure and analytical value.",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started visualization generation.",
+    "[PLOT] Generated trend chart for text_span_country_population, text_span_country_population.",
+    "[PLOT] Generated histogram chart for text_span_country_population.",
+    "[PLOT] Generated boxplot chart for text_span_country_population.",
+    "[PLOT] Generated histogram chart for text_span_country_area.",
+    "[PLOT] Generated boxplot chart for text_span_country_area.",
+    "[PLOT] Generated scatter chart for text_span_country_population, text_span_country_area.",
+    "Interactive dashboard compiled and persisted."
+  ]
+}

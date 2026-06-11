@@ -1,0 +1,13 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+  "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_582312da-b25f-46df-a0f7-d255651e8562.html",
+  "generated_plots": [],
+  "chart_explanations": [],
+  "visualization_summary": "No meaningful visualizations were created because the dataset did not meet the insight thresholds.",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started visualization generation.",
+    "[INFO] No charts retained after relevance filtering.",
+    "Interactive dashboard compiled and persisted."
+  ]
+}

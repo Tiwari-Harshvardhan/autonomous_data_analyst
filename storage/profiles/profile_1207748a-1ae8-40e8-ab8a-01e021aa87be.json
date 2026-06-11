@@ -1,0 +1,26 @@
+{
+  "shape": [
+    67,
+    8
+  ],
+  "columns": [
+    "text_div_col_md_4_country",
+    "text_h3_country_name",
+    "text_div_country_info",
+    "text_strong",
+    "text_span_country_capital",
+    "text_span_country_population",
+    "text_sup",
+    "text_span_country_area"
+  ],
+  "missing_values": {
+    "text_div_col_md_4_country": 0,
+    "text_h3_country_name": 0,
+    "text_div_country_info": 0,
+    "text_strong": 0,
+    "text_span_country_capital": 0,
+    "text_span_country_population": 0,
+    "text_sup": 0,
+    "text_span_country_area": 0
+  }
+}

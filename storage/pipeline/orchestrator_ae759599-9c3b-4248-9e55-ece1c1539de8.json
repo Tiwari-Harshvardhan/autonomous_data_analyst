@@ -1,0 +1,505 @@
+{
+  "user_query": "scrape and analyze data from the website https://books.toscrape.com",
+  "current_stage": "finished",
+  "execution_plan": {
+    "user_query": "scrape and analyze data from the website https://books.toscrape.com",
+    "stages": [
+      "data_collection",
+      "extraction",
+      "data_cleaning",
+      "feature_engineering",
+      "eda",
+      "visualization"
+    ],
+    "start_csv_path": null,
+    "reasoning": "The user wants to scrape a website, which mandates data_collection and extraction to get structured data. Following this, data_cleaning is essential to ensure data quality. For 'analyze data', feature_engineering is included for potential data transformations, eda for statistical profiling and insights, and visualization to present the analysis results.",
+    "data_goal": "To scrape book data from the specified website, clean it, and perform a comprehensive analysis.",
+    "expected_output": "A dashboard or series of plots showing distributions of book prices, ratings, categories, availability, and other relevant insights from the scraped data."
+  },
+  "raw_data_state": {
+    "user_query": "scrape and analyze data from the website https://books.toscrape.com",
+    "source_urls": [
+      "https://books.toscrape.com"
+    ],
+    "raw_data_path": "storage\\raw\\raw_data_996256a5-5200-4cab-97e4-ac8988b90db9.json",
+    "metadata_path": "storage\\metadata\\metadata_7237f571-d4c2-4092-a434-8c6aa2f5e07b.json",
+    "logs": [
+      "Started data collection workflow",
+      "Extracted URL(s) from query: ['https://books.toscrape.com']",
+      "Discovered 1 URLs",
+      "Completed web scraping",
+      "  https://books.toscrape.com → page_type=product_listing, structured_records=20, success=True",
+      "Raw data saved: storage\\raw\\raw_data_996256a5-5200-4cab-97e4-ac8988b90db9.json",
+      "Metadata saved: storage\\metadata\\metadata_7237f571-d4c2-4092-a434-8c6aa2f5e07b.json"
+    ],
+    "current_stage": "data_collection",
+    "raw_data_preview": [
+      {
+        "url": "https://books.toscrape.com",
+        "scraping_mode": "static",
+        "title": "All products | Books to Scrape - Sandbox",
+        "extracted_text": "name: A Light in the Attic | price: £51.77 | rating: Three | availability: In stock | product_url: catalogue/a-light-in-the-attic_1000/index.html\nname: Tipping the Velvet | price: £53.74 | rating: One | availability: In stock | product_url: catalogue/tipping-the-velvet_999/index.html\nname: Soumission | price: £50.10 | rating: One | availability: In stock | product_url: catalogue/soumission_998/index.html\nname: Sharp Objects | price: £47.82 | rating: Four | availability: In stock | product_url: catalogue/sharp-objects_997/index.html\nname: Sapiens: A Brief History of Humankind | price: £54.23 | rating: Five | availability: In stock | product_url: catalogue/sapiens-a-brief-history-of-humankind_996/index.html\nname: The Requiem Red | price: £22.65 | rating: One | availability: In stock | product_url: catalogue/the-requiem-red_995/index.html\nname: The Dirty Little Secrets of Getting Your Dream Job | price: £33.34 | rating: Four | availability: In stock | product_url: catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html\nname: The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull | price: £17.93 | rating: Three | availability: In stock | product_url: catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html\nname: The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics | price: £22.60 | rating: Four | availability: In stock | product_url: catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html\nname: The Black Maria | price: £52.15 | rating: One | availability: In stock | product_url: catalogue/the-black-maria_991/index.html\nname: Starving Hearts (Triangular Trade Trilogy, #1) | price: £13.99 | rating: Two | availability: In stock | product_url: catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html\nname: Shakespeare's Sonnets | price: £20.66 | rating: Four | availability: In stock | product_url: catalogue/shakespeares-sonnets_989/index.html\nname: Set Me Free | price: £17.46 | rating: Five | availability: In stock | product_url: catalogue/set-me-free_988/index.html\nname: Scott Pilgrim's Precious Little Life (Scott Pilgrim #1) | price: £52.29 | rating: Five | availability: In stock | product_url: catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html\nname: Rip it Up and Start Again | price: £35.02 | rating: Five | availability: In stock | product_url: catalogue/rip-it-up-and-start-again_986/index.html\nname: Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991 | price: £57.25 | rating: Three | availability: In stock | product_url: catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html\nname: Olio | price: £23.88 | rating: One | availability: In stock | product_url: catalogue/olio_984/index.html\nname: Mesaerion: The Best Science Fiction Stories 1800-1849 | price: £37.59 | rating: One | availability: In stock | product_url: catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html\nname: Libertarianism for Beginners | price: £51.33 | rating: Two | availability: In stock | product_url: catalogue/libertarianism-for-beginners_982/index.html\nname: It's Only the Himalayas | price: £45.17 | rating: Two | availability: In stock | product_url: catalogue/its-only-the-himalayas_981/index.html",
+        "structured_data": [
+          {
+            "name": "A Light in the Attic",
+            "price": "£51.77",
+            "rating": "Three",
+            "availability": "In stock",
+            "product_url": "catalogue/a-light-in-the-attic_1000/index.html"
+          },
+          {
+            "name": "Tipping the Velvet",
+            "price": "£53.74",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/tipping-the-velvet_999/index.html"
+          },
+          {
+            "name": "Soumission",
+            "price": "£50.10",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/soumission_998/index.html"
+          },
+          {
+            "name": "Sharp Objects",
+            "price": "£47.82",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/sharp-objects_997/index.html"
+          },
+          {
+            "name": "Sapiens: A Brief History of Humankind",
+            "price": "£54.23",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
+          },
+          {
+            "name": "The Requiem Red",
+            "price": "£22.65",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/the-requiem-red_995/index.html"
+          },
+          {
+            "name": "The Dirty Little Secrets of Getting Your Dream Job",
+            "price": "£33.34",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html"
+          },
+          {
+            "name": "The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull",
+            "price": "£17.93",
+            "rating": "Three",
+            "availability": "In stock",
+            "product_url": "catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html"
+          },
+          {
+            "name": "The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics",
+            "price": "£22.60",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html"
+          },
+          {
+            "name": "The Black Maria",
+            "price": "£52.15",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/the-black-maria_991/index.html"
+          },
+          {
+            "name": "Starving Hearts (Triangular Trade Trilogy, #1)",
+            "price": "£13.99",
+            "rating": "Two",
+            "availability": "In stock",
+            "product_url": "catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html"
+          },
+          {
+            "name": "Shakespeare's Sonnets",
+            "price": "£20.66",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/shakespeares-sonnets_989/index.html"
+          },
+          {
+            "name": "Set Me Free",
+            "price": "£17.46",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/set-me-free_988/index.html"
+          },
+          {
+            "name": "Scott Pilgrim's Precious Little Life (Scott Pilgrim #1)",
+            "price": "£52.29",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+          },
+          {
+            "name": "Rip it Up and Start Again",
+            "price": "£35.02",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/rip-it-up-and-start-again_986/index.html"
+          },
+          {
+            "name": "Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991",
+            "price": "£57.25",
+            "rating": "Three",
+            "availability": "In stock",
+            "product_url": "catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html"
+          },
+          {
+            "name": "Olio",
+            "price": "£23.88",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/olio_984/index.html"
+          },
+          {
+            "name": "Mesaerion: The Best Science Fiction Stories 1800-1849",
+            "price": "£37.59",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html"
+          },
+          {
+            "name": "Libertarianism for Beginners",
+            "price": "£51.33",
+            "rating": "Two",
+            "availability": "In stock",
+            "product_url": "catalogue/libertarianism-for-beginners_982/index.html"
+          },
+          {
+            "name": "It's Only the Himalayas",
+            "price": "£45.17",
+            "rating": "Two",
+            "availability": "In stock",
+            "product_url": "catalogue/its-only-the-himalayas_981/index.html"
+          }
+        ],
+        "page_type": "product_listing",
+        "html_path": "storage\\raw_html\\53a811c5-b6bb-4794-8d7e-569ad427a6ac.html",
+        "screenshot_path": null,
+        "metadata_path": "storage\\metadata\\7b05dd23-94d4-4c39-b6bb-424a7035701f.json",
+        "success": true,
+        "error": null
+      }
+    ]
+  },
+  "extraction_state": {
+    "html_paths": [
+      "storage\\raw_html\\53a811c5-b6bb-4794-8d7e-569ad427a6ac.html"
+    ],
+    "parsed_pages": [
+      {
+        "source_html_path": "storage\\raw_html\\53a811c5-b6bb-4794-8d7e-569ad427a6ac.html",
+        "url": "https://books.toscrape.com",
+        "title": "All products | Books to Scrape - Sandbox",
+        "page_type": "product_listing",
+        "extraction_method": "structured_data",
+        "confidence": 0.95,
+        "records": [
+          {
+            "name": "A Light in the Attic",
+            "price": "£51.77",
+            "rating": "Three",
+            "availability": "In stock",
+            "product_url": "catalogue/a-light-in-the-attic_1000/index.html"
+          },
+          {
+            "name": "Tipping the Velvet",
+            "price": "£53.74",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/tipping-the-velvet_999/index.html"
+          },
+          {
+            "name": "Soumission",
+            "price": "£50.10",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/soumission_998/index.html"
+          },
+          {
+            "name": "Sharp Objects",
+            "price": "£47.82",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/sharp-objects_997/index.html"
+          },
+          {
+            "name": "Sapiens: A Brief History of Humankind",
+            "price": "£54.23",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/sapiens-a-brief-history-of-humankind_996/index.html"
+          },
+          {
+            "name": "The Requiem Red",
+            "price": "£22.65",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/the-requiem-red_995/index.html"
+          },
+          {
+            "name": "The Dirty Little Secrets of Getting Your Dream Job",
+            "price": "£33.34",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html"
+          },
+          {
+            "name": "The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull",
+            "price": "£17.93",
+            "rating": "Three",
+            "availability": "In stock",
+            "product_url": "catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html"
+          },
+          {
+            "name": "The Boys in the Boat: Nine Americans and Their Epic Quest for Gold at the 1936 Berlin Olympics",
+            "price": "£22.60",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/the-boys-in-the-boat-nine-americans-and-their-epic-quest-for-gold-at-the-1936-berlin-olympics_992/index.html"
+          },
+          {
+            "name": "The Black Maria",
+            "price": "£52.15",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/the-black-maria_991/index.html"
+          },
+          {
+            "name": "Starving Hearts (Triangular Trade Trilogy, #1)",
+            "price": "£13.99",
+            "rating": "Two",
+            "availability": "In stock",
+            "product_url": "catalogue/starving-hearts-triangular-trade-trilogy-1_990/index.html"
+          },
+          {
+            "name": "Shakespeare's Sonnets",
+            "price": "£20.66",
+            "rating": "Four",
+            "availability": "In stock",
+            "product_url": "catalogue/shakespeares-sonnets_989/index.html"
+          },
+          {
+            "name": "Set Me Free",
+            "price": "£17.46",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/set-me-free_988/index.html"
+          },
+          {
+            "name": "Scott Pilgrim's Precious Little Life (Scott Pilgrim #1)",
+            "price": "£52.29",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+          },
+          {
+            "name": "Rip it Up and Start Again",
+            "price": "£35.02",
+            "rating": "Five",
+            "availability": "In stock",
+            "product_url": "catalogue/rip-it-up-and-start-again_986/index.html"
+          },
+          {
+            "name": "Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991",
+            "price": "£57.25",
+            "rating": "Three",
+            "availability": "In stock",
+            "product_url": "catalogue/our-band-could-be-your-life-scenes-from-the-american-indie-underground-1981-1991_985/index.html"
+          },
+          {
+            "name": "Olio",
+            "price": "£23.88",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/olio_984/index.html"
+          },
+          {
+            "name": "Mesaerion: The Best Science Fiction Stories 1800-1849",
+            "price": "£37.59",
+            "rating": "One",
+            "availability": "In stock",
+            "product_url": "catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html"
+          },
+          {
+            "name": "Libertarianism for Beginners",
+            "price": "£51.33",
+            "rating": "Two",
+            "availability": "In stock",
+            "product_url": "catalogue/libertarianism-for-beginners_982/index.html"
+          },
+          {
+            "name": "It's Only the Himalayas",
+            "price": "£45.17",
+            "rating": "Two",
+            "availability": "In stock",
+            "product_url": "catalogue/its-only-the-himalayas_981/index.html"
+          }
+        ],
+        "success": true,
+        "error": null
+      }
+    ],
+    "dataframe_path": "storage\\dataframes\\extracted_fbd21e58-7fd9-4701-9df9-d4960fdc4002.csv",
+    "metadata_path": "storage\\metadata\\extraction_metadata_76ad200e-06fe-4ba7-b126-e2cece37bd6c.json",
+    "logs": [
+      "Loaded 1 scraper record(s) from storage\\raw\\raw_data_996256a5-5200-4cab-97e4-ac8988b90db9.json",
+      "Starting extraction for 1 HTML file(s)",
+      "storage\\raw_html\\53a811c5-b6bb-4794-8d7e-569ad427a6ac.html → type=product_listing, method=structured_data, records=20, confidence=0.95",
+      "Extraction complete",
+      "DataFrame: 20 rows × 4 cols",
+      "Visualization hints: {'numeric_plot': [], 'categorical_plot': ['name', 'price', 'rating', 'product_url'], 'skip': []}",
+      "DataFrame saved: storage\\dataframes\\extracted_fbd21e58-7fd9-4701-9df9-d4960fdc4002.csv",
+      "Metadata saved: storage\\metadata\\extraction_metadata_76ad200e-06fe-4ba7-b126-e2cece37bd6c.json"
+    ]
+  },
+  "cleaning_state": {
+    "input_dataframe_path": "storage\\dataframes\\extracted_fbd21e58-7fd9-4701-9df9-d4960fdc4002.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_81e5f969-56d7-4c06-a8ed-f95e72aefb29.csv",
+    "profile_path": "storage\\profiles\\profile_66124774-3e56-4ea1-8951-9343f0c9ec88.json",
+    "metadata_path": "storage\\metadata\\cleaning_metadata_352c3cd5-6dc2-4d40-9250-2da92afabbf0.json",
+    "logs": [
+      "Loading dataframe",
+      "Loaded dataframe with shape (20, 4)",
+      "Data profiling completed",
+      "Missing values handled",
+      "Duplicates removed",
+      "Text standardized",
+      "Numeric validation completed",
+      "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_81e5f969-56d7-4c06-a8ed-f95e72aefb29.csv",
+      "Metadata saved at storage\\metadata\\cleaning_metadata_352c3cd5-6dc2-4d40-9250-2da92afabbf0.json"
+    ],
+    "quality_report": {
+      "final_rows": 20,
+      "final_columns": 4,
+      "missing_after_cleaning": {
+        "name": 0,
+        "price": 0,
+        "rating": 0,
+        "product_url": 0
+      },
+      "duplicates_after_cleaning": 0
+    }
+  },
+  "feature_state": {
+    "input_dataframe_path": "storage\\cleaned_data\\cleaned_81e5f969-56d7-4c06-a8ed-f95e72aefb29.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+    "profile_path": "storage\\profiles\\profile_645a8a44-acc3-4305-8080-23eaf03591b2.json",
+    "metadata_path": "storage\\metadata\\feature_engineering_metadata_af6887e7-7b23-4fe1-bb2d-01446274917a.json",
+    "logs": [
+      "Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_81e5f969-56d7-4c06-a8ed-f95e72aefb29.csv",
+      "Loaded DataFrame: 20 rows × 4 cols. Numeric columns: []",
+      "Skewness correction applied.",
+      "Z-score scaling applied to numeric features.",
+      "DateTime expansion complete. New columns: none",
+      "[interaction] Attempt 1/3",
+      "[interaction] LLM call failed: GEMINI_API_KEY environment variable is not set.",
+      "Feature interaction complete. Added: none",
+      "Engineered DataFrame saved: 20 rows × 4 cols → storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+      "Metadata saved."
+    ],
+    "quality_report": {
+      "pre_skewness": {},
+      "post_skewness": {},
+      "datetime_features_added": [],
+      "interaction_features_added": [],
+      "final_shape": [
+        20,
+        4
+      ]
+    },
+    "analysis_summary": "Skewness corrected, z-score scaling applied. DateTime expansion added 0 signals. LLM-proposed interaction features accepted: 0.",
+    "interaction_features_added": [],
+    "datetime_features_added": []
+  },
+  "eda_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+    "profile_path": "storage\\profiles\\profile_22f843be-4ec4-4947-8d54-5117384b1dab.json",
+    "plot_paths": [
+      "storage\\plots\\plot_rating_c01896d9-d915-402e-a8d1-f447b01abf50.png"
+    ],
+    "metadata_path": "storage\\metadata\\eda_metadata_caf41f6f-0570-4603-8990-e26f6375fdb1.json",
+    "logs": [
+      "Loading data from: storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+      "Loaded DataFrame: 20 rows × 4 cols",
+      "Profile saved: storage\\profiles\\profile_22f843be-4ec4-4947-8d54-5117384b1dab.json",
+      "Descriptive stats computed for 1 column groups",
+      "Saved 1 plot(s) to storage\\plots",
+      "Outlier detection complete: 1 column(s) checked",
+      "Skewed columns (|skew|>0.5): ['error']",
+      "Categorical analysis complete",
+      "Bivariate analysis complete: 6 pair(s)",
+      "Metadata saved: storage\\metadata\\eda_metadata_caf41f6f-0570-4603-8990-e26f6375fdb1.json"
+    ],
+    "quality_report": {
+      "rows": 20,
+      "columns": 4,
+      "missing_values": {
+        "name": 0,
+        "price": 0,
+        "rating": 0,
+        "product_url": 0
+      },
+      "missing_pct": {
+        "name": 0.0,
+        "price": 0.0,
+        "rating": 0.0,
+        "product_url": 0.0
+      },
+      "duplicates": 0,
+      "dtypes": {
+        "name": "str",
+        "price": "str",
+        "rating": "str",
+        "product_url": "str"
+      },
+      "numeric_summary": {}
+    }
+  },
+  "visualization_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_582312da-b25f-46df-a0f7-d255651e8562.html",
+    "generated_plots": [],
+    "chart_explanations": [],
+    "visualization_summary": "No meaningful visualizations were created because the dataset did not meet the insight thresholds.",
+    "metadata_path": "storage\\visual_metadata\\visualisation_metadata_11c9ddb8-1632-4d02-be39-9203a966ad68.json",
+    "logs": [
+      "[INIT] Started visualization generation.",
+      "[INFO] No charts retained after relevance filtering.",
+      "Interactive dashboard compiled and persisted."
+    ]
+  },
+  "logs": [
+    "Starting stage: data_collection",
+    "Raw data saved: storage\\raw\\raw_data_996256a5-5200-4cab-97e4-ac8988b90db9.json",
+    "Starting stage: extraction",
+    "Extracted CSV saved: storage\\dataframes\\extracted_fbd21e58-7fd9-4701-9df9-d4960fdc4002.csv",
+    "Starting stage: data_cleaning",
+    "Cleaned CSV saved: storage\\cleaned_data\\cleaned_81e5f969-56d7-4c06-a8ed-f95e72aefb29.csv",
+    "Starting stage: feature_engineering",
+    "Engineered CSV saved: storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+    "Starting stage: eda",
+    "EDA metadata saved: storage\\metadata\\eda_metadata_caf41f6f-0570-4603-8990-e26f6375fdb1.json",
+    "Starting stage: visualization",
+    "Dashboard saved: storage\\dashboards\\tableau_dashboard_582312da-b25f-46df-a0f7-d255651e8562.html",
+    "All stages complete."
+  ],
+  "artifact_paths": {
+    "raw_data_path": "storage\\raw\\raw_data_996256a5-5200-4cab-97e4-ac8988b90db9.json",
+    "extracted_dataframe_path": "storage\\dataframes\\extracted_fbd21e58-7fd9-4701-9df9-d4960fdc4002.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_81e5f969-56d7-4c06-a8ed-f95e72aefb29.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+    "eda_metadata_path": "storage\\metadata\\eda_metadata_caf41f6f-0570-4603-8990-e26f6375fdb1.json",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_582312da-b25f-46df-a0f7-d255651e8562.html"
+  },
+  "attempt": 1,
+  "correction_instruction": null
+}

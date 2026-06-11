@@ -1,10 +1,11 @@
 import os
 import json
+import re
 import uuid
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.use("Agg")
+matplotlib.use("Agg")  # non-interactive backend — safe for agents and servers
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -12,6 +13,10 @@ from typing import Optional, List, Dict, Any, Union
 from pydantic import BaseModel, Field
 from google.adk.agents import Agent
 
+
+# ---------------------------------------------------------------------------
+# Storage setup
+# ---------------------------------------------------------------------------
 
 BASE_STORAGE_DIR = "storage"
 EDA_DATA_DIR  = os.path.join(BASE_STORAGE_DIR, "eda_data")
@@ -24,26 +29,9 @@ for d in (EDA_DATA_DIR, PROFILE_DIR, METADATA_DIR, PLOT_DIR, LOG_DIR):
     os.makedirs(d, exist_ok=True)
 
 
-def _sanitize_for_json(obj: Any) -> Any:
-    """
-    Recursively converts NaN, Inf, and other non-JSON-serializable values to None.
-    This prevents JSON serialization errors when calling the Google API.
-    """
-    if isinstance(obj, dict):
-        return {k: _sanitize_for_json(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [_sanitize_for_json(item) for item in obj]
-    elif isinstance(obj, float):
-        if np.isnan(obj) or np.isinf(obj):
-            return None
-        return obj
-    elif isinstance(obj, np.number):
-        val = float(obj)
-        if np.isnan(val) or np.isinf(val):
-            return None
-        return float(obj)
-    return obj
-
+# ---------------------------------------------------------------------------
+# Data model
+# ---------------------------------------------------------------------------
 
 class EDAState(BaseModel):
     input_dataframe_path: str
@@ -52,8 +40,11 @@ class EDAState(BaseModel):
     metadata_path: Optional[str] = None
     logs: List[str] = Field(default_factory=list)
     quality_report: Optional[Dict[str, Any]] = None
-    analysis_summary: Optional[str] = None
 
+
+# ---------------------------------------------------------------------------
+# Persistence helpers
+# ---------------------------------------------------------------------------
 
 def _unique_path(directory: str, prefix: str, extension: str) -> str:
     return os.path.join(directory, f"{prefix}_{uuid.uuid4()}.{extension}")
@@ -62,14 +53,14 @@ def _unique_path(directory: str, prefix: str, extension: str) -> str:
 def save_profile(profile: Dict[str, Any]) -> str:
     path = _unique_path(PROFILE_DIR, "profile", "json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(_sanitize_for_json(profile), f, indent=2, ensure_ascii=False)
+        json.dump(profile, f, indent=2, ensure_ascii=False)
     return path
 
 
 def save_metadata(state: EDAState) -> str:
     path = _unique_path(METADATA_DIR, "eda_metadata", "json")
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(_sanitize_for_json(state.model_dump()), f, indent=2, ensure_ascii=False)
+        json.dump(state.model_dump(), f, indent=2, ensure_ascii=False)
     return path
 
 
@@ -81,73 +72,18 @@ def _save_figure(prefix: str) -> str:
     return path
 
 
-def summarize_data_insights(df: pd.DataFrame, profile: Dict[str, Any]) -> str:
-    rows = profile.get("rows", 0)
-    columns = profile.get("columns", 0)
-    numeric_count = int(df.select_dtypes(include=[np.number]).shape[1])
-    categorical_count = int(df.select_dtypes(include=["object", "category"]).shape[1])
-
-    summary_parts = [
-        f"The dataset contains {rows} rows and {columns} columns.",
-        f"There are {numeric_count} numeric features and {categorical_count} categorical features.",
-    ]
-
-    duplicates = profile.get("duplicates", 0)
-    if duplicates:
-        summary_parts.append(f"The data includes {duplicates} duplicate rows that were identified.")
-
-    missing_pct = {k: v for k, v in profile.get("missing_pct", {}).items() if v and v > 0}
-    if missing_pct:
-        top_missing = sorted(missing_pct.items(), key=lambda x: x[1], reverse=True)[:3]
-        missing_text = ", ".join(f"{col}: {round(pct, 1)}%" for col, pct in top_missing)
-        summary_parts.append(f"Missing data is most pronounced in: {missing_text}.")
-    else:
-        summary_parts.append("Missing values are minimal after the initial data quality pass.")
-
-    skewness = profile.get("skewness") or {}
-    if skewness:
-        skewed_cols = [f"{col} ({meta['direction']})" if isinstance(meta,dict) else f"{col}"  for col, meta in skewness.items()]
-        summary_parts.append(f"Detected skewed numeric distributions in: {', '.join(skewed_cols)}.")
-    else:
-        summary_parts.append("Numeric distributions are generally well-centered without strong skew.")
-
-    category_highlights = []
-    for col in df.select_dtypes(include=["object", "category"]).columns.tolist():
-        counts = df[col].dropna().value_counts(normalize=True)
-        if not counts.empty:
-            top = counts.index[0]
-            top_pct = round(counts.iloc[0] * 100, 1)
-            category_highlights.append(f"{col} is dominated by '{top}' at {top_pct}%.")
-    if category_highlights:
-        summary_parts.append(" ".join(category_highlights[:3]))
-
-    anomalies = {}
-    numeric_df = df.select_dtypes(include=[np.number])
-    for col in numeric_df.columns:
-        col_data = numeric_df[col].dropna()
-        if len(col_data) < 10:
-            continue
-        q1 = col_data.quantile(0.25)
-        q3 = col_data.quantile(0.75)
-        iqr = q3 - q1
-        lower = q1 - 1.5 * iqr
-        upper = q3 + 1.5 * iqr
-        count = int(((col_data < lower) | (col_data > upper)).sum())
-        if count > 0:
-            anomalies[col] = count
-    if anomalies:
-        anomaly_cols = sorted(anomalies.items(), key=lambda x: x[1], reverse=True)[:3]
-        summary_parts.append("Outlier counts were notable in: " + ", ".join(f"{col} ({count})" for col, count in anomaly_cols) + ".")
-
-    return " ".join(summary_parts)
-
+# ---------------------------------------------------------------------------
+# EDA tools
+# Each function accepts a DataFrame and returns a JSON-serializable result.
+# They are also registered as ADK tools below.
+# ---------------------------------------------------------------------------
 
 def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
     """
     Returns a data quality snapshot: shape, missing values, duplicates,
     dtypes, and numeric summary statistics.
     """
-    result = {
+    return {
         "rows": len(df),
         "columns": len(df.columns),
         "missing_values": df.isnull().sum().to_dict(),
@@ -160,7 +96,6 @@ def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
             else {}
         ),
     }
-    return _sanitize_for_json(result)
 
 
 def descriptive_statistics(df: pd.DataFrame) -> Dict[str, Any]:
@@ -177,41 +112,68 @@ def descriptive_statistics(df: pd.DataFrame) -> Dict[str, Any]:
     if not categorical.empty:
         result["categorical"] = categorical.describe().to_dict()
 
-    return _sanitize_for_json(result)
+    return result
 
 
 def visualisation_tool(df: pd.DataFrame) -> List[str]:
     """
-    Plots a KDE (numeric columns) or bar chart (categorical columns) for each
-    column and saves each figure to disk. Returns a list of saved file paths.
+    Plots only columns that will produce a meaningful chart.
+
+    Rules applied before plotting:
+    - Skip columns whose name starts with '_' (internal metadata)
+    - Skip numeric columns with only 1 unique value (constant)
+    - Skip categorical columns with > 20 unique values (too many bars,
+      unreadable — e.g. book titles, URLs, free-text fields)
+    - Skip categorical columns where every value is unique (IDs, product URLs)
+    - Skip columns where > 50% of values look like URL paths
+
+    Numeric  → KDE distribution plot
+    Categorical (2–20 unique values) → horizontal bar chart of value counts
     """
     saved_paths = []
+    url_pattern = re.compile(r"https?://|/catalogue/|\.html$", re.I)
 
     for col in df.columns:
-        fig, ax = plt.subplots(figsize=(8, 4))
+        # Never plot internal bookkeeping columns
+        if col.startswith("_"):
+            continue
+
+        n_unique = df[col].nunique(dropna=True)
+        n_rows   = len(df)
 
         if pd.api.types.is_numeric_dtype(df[col]):
-            numeric_data = df[col].dropna()
-            if numeric_data.empty:
-                plt.close(fig)
-                continue
-            try:
-                numeric_data.plot(kind="kde", ax=ax, title=f"Distribution — {col}")
-            except Exception:
-                numeric_data.plot(kind="hist", ax=ax, title=f"Distribution (Hist) — {col}")
+            if n_unique <= 1:
+                continue  # constant column — no distribution to show
+            fig, ax = plt.subplots(figsize=(8, 4))
+            df[col].dropna().plot(kind="kde", ax=ax, title=f"Distribution — {col}")
             ax.set_xlabel(col)
-        else:
-            counts = df[col].value_counts().head(20)
-            if counts.empty:
-                plt.close(fig)
-                continue
-            counts.plot(kind="bar", ax=ax, title=f"Value counts — {col}")
-            ax.set_xlabel(col)
-            ax.set_ylabel("Count")
-            plt.xticks(rotation=45, ha="right")
+            path = _save_figure(f"plot_{col}")
+            saved_paths.append(path)
 
-        path = _save_figure(f"plot_{col}")
-        saved_paths.append(path)
+        else:
+            # Skip if too many unique values — not useful as a bar chart
+            if n_unique > 20:
+                continue
+            # Skip if every row is unique (IDs, free text)
+            if n_unique == n_rows:
+                continue
+            # Skip if most values look like URLs
+            url_rate = (
+                df[col].dropna()
+                .apply(lambda v: bool(url_pattern.search(str(v))))
+                .mean()
+            )
+            if url_rate > 0.5:
+                continue
+
+            counts = df[col].value_counts()
+            fig, ax = plt.subplots(figsize=(8, max(3, len(counts) * 0.4)))
+            counts.plot(kind="barh", ax=ax, title=f"Value counts — {col}")
+            ax.set_xlabel("Count")
+            ax.set_ylabel(col)
+            plt.tight_layout()
+            path = _save_figure(f"plot_{col}")
+            saved_paths.append(path)
 
     return saved_paths
 
@@ -231,7 +193,7 @@ def outlier_detector(df: pd.DataFrame) -> Dict[str, Any]:
         q3 = numeric_df[col].quantile(0.75)
         iqr = q3 - q1
         lower = q1 - 1.5 * iqr
-        upper = q3 + 1.5 * iqr 
+        upper = q3 + 1.5 * iqr  # was incorrectly Q3 - 1.5*IQR
 
         mask = (numeric_df[col] < lower) | (numeric_df[col] > upper)  # fixed missing parens
         outliers = numeric_df.loc[mask, col]
@@ -242,7 +204,7 @@ def outlier_detector(df: pd.DataFrame) -> Dict[str, Any]:
             "upper_bound": round(upper, 4),
         }
 
-    return _sanitize_for_json(report)
+    return report
 
 
 def skewness_detector(df: pd.DataFrame) -> Dict[str, Any]:
@@ -257,13 +219,13 @@ def skewness_detector(df: pd.DataFrame) -> Dict[str, Any]:
     report: Dict[str, Any] = {}
     for col in numeric_df.columns:
         skew = numeric_df[col].skew()
-        if not np.isnan(skew) and abs(skew) > 0.5:
+        if abs(skew) > 0.5:
             report[col] = {
                 "skewness": round(skew, 4),
                 "direction": "positive" if skew > 0 else "negative",
             }
 
-    return _sanitize_for_json(report)
+    return report
 
 
 def categorical_column_analysis(df: pd.DataFrame) -> Dict[str, Any]:
@@ -279,7 +241,7 @@ def categorical_column_analysis(df: pd.DataFrame) -> Dict[str, Any]:
     for col in categorical_df.columns:
         report[col] = {
             "unique_count": int(df[col].nunique()),
-            "frequencies": df[col].value_counts().to_dict(), 
+            "frequencies": df[col].value_counts().to_dict(),  # was not serialized
         }
     return report
 
@@ -303,7 +265,14 @@ def categorical_missing(df: pd.DataFrame) -> Dict[str, Any]:
 
 
 def bivariate_analysis(df: pd.DataFrame) -> Dict[str, Any]:
-    "Runs pairwise analysis across all column combinations"
+    """
+    Runs pairwise analysis across all column combinations:
+    - num × num  → Pearson correlation coefficient
+    - num × cat  → per-category mean of the numeric column
+    - cat × cat  → contingency table (value counts)
+
+    Collects ALL pairs before returning instead of exiting after the first.
+    """
     num_cols = df.select_dtypes(include=[np.number]).columns.tolist()
     cat_cols = df.select_dtypes(include=["object", "bool", "category"]).columns.tolist()
     all_cols = num_cols + cat_cols
@@ -314,28 +283,34 @@ def bivariate_analysis(df: pd.DataFrame) -> Dict[str, Any]:
              for i in range(len(all_cols))
              for j in range(i + 1, len(all_cols))]
 
-    for col1, col2 in pairs: 
-        key = f"{col1} , {col2}"
+    for col1, col2 in pairs:  # was pairs[] — invalid syntax
+        key = f"{col1} × {col2}"
 
         if col1 in num_cols and col2 in num_cols:
             corr = df[col1].corr(df[col2])
-            report[key] = {"type": "num-num", "pearson_r": round(corr, 4)}
+            report[key] = {"type": "num×num", "pearson_r": round(corr, 4)}
 
         elif col1 in num_cols and col2 in cat_cols:
             # mean of numeric column grouped by the categorical column
             group_means = df.groupby(col2)[col1].mean().round(4).to_dict()
-            report[key] = {"type": "num-cat", "group_means": group_means}
+            report[key] = {"type": "num×cat", "group_means": group_means}
 
         elif col1 in cat_cols and col2 in num_cols:
             group_means = df.groupby(col1)[col2].mean().round(4).to_dict()
-            report[key] = {"type": "cat-num", "group_means": group_means}
+            report[key] = {"type": "cat×num", "group_means": group_means}
 
         else:
+            # cat × cat — contingency table
+            # was using df['cat_var'] (literal string) instead of df[cat_var]
             ct = pd.crosstab(df[col1], df[col2]).to_dict()
-            report[key] = {"type": "cat-cat", "contingency_table": ct}
+            report[key] = {"type": "cat×cat", "contingency_table": ct}
 
-    return _sanitize_for_json(report)
+    return report
 
+
+# ---------------------------------------------------------------------------
+# Full EDA pipeline
+# ---------------------------------------------------------------------------
 
 def execute_eda(csv_path: str) -> EDAState:
     """
@@ -343,60 +318,68 @@ def execute_eda(csv_path: str) -> EDAState:
     disk, and returns the populated EDAState.
     """
     state = EDAState(input_dataframe_path=csv_path)
-    state.logs.append("Loading cleaned dataset for exploratory analysis.")
+    state.logs.append(f"Loading data from: {csv_path}")
 
     df = pd.read_csv(csv_path, encoding="utf-8")
-    state.logs.append(f"Loaded DataFrame with {df.shape[0]} rows and {df.shape[1]} columns.")
+    state.logs.append(f"Loaded DataFrame: {df.shape[0]} rows × {df.shape[1]} cols")
 
-    # profile
+    # 1 — profile
     profile = profile_dataframe(df)
-    profile['skewness'] = skewness_detector(df)
     state.profile_path = save_profile(profile)
     state.quality_report = profile
-    state.logs.append("Data profile generated.")
+    state.logs.append(f"Profile saved: {state.profile_path}")
 
-    # summarise insights
-    state.analysis_summary = summarize_data_insights(df, profile)
-    state.logs.append("High-level insight summary assembled.")
-
-    # descriptive stats
+    # 2 — descriptive stats (logged, not separately saved)
     stats = descriptive_statistics(df)
-    state.logs.append(f"Descriptive statistics computed for {len(stats)} column groups.")
+    state.logs.append(f"Descriptive stats computed for {len(stats)} column groups")
 
-    # visualisations
+    # 3 — visualisations
     plot_paths = visualisation_tool(df)
     state.plot_paths = plot_paths
-    state.logs.append(f"Generated {len(plot_paths)} exploratory figures.")
+    state.logs.append(f"Saved {len(plot_paths)} plot(s) to {PLOT_DIR}")
 
-    # outliers
+    # 4 — outliers
     outliers = outlier_detector(df)
-    state.logs.append(f"Outlier detection completed across numeric columns.")
+    state.logs.append(f"Outlier detection complete: {len(outliers)} column(s) checked")
 
-    # skewness
+    # 5 — skewness
     skew = skewness_detector(df)
-    state.logs.append(f"Identified skewed numeric columns: {list(skew.keys())}.")
+    state.logs.append(f"Skewed columns (|skew|>0.5): {list(skew.keys())}")
 
-    # categorical analysis
+    # 6 — categorical analysis
     cat_analysis = categorical_column_analysis(df)
     cat_nulls = categorical_missing(df)
-    state.logs.append("Categorical analysis completed.")
+    state.logs.append("Categorical analysis complete")
 
-    # bivariate
+    # 7 — bivariate
     bivariate = bivariate_analysis(df)
-    state.logs.append(f"Bivariate analysis completed: {len(bivariate)} pair(s) evaluated.")
+    state.logs.append(f"Bivariate analysis complete: {len(bivariate)} pair(s)")
 
     # Persist full metadata
     state.metadata_path = save_metadata(state)
-    state.logs.append("EDA metadata saved.")
+    state.logs.append(f"Metadata saved: {state.metadata_path}")
+
+    print(f"\nEDA complete. Artifacts saved to '{BASE_STORAGE_DIR}/'")
+    print(f"  Profile  : {state.profile_path}")
+    print(f"  Plots    : {len(state.plot_paths)} file(s) in {PLOT_DIR}")
+    print(f"  Metadata : {state.metadata_path}")
 
     return state
 
 
+# ---------------------------------------------------------------------------
+# ADK tool wrapper
+# ---------------------------------------------------------------------------
+
 def run_eda_on_csv(csv_path: str) -> dict:
     """ADK-compatible tool. Runs the full EDA pipeline and returns the state."""
     state = execute_eda(csv_path)
-    return _sanitize_for_json(state.model_dump())
+    return state.model_dump()
 
+
+# ---------------------------------------------------------------------------
+# ADK agent
+# ---------------------------------------------------------------------------
 
 eda_agent = Agent(
     name="eda_agent",
@@ -429,7 +412,11 @@ eda_agent = Agent(
     tools=[run_eda_on_csv],
 )
 
+
+# ---------------------------------------------------------------------------
 # Entry point
+# ---------------------------------------------------------------------------
+
 if __name__ == "__main__":
     import sys
     csv_path = sys.argv[1] if len(sys.argv) > 1 else "storage/dataframes/cleaned_example.csv"

@@ -1,0 +1,43 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+  "profile_path": "storage\\profiles\\profile_22f843be-4ec4-4947-8d54-5117384b1dab.json",
+  "plot_paths": [
+    "storage\\plots\\plot_rating_c01896d9-d915-402e-a8d1-f447b01abf50.png"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "Loading data from: storage\\eda_data\\engineered_data_f76483f8-81b1-4c06-8f19-d4020a8ef6ee.csv",
+    "Loaded DataFrame: 20 rows × 4 cols",
+    "Profile saved: storage\\profiles\\profile_22f843be-4ec4-4947-8d54-5117384b1dab.json",
+    "Descriptive stats computed for 1 column groups",
+    "Saved 1 plot(s) to storage\\plots",
+    "Outlier detection complete: 1 column(s) checked",
+    "Skewed columns (|skew|>0.5): ['error']",
+    "Categorical analysis complete",
+    "Bivariate analysis complete: 6 pair(s)"
+  ],
+  "quality_report": {
+    "rows": 20,
+    "columns": 4,
+    "missing_values": {
+      "name": 0,
+      "price": 0,
+      "rating": 0,
+      "product_url": 0
+    },
+    "missing_pct": {
+      "name": 0.0,
+      "price": 0.0,
+      "rating": 0.0,
+      "product_url": 0.0
+    },
+    "duplicates": 0,
+    "dtypes": {
+      "name": "str",
+      "price": "str",
+      "rating": "str",
+      "product_url": "str"
+    },
+    "numeric_summary": {}
+  }
+}

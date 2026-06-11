@@ -1,0 +1,38 @@
+{
+  "input_dataframe_path": "storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+  "engineered_dataframe_path": "storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+  "profile_path": "storage\\profiles\\profile_1207748a-1ae8-40e8-ab8a-01e021aa87be.json",
+  "metadata_path": null,
+  "logs": [
+    "Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+    "Loaded DataFrame: 67 rows × 8 cols. Numeric columns: ['text_span_country_population', 'text_sup', 'text_span_country_area']",
+    "Skewness correction applied.",
+    "Z-score scaling applied to numeric features.",
+    "DateTime expansion complete. New columns: none",
+    "[interaction] Attempt 1/3",
+    "[interaction] LLM call failed: GEMINI_API_KEY environment variable is not set.",
+    "Feature interaction complete. Added: none",
+    "Engineered DataFrame saved: 67 rows × 8 cols → storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv"
+  ],
+  "quality_report": {
+    "pre_skewness": {
+      "text_span_country_population": 1.928909799612445,
+      "text_sup": 0.0,
+      "text_span_country_area": 1.6577303625870676
+    },
+    "post_skewness": {
+      "text_span_country_population": 1.928909799612445,
+      "text_sup": 0.0,
+      "text_span_country_area": -0.14741994244473852
+    },
+    "datetime_features_added": [],
+    "interaction_features_added": [],
+    "final_shape": [
+      67,
+      8
+    ]
+  },
+  "analysis_summary": "Skewness corrected, z-score scaling applied. DateTime expansion added 0 signals. LLM-proposed interaction features accepted: 0.",
+  "interaction_features_added": [],
+  "datetime_features_added": []
+}

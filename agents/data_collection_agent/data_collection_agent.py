@@ -57,9 +57,9 @@ class ScraperResult(BaseModel):
     url: str
     scraping_mode: str
     title: Optional[str] = None
-    extracted_text: Optional[str] = None                       # always populated for pipeline compat
-    structured_data: Optional[List[Dict[str, Any]]] = None     # product/table records when applicable
-    page_type: Optional[str] = None                            # "product_listing" | "table_heavy" | "article" | "general"
+    extracted_text: Optional[str] = None
+    structured_data: Optional[List[Dict[str, Any]]] = None
+    page_type: Optional[str] = None
     html_path: Optional[str] = None
     screenshot_path: Optional[str] = None
     metadata_path: Optional[str] = None
@@ -77,18 +77,14 @@ class WorkflowState(BaseModel):
     raw_data_preview: Optional[List[Dict[str, Any]]] = None
 
 
+# ---------------------------------------------------------------------------
+# Page classification helpers (used by the scraper to tag each page)
+# ---------------------------------------------------------------------------
 
-# ===========================================================================
-# Layout-Aware Extraction Module
-# ===========================================================================
-
-# Signals used to score whether a page is a product listing or catalog.
 _PRODUCT_SIGNALS = [
     "product", "price", "rating", "add-to-cart", "buy", "shop",
     "item", "catalogue", "catalog", "listing", "card",
 ]
-
-# Signals used to score whether a page is table-heavy.
 _TABLE_SIGNALS = ["<table", "thead", "tbody", "<tr", "<td"]
 
 
@@ -118,14 +114,28 @@ def _classify_page(html: str, soup: BeautifulSoup) -> str:
     return "general"
 
 
+# ---------------------------------------------------------------------------
+# Layout-aware extraction helpers
+# ---------------------------------------------------------------------------
+
+def _fix_encoding(text: str) -> str:
+    """Repairs mojibake: 'â£51.77' → '£51.77'"""
+    try:
+        return text.encode("latin-1").decode("utf-8")
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        return text
+
+
+def _clean_price(raw: str) -> str:
+    """Strips concatenated availability text from a price string."""
+    match = re.search(r"[\$\£\€\₹\¥]?\s*\d[\d,]*\.?\d*", raw)
+    return match.group(0).strip() if match else raw
+
+
 def extract_layout_aware(soup: BeautifulSoup) -> str:
     """
-    Replaces the rigid soup.find_all("p") approach.
-
-    Walks the document in order and captures headings (prefixed with # marks),
-    paragraphs, list items, and table rows (cells joined by " | "). This
-    preserves semantic structure in the extracted_text field without losing
-    content that lives outside <p> tags.
+    Walks the document in order and captures headings, paragraphs,
+    list items, and table rows — preserving semantic structure as plain text.
     """
     lines: List[str] = []
     seen: set = set()
@@ -137,7 +147,6 @@ def extract_layout_aware(soup: BeautifulSoup) -> str:
         text = tag.get_text(separator=" ", strip=True)
         if not text:
             continue
-
         if tag.name.startswith("h"):
             lines.append(f"{'#' * int(tag.name[1])} {text}")
         elif tag.name == "tr":
@@ -150,51 +159,17 @@ def extract_layout_aware(soup: BeautifulSoup) -> str:
     return "\n".join(lines)
 
 
-def extract_tables_as_records(soup: BeautifulSoup) -> List[Dict[str, Any]]:
-    """
-    Converts every HTML table into a list of row dicts.
-    Uses the first <th> row as column headers; falls back to positional
-    keys (col_0, col_1 …) when no headers are present.
-    """
-    records: List[Dict[str, Any]] = []
-
-    for table in soup.find_all("table"):
-        rows = table.find_all("tr")
-        if not rows:
-            continue
-
-        header_cells = rows[0].find_all("th")
-        headers = [th.get_text(strip=True) for th in header_cells]
-        data_rows = rows[1:] if headers else rows
-
-        for row in data_rows:
-            cells = [td.get_text(strip=True) for td in row.find_all(["td", "th"])]
-            if not cells:
-                continue
-            if headers and len(cells) == len(headers):
-                records.append(dict(zip(headers, cells)))
-            else:
-                records.append({f"col_{i}": v for i, v in enumerate(cells)})
-
-    return records
-
-
 def extract_product_cards(soup: BeautifulSoup) -> List[Dict[str, Any]]:
     """
-    Heuristically extracts product records from repeated card/grid elements.
-
-    Tries several candidate selectors (article, li.product, div.card etc.)
-    and picks the first one that yields at least 3 matches — a strong signal
-    that we've found the product grid rather than a one-off widget.
-
-    For each card, captures: name, price, rating, and URL.
+    Extracts product records from repeated card/grid elements.
+    Targets Books to Scrape's <article class="product_pod"> and generic grids.
     """
     products: List[Dict[str, Any]] = []
 
     candidate_selectors = [
-        {"tag": "article",  "attrs": {}},
-        {"tag": "li",       "attrs": {"class": re.compile(r"product|item|card", re.I)}},
-        {"tag": "div",      "attrs": {"class": re.compile(r"product|item|card|grid", re.I)}},
+        {"tag": "article", "attrs": {}},
+        {"tag": "li",  "attrs": {"class": re.compile(r"product|item|card", re.I)}},
+        {"tag": "div", "attrs": {"class": re.compile(r"product|item|card|grid", re.I)}},
     ]
 
     for sel in candidate_selectors:
@@ -205,44 +180,81 @@ def extract_product_cards(soup: BeautifulSoup) -> List[Dict[str, Any]]:
         for card in cards:
             record: Dict[str, Any] = {}
 
+            # Name — Books to Scrape stores real title in the <a> title attr
             name_tag = (
-                card.find(["h1", "h2", "h3", "h4"])
+                card.find("h3") or card.find("h2") or card.find("h4")
                 or card.find("strong")
                 or card.find(class_=re.compile(r"name|title", re.I))
             )
             if name_tag:
-                record["name"] = name_tag.get_text(strip=True)
-
-            price_tag = card.find(class_=re.compile(r"price|cost|amount", re.I))
-            if not price_tag:
-                # Fall back: find any tag whose text contains a currency symbol
-                price_tag = card.find(string=re.compile(r"[\$\£\€\₹]"))
-            if price_tag:
-                record["price"] = (
-                    price_tag if isinstance(price_tag, str)
-                    else price_tag.get_text(strip=True)
+                a = name_tag.find("a")
+                record["name"] = (
+                    a["title"] if a and a.get("title")
+                    else name_tag.get_text(strip=True)
                 )
 
-            rating_tag = card.find(class_=re.compile(r"rating|star|review", re.I))
-            if rating_tag:
-                record["rating"] = rating_tag.get_text(strip=True)
+            # Price — target the specific price element, not the container div
+            price_tag = (
+                card.find("p", class_=re.compile(r"price_color", re.I))
+                or card.find(class_=re.compile(
+                    r"^price$|price[_-](?!container|box|wrap|product)", re.I
+                ))
+            )
+            if price_tag:
+                raw_price = _fix_encoding(price_tag.get_text(separator="", strip=True))
+                record["price"] = _clean_price(raw_price)
 
+            # Rating — Books to Scrape uses <p class="star-rating Three">
+            rating_tag = card.find(class_=re.compile(r"star-rating|rating", re.I))
+            if rating_tag:
+                classes     = " ".join(rating_tag.get("class", []))
+                word_rating = re.search(r"\b(One|Two|Three|Four|Five)\b", classes, re.I)
+                record["rating"] = (
+                    word_rating.group(1) if word_rating
+                    else rating_tag.get_text(strip=True)
+                )
+
+            # Availability
+            avail_tag = card.find(class_=re.compile(r"availab|stock", re.I))
+            if avail_tag:
+                record["availability"] = avail_tag.get_text(strip=True)
+
+            # Product URL
             link = card.find("a", href=True)
             if link:
-                record["url"] = link["href"]
+                record["product_url"] = link["href"]
 
             if record:
                 products.append(record)
 
         if products:
-            break  # stop after the first selector that produces results
+            break
 
     return products
 
 
-# ===========================================================================
-# LLM Fallback Parser
-# ===========================================================================
+def extract_tables_as_records(soup: BeautifulSoup) -> List[Dict[str, Any]]:
+    """Converts HTML tables into a list of row dicts keyed by header names."""
+    records: List[Dict[str, Any]] = []
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if not rows:
+            continue
+        headers = [th.get_text(strip=True) for th in rows[0].find_all("th")]
+        for row in (rows[1:] if headers else rows):
+            cells = [td.get_text(strip=True) for td in row.find_all(["td", "th"])]
+            if not cells:
+                continue
+            if headers and len(cells) == len(headers):
+                records.append(dict(zip(headers, cells)))
+            else:
+                records.append({f"col_{i}": v for i, v in enumerate(cells)})
+    return records
+
+
+# ---------------------------------------------------------------------------
+# LLM fallback parser
+# ---------------------------------------------------------------------------
 
 _LLM_EXTRACTION_PROMPT = """
 You are a data extraction specialist inside a web scraping pipeline.
@@ -259,8 +271,7 @@ Rules:
   - Return ONLY a JSON array. No markdown fences, no text outside the array.
   - Each element is one record (one product, one table row, one article).
   - Use clean snake_case key names (e.g. "product_name", "price", "rating").
-  - Only include values that appear verbatim in the structural map — never
-    invent data.
+  - Only include values that appear verbatim in the structural map.
   - If no structured data is present, return an empty array: []
 
 Structural map:
@@ -269,29 +280,21 @@ Structural map:
 
 
 def _build_structural_map(soup: BeautifulSoup, max_nodes: int = 60) -> str:
-    """
-    Produces a compact, token-efficient snapshot of the page structure for
-    the LLM. Captures tag name, CSS classes, and up to 80 chars of inner
-    text per node, capped at max_nodes to keep the prompt small.
-    """
     lines: List[str] = []
     for i, tag in enumerate(soup.find_all(True)):
         if i >= max_nodes:
             break
         if not isinstance(tag, Tag):
             continue
-        classes = " ".join(tag.get("class", []))
-        text = tag.get_text(separator=" ", strip=True)[:80]
+        classes = " ".join(tag.get("class") or [])
+        text    = tag.get_text(separator=" ", strip=True)[:80]
         if text:
             lines.append(f"<{tag.name} class='{classes}'> {text}")
     return "\n".join(lines)
 
 
 def _call_llm_for_extraction(structural_map: str) -> List[Dict[str, Any]]:
-    """
-    Sends the structural map to Gemini and returns parsed JSON records.
-    Returns an empty list on any failure — the pipeline always continues.
-    """
+    """Sends structural map to Gemini and returns parsed JSON records."""
     api_key = os.environ.get("GEMINI_API_KEY", "")
     if not api_key:
         print("[LLM extractor] GEMINI_API_KEY not set — skipping LLM fallback.")
@@ -318,9 +321,8 @@ def _call_llm_for_extraction(structural_map: str) -> List[Dict[str, Any]]:
             .get("text", "")
             .strip()
         )
-        # Strip accidental markdown fences if the model adds them
-        raw = re.sub(r"^```json\s*", "", raw)
-        raw = re.sub(r"\s*```$", "", raw)
+        raw    = re.sub(r"^```json\s*", "", raw)
+        raw    = re.sub(r"\s*```$",     "", raw)
         parsed = json.loads(raw)
         if isinstance(parsed, list):
             return parsed
@@ -338,7 +340,7 @@ class UniversalScraper:
     """
     Scrapes a URL using requests+BeautifulSoup (static) or Playwright (dynamic).
 
-    Extraction is now layout-aware and page-type aware:
+    Extraction is page-type aware:
       article / general  → extract_layout_aware (structured plain text)
       table_heavy        → extract_tables_as_records (list of row dicts)
       product_listing    → extract_product_cards, with LLM fallback if
@@ -352,7 +354,6 @@ class UniversalScraper:
         )
     }
 
-    # Strings in the raw HTML that suggest the page requires JS to render.
     DYNAMIC_MARKERS = [
         "react", "next.js", "__next", "vue", "angular",
         "hydration", "webpack", "application/json",
@@ -362,11 +363,25 @@ class UniversalScraper:
         is_dynamic = await self._is_dynamic(url)
         mode = "dynamic" if is_dynamic else "static"
         print(f"[{mode}] {url}")
-        scrape_fn = self._scrape_dynamic if is_dynamic else self._scrape_static
-        return await scrape_fn(url)
+        return await (self._scrape_dynamic if is_dynamic else self._scrape_static)(url)
 
     # ------------------------------------------------------------------
-    # Extraction dispatcher (shared by both static and dynamic paths)
+    # Detection
+    # ------------------------------------------------------------------
+
+    async def _is_dynamic(self, url: str) -> bool:
+        try:
+            resp  = requests.get(url, headers=self.HEADERS, timeout=10)
+            html  = resp.text.lower()
+            score = sum(1 for m in self.DYNAMIC_MARKERS if m in html)
+            if len(html) < 5000:
+                score += 2
+            return score >= 2
+        except Exception:
+            return True
+
+    # ------------------------------------------------------------------
+    # Extraction dispatcher (shared by static and dynamic paths)
     # ------------------------------------------------------------------
 
     def _extract(
@@ -376,64 +391,39 @@ class UniversalScraper:
         Classifies the page and runs the appropriate extractor.
 
         Returns:
-          extracted_text  : plain-text representation (always populated so
-                            downstream agents reading this field still work)
+          extracted_text  : plain-text (always populated for pipeline compat)
           structured_data : list of records for product/table pages, else None
           page_type       : classification label
         """
-        page_type = _classify_page(html, soup)
+        page_type       = _classify_page(html, soup)
         structured_data: Optional[List[Dict[str, Any]]] = None
 
         if page_type == "product_listing":
             records = extract_product_cards(soup)
             if len(records) < 3:
-                # Programmatic extraction found too little — try the LLM
-                print(f"[extractor] Only {len(records)} card(s) found — trying LLM fallback")
-                structural_map = _build_structural_map(soup)
-                records = _call_llm_for_extraction(structural_map)
+                print(f"[extractor] Only {len(records)} card(s) — trying LLM fallback")
+                records = _call_llm_for_extraction(_build_structural_map(soup))
             structured_data = records if records else None
-            # Flatten records into text so extracted_text stays useful
-            extracted_text = "\n".join(
+            extracted_text  = "\n".join(
                 " | ".join(f"{k}: {v}" for k, v in r.items())
                 for r in (records or [])
             )[:10_000]
 
         elif page_type == "table_heavy":
-            records = extract_tables_as_records(soup)
+            records         = extract_tables_as_records(soup)
             structured_data = records if records else None
-            extracted_text = "\n".join(
+            extracted_text  = "\n".join(
                 " | ".join(f"{k}: {v}" for k, v in r.items())
                 for r in (records or [])
             )[:10_000]
 
         else:
-            # article or general — layout-aware structured text
             extracted_text = extract_layout_aware(soup)[:10_000]
 
         return extracted_text, structured_data, page_type
 
     # ------------------------------------------------------------------
-    # Detection
-    # ------------------------------------------------------------------
-
-    async def _is_dynamic(self, url: str) -> bool:
-        """
-        Score the raw HTML against known JS-framework markers.
-        A score >= 2 means we use Playwright. On any network error we
-        default to dynamic, since a broken static fetch usually means JS.
-        """
-        try:
-            resp = requests.get(url, headers=self.HEADERS, timeout=10)
-            html = resp.text.lower()
-            score = sum(1 for m in self.DYNAMIC_MARKERS if m in html)
-            if len(html) < 5000:
-                score += 2  # tiny body → almost certainly a JS shell
-            return score >= 2
-        except Exception:
-            return True
-
-    # ------------------------------------------------------------------
-    # Static path (requests + BeautifulSoup)
+    # Static path
     # ------------------------------------------------------------------
 
     async def _scrape_static(self, url: str) -> ScraperResult:
@@ -441,8 +431,11 @@ class UniversalScraper:
             resp = requests.get(url, headers=self.HEADERS, timeout=15)
             resp.raise_for_status()
 
-            soup = BeautifulSoup(resp.text, "html.parser")
-            title = soup.title.string.strip() if soup.title and soup.title.string else None
+            soup  = BeautifulSoup(resp.text, "html.parser")
+            title = (
+                soup.title.string.strip()
+                if soup.title and soup.title.string else None
+            )
             extracted_text, structured_data, page_type = self._extract(resp.text, soup)
 
             return ScraperResult(
@@ -456,24 +449,26 @@ class UniversalScraper:
                 metadata_path=self._save_metadata(url, "static", title),
             )
         except Exception as e:
-            return ScraperResult(url=url, scraping_mode="static", success=False, error=str(e))
+            return ScraperResult(
+                url=url, scraping_mode="static", success=False, error=str(e)
+            )
 
     # ------------------------------------------------------------------
-    # Dynamic path (Playwright)
+    # Dynamic path
     # ------------------------------------------------------------------
 
     async def _scrape_dynamic(self, url: str) -> ScraperResult:
         try:
             async with async_playwright() as p:
                 browser = await p.chromium.launch(headless=True)
-                page = await browser.new_page(user_agent=self.HEADERS["User-Agent"])
+                page    = await browser.new_page(user_agent=self.HEADERS["User-Agent"])
 
                 await page.goto(url, timeout=60_000, wait_until="networkidle")
                 await self._scroll_to_bottom(page)
 
-                html = await page.content()
+                html  = await page.content()
                 title = await page.title()
-                soup = BeautifulSoup(html, "html.parser")
+                soup  = BeautifulSoup(html, "html.parser")
                 extracted_text, structured_data, page_type = self._extract(html, soup)
 
                 result = ScraperResult(
@@ -491,16 +486,15 @@ class UniversalScraper:
                 return result
 
         except Exception as e:
-            return ScraperResult(url=url, scraping_mode="dynamic", success=False, error=str(e))
+            return ScraperResult(
+                url=url, scraping_mode="dynamic", success=False, error=str(e)
+            )
 
     # ------------------------------------------------------------------
     # Infinite scroll
     # ------------------------------------------------------------------
 
     async def _scroll_to_bottom(self, page, max_rounds: int = 20) -> None:
-        """
-        Scroll until the document height stops growing or we hit max_rounds.
-        """
         prev_height = await page.evaluate("document.body.scrollHeight")
         for _ in range(max_rounds):
             await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
@@ -531,17 +525,20 @@ class UniversalScraper:
     def _save_metadata(self, url: str, mode: str, title: Optional[str]) -> str:
         path = self._unique_path(METADATA_DIR, "json")
         with open(path, "w", encoding="utf-8") as f:
-            json.dump({"url": url, "mode": mode, "title": title}, f, indent=2, ensure_ascii=False)
+            json.dump(
+                {"url": url, "mode": mode, "title": title},
+                f, indent=2, ensure_ascii=False,
+            )
         return path
 
 
 # ---------------------------------------------------------------------------
-# Persistence helpers (workflow-level)
+# Workflow-level persistence
 # ---------------------------------------------------------------------------
 
 def save_raw_data(scraped_results: List[ScraperResult]) -> str:
-    """Serializes a list of ScraperResults to JSON and writes to disk."""
-    path = os.path.join(RAW_DATA_DIR, f"raw_data_{uuid.uuid4()}.json")
+    """Serializes ScraperResults to JSON. Path is read by extraction agent."""
+    path    = os.path.join(RAW_DATA_DIR, f"raw_data_{uuid.uuid4()}.json")
     records = [r.model_dump() for r in scraped_results]
     with open(path, "w", encoding="utf-8") as f:
         json.dump(_sanitize_for_json(records), f, indent=2, ensure_ascii=False)
@@ -560,9 +557,9 @@ def save_workflow_metadata(state: WorkflowState) -> str:
 # ---------------------------------------------------------------------------
 
 async def scrape_url(url: str) -> dict:
-    """ADK-compatible tool. Scrapes a single URL and returns a JSON-safe result dict."""
+    """ADK tool: scrapes a single URL and returns a JSON-safe ScraperResult dict."""
     scraper = UniversalScraper()
-    result = await scraper.scrape(url)
+    result  = await scraper.scrape(url)
     return _sanitize_for_json(result.model_dump())
 
 
@@ -573,7 +570,6 @@ async def scrape_url(url: str) -> dict:
 async def execute_data_collection(state: WorkflowState) -> WorkflowState:
     state.logs.append("Started data collection workflow")
 
-    # Extract URLs directly from the query if provided; otherwise use defaults
     urls_in_query = re.findall(r"https?://[^\s]+", state.user_query)
     if urls_in_query:
         discovered_urls = urls_in_query
@@ -583,12 +579,11 @@ async def execute_data_collection(state: WorkflowState) -> WorkflowState:
             "https://en.wikipedia.org/wiki/Machine_learning",
             "https://www.ibm.com/topics/machine-learning",
         ]
-        state.logs.append("No URL found in query — using default machine learning sources")
+        state.logs.append("No URL found in query — using default sources")
 
     state.source_urls = discovered_urls
     state.logs.append(f"Discovered {len(discovered_urls)} URLs")
 
-    # Scrape concurrently
     scraper = UniversalScraper()
     scraped_results: List[ScraperResult] = list(
         await asyncio.gather(*(scraper.scrape(url) for url in discovered_urls))
@@ -633,11 +628,11 @@ data_collection_agent = Agent(
     2. If no URL is given, use google_search to find relevant pages, then
        scrape the top results with scrape_url.
     3. After scraping, report for each URL:
-       - The page_type detected (product_listing / table_heavy / article / general)
-       - How many structured_data records were extracted (if any)
+       - The page_type detected
+       - How many structured_data records were extracted
        - The raw_data_path where results were saved
-    4. If structured_data is present, show the user the first 3 records so
-       they can verify the extraction looks correct.
+    4. If structured_data is present, show the first 3 records so the user
+       can verify the extraction looks correct.
 
     Constraints:
     - Never fabricate data.
@@ -662,8 +657,6 @@ if __name__ == "__main__":
         else "Scrape product listings from https://books.toscrape.com"
     )
 
-    # Route through the agent so google_search and scrape_url are used
-    # adaptively rather than hardcoding which URLs to hit.
     async def _run():
         response = await data_collection_agent.run_async(query)
         print(response)

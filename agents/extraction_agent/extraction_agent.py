@@ -2,10 +2,11 @@ import os
 import json
 import uuid
 import re
+import requests
 import pandas as pd
 
-from bs4 import BeautifulSoup
-from typing import Optional, List, Dict, Any
+from bs4 import BeautifulSoup, Tag
+from typing import Optional, List, Dict, Any, Tuple
 from pydantic import BaseModel, Field
 
 from google.adk.agents import Agent
@@ -28,12 +29,18 @@ for d in (PARSED_DATA_DIR, DATAFRAME_DIR, METADATA_DIR):
 # Data models
 # ---------------------------------------------------------------------------
 
-class ParsedPage(BaseModel):
-    """Structured data extracted from a single raw data record."""
+class ExtractionResult(BaseModel):
+    """
+    Represents the outcome of one extraction attempt on a single page.
+    Carries both the records and a confidence score so the orchestrator
+    can decide whether to trigger a more expensive fallback.
+    """
     source_html_path: str
     url: Optional[str] = None
     title: Optional[str] = None
-    extraction_method: str = "html_parse"   # "structured_data" | "product_cards" | "html_parse"
+    page_type: Optional[str] = None           # classified page archetype
+    extraction_method: str = "html_parse"     # which strategy succeeded
+    confidence: float = 0.0                   # 0.0 – 1.0
     records: List[Dict[str, Any]] = Field(default_factory=list)
     success: bool = True
     error: Optional[str] = None
@@ -64,26 +71,404 @@ def _fix_encoding(text: str) -> str:
 
 
 def _clean_record(record: Dict[str, Any]) -> Dict[str, Any]:
-    """Applies encoding fix to every string value in a record dict."""
     return {
         k: (_fix_encoding(v) if isinstance(v, str) else v)
         for k, v in record.items()
     }
 
 
-# ---------------------------------------------------------------------------
-# Extraction strategies
-# ---------------------------------------------------------------------------
+def _clean_price(raw: str) -> str:
+    """
+    Extracts just the numeric price from a string that may contain
+    concatenated availability text, e.g. '£51.77In stockAdd to basket'.
+    """
+    match = re.search(r"[\$\£\€\₹\¥]?\s*\d[\d,]*\.?\d*", raw)
+    return match.group(0).strip() if match else raw
+
+
+# ===========================================================================
+# CHANGE 1 — Page-Type Classification
+# ===========================================================================
+
+# Schema.org types mapped to our internal page archetypes
+_SCHEMA_TYPE_MAP = {
+    "Product":        "ecommerce",
+    "ItemList":       "ecommerce",
+    "Offer":          "ecommerce",
+    "NewsArticle":    "article",
+    "Article":        "article",
+    "BlogPosting":    "article",
+    "JobPosting":     "listing",
+    "RealEstateListing": "listing",
+    "Recipe":         "listing",
+    "FAQPage":        "documentation",
+    "TechArticle":    "documentation",
+    "Dataset":        "table_data",
+    "Table":          "table_data",
+}
+
+
+def classify_page_type(soup: BeautifulSoup, html: str) -> str:
+    """
+    Classifies the page into one of six archetypes using three signals
+    in priority order: JSON-LD schema, microdata itemtype, then DOM heuristics.
+
+    Returns one of: ecommerce | table_data | article | documentation |
+                    listing | unknown
+    """
+    # --- Signal 1: JSON-LD schema.org type ---
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(script.string or "")
+            schema_type = (
+                data.get("@type", "")
+                if isinstance(data, dict)
+                else data[0].get("@type", "") if isinstance(data, list) else ""
+            )
+            archetype = _SCHEMA_TYPE_MAP.get(schema_type)
+            if archetype:
+                return archetype
+        except (json.JSONDecodeError, IndexError, KeyError):
+            continue
+
+    # --- Signal 2: microdata itemtype ---
+    for tag in soup.find_all(attrs={"itemtype": True}):
+        itemtype = tag.get("itemtype", "")
+        for schema_name, archetype in _SCHEMA_TYPE_MAP.items():
+            if schema_name.lower() in itemtype.lower():
+                return archetype
+
+    # --- Signal 3: DOM heuristics ---
+    table_count   = len(soup.find_all("table"))
+    article_count = len(soup.find_all("article"))
+    product_count = len(soup.select(".product, .product-card, .product_pod, [class*='product']"))
+    listing_count = len(soup.select(".listing, .job, .property, [class*='listing']"))
+    code_count    = len(soup.find_all(["code", "pre"]))
+
+    if product_count >= 3:
+        return "ecommerce"
+    if table_count >= 2:
+        return "table_data"
+    if listing_count >= 3:
+        return "listing"
+    if code_count >= 3:
+        return "documentation"
+    if article_count >= 1 and soup.find_all("p"):
+        return "article"
+
+    return "unknown"
+
+
+# ===========================================================================
+# CHANGE 2 — JSON-LD Extraction
+# ===========================================================================
+
+def extract_jsonld(soup: BeautifulSoup) -> Tuple[List[Dict[str, Any]], float]:
+    """
+    Extracts structured data from <script type="application/ld+json"> blocks.
+    Returns (records, confidence). Confidence is 0.95 when records are found
+    since JSON-LD is explicitly machine-readable data.
+    """
+    records: List[Dict[str, Any]] = []
+
+    for script in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(script.string or "")
+            if isinstance(data, dict):
+                items = [data]
+            elif isinstance(data, list):
+                items = data
+            else:
+                continue
+
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                # Flatten one level — skip context/type metadata keys
+                record = {
+                    k: (str(v) if not isinstance(v, (str, int, float, bool)) else v)
+                    for k, v in item.items()
+                    if not k.startswith("@") and v is not None
+                }
+                if record:
+                    records.append(_clean_record(record))
+
+        except (json.JSONDecodeError, AttributeError):
+            continue
+
+    confidence = 0.95 if records else 0.0
+    return records, confidence
+
+
+# ===========================================================================
+# CHANGE 4 — Microdata Extraction
+# ===========================================================================
+
+def extract_microdata(soup: BeautifulSoup) -> Tuple[List[Dict[str, Any]], float]:
+    """
+    Extracts data from HTML microdata attributes (itemprop / itemscope).
+    Works on sites that use schema.org microdata instead of JSON-LD.
+    """
+    records: List[Dict[str, Any]] = []
+
+    # Each itemscope element is one record
+    for scope in soup.find_all(attrs={"itemscope": True}):
+        record: Dict[str, Any] = {}
+        for prop in scope.find_all(attrs={"itemprop": True}):
+            name  = prop.get("itemprop", "").strip()
+            value = (
+                prop.get("content")
+                or prop.get("datetime")
+                or prop.get("href")
+                or prop.get_text(strip=True)
+            )
+            if name and value:
+                record[name] = _fix_encoding(str(value))
+        if record:
+            records.append(record)
+
+    confidence = 0.90 if records else 0.0
+    return records, confidence
+
+
+# ===========================================================================
+# CHANGE 3 & 6 — Repeating Block Detection (real & fake tables)
+# ===========================================================================
+
+def detect_repeating_blocks(soup: BeautifulSoup) -> Tuple[List[Tag], float]:
+    """
+    Finds the dominant repeating DOM structure — the pattern that appears
+    most frequently under a single parent. This handles both real product
+    grids (<article>, <li class="product">) and fake tables (repeated
+    <div class="row"> structures that visually look like tables).
+
+    Returns (list_of_matching_tags, confidence).
+    """
+    # Count how many times each (parent_tag, child_tag, frozenset_of_classes)
+    # pattern appears. The most frequent pattern is almost certainly the
+    # repeating data block.
+    pattern_counts: Dict[Tuple, List[Tag]] = {}
+
+    for tag in soup.find_all(True):
+        if not isinstance(tag, Tag):
+            continue
+        parent = tag.parent
+        if not parent or not isinstance(parent, Tag):
+            continue
+
+        siblings = parent.find_all(tag.name, recursive=False)
+        if len(siblings) < 5:
+            continue
+
+        classes = frozenset(tag.get("class") or [])
+        key = (parent.name, tag.name, classes)
+        if key not in pattern_counts:
+            pattern_counts[key] = []
+        if tag not in pattern_counts[key]:
+            pattern_counts[key].append(tag)
+
+    if not pattern_counts:
+        return [], 0.0
+
+    # Pick the most frequent pattern
+    best_key  = max(pattern_counts, key=lambda k: len(pattern_counts[k]))
+    best_tags = pattern_counts[best_key]
+
+    # Confidence scales with repetition — 20+ occurrences → near certain
+    confidence = min(0.85, 0.4 + len(best_tags) * 0.02)
+    return best_tags, confidence
+
+
+def extract_from_repeating_blocks(
+    blocks: List[Tag],
+) -> Tuple[List[Dict[str, Any]], float]:
+    """
+    Dynamically extracts fields from each repeating block without assuming
+    any specific field names. Captures: text nodes, links, numbers, dates,
+    currency values, and images — labelled by their position/class.
+    """
+    records: List[Dict[str, Any]] = []
+    currency_re = re.compile(r"[\$\£\€\₹\¥]\s*[\d,]+\.?\d*")
+    date_re     = re.compile(r"\b\d{1,4}[-/\.]\d{1,2}[-/\.]\d{1,4}\b")
+
+    for block in blocks:
+        record: Dict[str, Any] = {}
+
+        for child in block.find_all(True):
+            if not isinstance(child, Tag):
+                continue
+
+            text = child.get_text(separator=" ", strip=True)
+            if not text or len(text) > 300:
+                continue
+
+            # Build a stable field label from tag + class
+            classes = "_".join(child.get("class") or [])
+            label   = f"{child.name}_{classes}" if classes else child.name
+            label   = re.sub(r"[^\w]", "_", label)[:40]
+
+            # Classify the value type
+            if currency_re.search(text):
+                match = currency_re.search(text)
+                record[f"price_{label}"] = match.group(0).strip()
+            elif date_re.search(text):
+                record[f"date_{label}"] = text
+            elif child.name in ("a",) and child.get("href"):
+                record[f"link_{label}"] = child["href"]
+                if text:
+                    record[f"text_{label}"] = _fix_encoding(text)
+            elif child.name in ("img",):
+                record[f"image_{label}"] = child.get("src") or child.get("data-src", "")
+            elif text:
+                record[f"text_{label}"] = _fix_encoding(text)
+
+        # Deduplicate: if a child value also appears in a parent key, drop parent
+        clean: Dict[str, Any] = {}
+        values_seen = set()
+        for k, v in record.items():
+            if v not in values_seen:
+                clean[k] = v
+                values_seen.add(v)
+
+        if clean:
+            records.append(clean)
+
+    confidence = min(0.82, 0.4 + len(records) * 0.02) if records else 0.0
+    return records, confidence
+
+
+# ===========================================================================
+# CHANGE 5 — LLM Schema Inference (sends 3 examples, not full HTML)
+# ===========================================================================
+
+_SCHEMA_INFERENCE_PROMPT = """
+You are a data schema specialist inside a web scraping pipeline.
+
+Below are 3 sample records extracted from repeated blocks on a webpage.
+Each record is a flat dict of raw field labels and values.
+
+Your task:
+1. Infer the entity type (e.g. "book", "job_posting", "product", "article").
+2. Map the raw field labels to clean, meaningful snake_case names.
+3. Return ONLY a JSON object — no markdown fences, no explanation:
+
+{
+  "entity_type": "<type>",
+  "field_mapping": {
+    "<raw_label>": "<clean_name>",
+    ...
+  }
+}
+
+Only include fields that have clear meaning. Drop internal IDs, CSS artifacts,
+and duplicated values. If a field's purpose is unclear, omit it.
+
+Sample records:
+SAMPLES
+"""
+
+
+def infer_schema_with_llm(
+    sample_records: List[Dict[str, Any]],
+) -> Optional[Dict[str, str]]:
+    """
+    Sends 3 sample records to Gemini and returns a field_mapping dict
+    that renames raw extracted labels to clean semantic names.
+    Returns None if the API call fails — extraction continues without renaming.
+    """
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    if not api_key or not sample_records:
+        return None
+
+    samples = json.dumps(sample_records[:3], indent=2, ensure_ascii=False)
+    prompt  = _SCHEMA_INFERENCE_PROMPT.replace("SAMPLES", samples)
+
+    url = (
+        "https://generativelanguage.googleapis.com/v1beta/models/"
+        f"gemini-2.0-flash:generateContent?key={api_key}"
+    )
+    body = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.1, "maxOutputTokens": 512},
+    }
+
+    try:
+        resp = requests.post(url, json=body, timeout=20)
+        resp.raise_for_status()
+        raw = (
+            resp.json()
+            .get("candidates", [{}])[0]
+            .get("content", {})
+            .get("parts", [{}])[0]
+            .get("text", "")
+            .strip()
+        )
+        raw = re.sub(r"^```json\s*", "", raw)
+        raw = re.sub(r"\s*```$",     "", raw)
+        parsed = json.loads(raw)
+        return parsed.get("field_mapping", {})
+    except Exception:
+        return None
+
+
+def apply_schema_mapping(
+    records: List[Dict[str, Any]],
+    mapping: Optional[Dict[str, str]],
+) -> List[Dict[str, Any]]:
+    """Renames raw field labels using the LLM-inferred schema mapping."""
+    if not mapping:
+        return records
+    return [
+        {mapping.get(k, k): v for k, v in r.items()}
+        for r in records
+    ]
+
+
+# ===========================================================================
+# CHANGE 8 — Extraction Confidence Score tracker
+# ===========================================================================
+
+def _make_result(
+    html_path: str,
+    url: Optional[str],
+    title: Optional[str],
+    page_type: str,
+    method: str,
+    records: List[Dict[str, Any]],
+    confidence: float,
+) -> ExtractionResult:
+    return ExtractionResult(
+        source_html_path=html_path,
+        url=url,
+        title=title,
+        page_type=page_type,
+        extraction_method=method,
+        confidence=round(confidence, 3),
+        records=records,
+    )
+
+
+# ===========================================================================
+# Main HTML Extractor — orchestrates all strategies in priority order
+# ===========================================================================
 
 class HTMLExtractor:
     """
-    Three-tier extractor. For each raw scraper record it tries strategies
-    in priority order and stops at the first one that yields useful rows:
+    Universal extractor. Tries extraction strategies in this priority order,
+    stopping at the first one that exceeds the confidence threshold:
 
-      1. structured_data  — scraper already extracted product cards / table rows
-      2. product_cards    — re-parse HTML looking for repeated card elements
-      3. html_parse       — generic fallback: headings + paragraphs + tables
+      1. Pre-extracted structured_data from the scraper  (confidence: 0.95)
+      2. JSON-LD                                          (confidence: 0.95)
+      3. Microdata (itemprop/itemscope)                   (confidence: 0.90)
+      4. Real HTML tables                                 (confidence: 0.85)
+      5. Repeating DOM block detection                    (confidence: 0.40–0.85)
+         └─ LLM schema inference to rename raw fields
+      6. LLM full-page fallback                           (confidence: 0.50)
+      7. Generic layout-aware text extraction             (confidence: 0.20)
     """
+
+    # Minimum confidence to accept a strategy's result without trying the next
+    CONFIDENCE_THRESHOLD = 0.60
 
     def extract(
         self,
@@ -92,160 +477,101 @@ class HTMLExtractor:
         structured_data: Optional[List[Dict[str, Any]]] = None,
         page_type: Optional[str] = None,
         title: Optional[str] = None,
-    ) -> ParsedPage:
+    ) -> ExtractionResult:
 
-        # --- Strategy 1: use pre-extracted structured_data from the scraper ---
+        # --- Strategy 1: pre-extracted structured_data from the scraper ---
         if structured_data:
             records = [_clean_record(r) for r in structured_data if r]
+            # Clean price fields that may contain concatenated text
+            for r in records:
+                if "price" in r:
+                    r["price"] = _clean_price(r["price"])
             if records:
-                return ParsedPage(
-                    source_html_path=html_path,
-                    url=url,
-                    title=title,
-                    extraction_method="structured_data",
-                    records=records,
+                return _make_result(
+                    html_path, url, title,
+                    page_type or "unknown", "structured_data", records, 0.95
                 )
 
-        # --- Read HTML from disk for strategies 2 & 3 ---
+        # --- Read HTML ---
         try:
             with open(html_path, "r", encoding="utf-8") as f:
                 html = f.read()
         except Exception as e:
-            return ParsedPage(
+            return ExtractionResult(
                 source_html_path=html_path, success=False,
                 error=f"Could not read HTML file: {e}"
             )
 
-        soup = BeautifulSoup(html, "html.parser")
-        page_title = (
-            title
-            or (soup.title.string.strip() if soup.title and soup.title.string else None)
+        soup       = BeautifulSoup(html, "html.parser")
+        page_title = title or (
+            soup.title.string.strip() if soup.title and soup.title.string else None
         )
 
-        # --- Strategy 2: product card re-parse (for product_listing pages) ---
-        if page_type == "product_listing" or self._looks_like_product_page(soup):
-            records = self._extract_product_cards(soup)
-            if records:
-                return ParsedPage(
-                    source_html_path=html_path,
-                    url=url,
-                    title=page_title,
-                    extraction_method="product_cards",
-                    records=records,
-                )
+        # Classify page type if not provided by the scraper
+        detected_type = page_type or classify_page_type(soup, html)
 
-        # --- Strategy 3: generic HTML parse ---
-        records = self._extract_generic(soup, url, page_title, html_path)
-        return ParsedPage(
-            source_html_path=html_path,
-            url=url,
-            title=page_title,
-            extraction_method="html_parse",
-            records=records,
+        # --- Strategy 2: JSON-LD ---
+        records, confidence = extract_jsonld(soup)
+        if records and confidence >= self.CONFIDENCE_THRESHOLD:
+            return _make_result(
+                html_path, url, page_title,
+                detected_type, "jsonld", records, confidence
+            )
+
+        # --- Strategy 3: Microdata ---
+        records, confidence = extract_microdata(soup)
+        if records and confidence >= self.CONFIDENCE_THRESHOLD:
+            return _make_result(
+                html_path, url, page_title,
+                detected_type, "microdata", records, confidence
+            )
+
+        # --- Strategy 4: Real HTML tables ---
+        records, confidence = self._extract_tables(soup)
+        if records and confidence >= self.CONFIDENCE_THRESHOLD:
+            return _make_result(
+                html_path, url, page_title,
+                detected_type, "html_tables", records, confidence
+            )
+
+        # --- Strategy 5: Repeating block detection + LLM schema inference ---
+        blocks, block_confidence = detect_repeating_blocks(soup)
+        if blocks and block_confidence >= 0.40:
+            raw_records, confidence = extract_from_repeating_blocks(blocks)
+            if raw_records:
+                # Ask LLM to rename the raw dynamically-labelled fields
+                mapping = infer_schema_with_llm(raw_records)
+                records = apply_schema_mapping(raw_records, mapping)
+                if confidence >= self.CONFIDENCE_THRESHOLD:
+                    return _make_result(
+                        html_path, url, page_title,
+                        detected_type, "repeating_blocks", records, confidence
+                    )
+
+        # --- Strategy 6: LLM full-page fallback ---
+        records, confidence = self._llm_fallback(soup)
+        if records:
+            return _make_result(
+                html_path, url, page_title,
+                detected_type, "llm_fallback", records, confidence
+            )
+
+        # --- Strategy 7: Generic layout-aware text (last resort) ---
+        records = self._extract_generic(soup, url, page_title)
+        return _make_result(
+            html_path, url, page_title,
+            detected_type, "generic_text", records, 0.20
         )
 
     # ------------------------------------------------------------------
-    # Strategy 2 helpers
+    # Strategy 4 — HTML tables
     # ------------------------------------------------------------------
 
-    def _looks_like_product_page(self, soup: BeautifulSoup) -> bool:
-        """Quick heuristic check without re-classifying the full page."""
-        return bool(
-            soup.find_all("article")
-            or soup.find_all(class_=re.compile(r"product|item|card", re.I))
-        )
-
-    def _extract_product_cards(self, soup: BeautifulSoup) -> List[Dict[str, Any]]:
-        """
-        Extracts product records from repeated article/card elements.
-        Targets Books to Scrape's <article class="product_pod"> pattern
-        as well as generic product grids on other e-commerce sites.
-        """
+    def _extract_tables(
+        self, soup: BeautifulSoup
+    ) -> Tuple[List[Dict[str, Any]], float]:
         records: List[Dict[str, Any]] = []
 
-        candidate_selectors = [
-            {"tag": "article", "attrs": {}},
-            {"tag": "li",  "attrs": {"class": re.compile(r"product|item|card", re.I)}},
-            {"tag": "div", "attrs": {"class": re.compile(r"product|item|card|grid", re.I)}},
-        ]
-
-        for sel in candidate_selectors:
-            cards = soup.find_all(sel["tag"], attrs=sel["attrs"])
-            if len(cards) < 3:
-                continue
-
-            for card in cards:
-                record: Dict[str, Any] = {}
-
-                # Title / name
-                name_tag = (
-                    card.find("h3") or card.find("h2") or card.find("h4")
-                    or card.find("strong")
-                    or card.find(class_=re.compile(r"name|title", re.I))
-                )
-                if name_tag:
-                    # Books to Scrape puts the real title in the <a> title attr
-                    a = name_tag.find("a")
-                    record["name"] = (
-                        a["title"] if a and a.get("title") else name_tag.get_text(strip=True)
-                    )
-
-                # Price — class-based first, then currency symbol fallback
-                price_tag = card.find(class_=re.compile(r"price", re.I))
-                if price_tag:
-                    record["price"] = _fix_encoding(price_tag.get_text(strip=True))
-
-                # Rating — Books to Scrape uses <p class="star-rating One/Two/...">
-                rating_tag = card.find(class_=re.compile(r"star-rating|rating", re.I))
-                if rating_tag:
-                    # CSS class holds the word rating e.g. "star-rating Three"
-                    classes = " ".join(rating_tag.get("class", []))
-                    word_rating = re.search(
-                        r"\b(One|Two|Three|Four|Five)\b", classes, re.I
-                    )
-                    record["rating"] = (
-                        word_rating.group(1) if word_rating
-                        else rating_tag.get_text(strip=True)
-                    )
-
-                # Availability
-                avail_tag = card.find(class_=re.compile(r"availab|stock", re.I))
-                if avail_tag:
-                    record["availability"] = avail_tag.get_text(strip=True)
-
-                # Product URL
-                link = card.find("a", href=True)
-                if link:
-                    href = link["href"]
-                    record["product_url"] = href
-
-                if record:
-                    records.append(record)
-
-            if records:
-                break
-
-        return records
-
-    # ------------------------------------------------------------------
-    # Strategy 3 helper
-    # ------------------------------------------------------------------
-
-    def _extract_generic(
-        self,
-        soup: BeautifulSoup,
-        url: Optional[str],
-        title: Optional[str],
-        html_path: str,
-    ) -> List[Dict[str, Any]]:
-        """
-        Fallback for non-product pages (articles, Wikipedia, etc.).
-        Returns one record per paragraph with page metadata attached.
-        Also extracts table rows as individual records when tables are present.
-        """
-        records: List[Dict[str, Any]] = []
-
-        # Tables first — they contain the most structured data
         for table in soup.find_all("table"):
             rows = table.find_all("tr")
             if not rows:
@@ -260,48 +586,135 @@ class HTMLExtractor:
                 else:
                     records.append({f"col_{i}": v for i, v in enumerate(cells)})
 
-        # Paragraphs + headings if no tables produced records
-        if not records:
-            for tag in soup.find_all(["h1", "h2", "h3", "p"]):
-                text = _fix_encoding(tag.get_text(strip=True))
-                if text:
-                    records.append({
-                        "tag":   tag.name,
-                        "text":  text,
-                        "url":   url,
-                        "title": title,
-                    })
+        confidence = min(0.85, 0.50 + len(records) * 0.01) if records else 0.0
+        return records, confidence
+
+    # ------------------------------------------------------------------
+    # Strategy 6 — LLM full-page fallback
+    # ------------------------------------------------------------------
+
+    _LLM_EXTRACT_PROMPT = """
+You are a data extraction specialist. Below is a compact structural map of a webpage.
+
+Extract all meaningful structured data from it and return a JSON array of records.
+Each record represents one entity (product, article, job, etc.).
+Use clean snake_case field names. Return ONLY the JSON array — no markdown, no explanation.
+If there is nothing structured to extract, return [].
+
+Structural map:
+{map}
+"""
+
+    def _build_structural_map(self, soup: BeautifulSoup, max_nodes: int = 60) -> str:
+        lines: List[str] = []
+        for i, tag in enumerate(soup.find_all(True)):
+            if i >= max_nodes:
+                break
+            if not isinstance(tag, Tag):
+                continue
+            classes = " ".join(tag.get("class") or [])
+            text    = tag.get_text(separator=" ", strip=True)[:80]
+            if text:
+                lines.append(f"<{tag.name} class='{classes}'> {text}")
+        return "\n".join(lines)
+
+    def _llm_fallback(
+        self, soup: BeautifulSoup
+    ) -> Tuple[List[Dict[str, Any]], float]:
+        api_key = os.environ.get("GEMINI_API_KEY", "")
+        if not api_key:
+            return [], 0.0
+
+        structural_map = self._build_structural_map(soup)
+        prompt = self._LLM_EXTRACT_PROMPT.replace("{map}", structural_map)
+        url = (
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            f"gemini-2.0-flash:generateContent?key={api_key}"
+        )
+        body = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.1, "maxOutputTokens": 2048},
+        }
+
+        try:
+            resp = requests.post(url, json=body, timeout=30)
+            resp.raise_for_status()
+            raw = (
+                resp.json()
+                .get("candidates", [{}])[0]
+                .get("content", {})
+                .get("parts", [{}])[0]
+                .get("text", "")
+                .strip()
+            )
+            raw     = re.sub(r"^```json\s*", "", raw)
+            raw     = re.sub(r"\s*```$",     "", raw)
+            parsed  = json.loads(raw)
+            records = parsed if isinstance(parsed, list) else []
+            confidence = 0.55 if records else 0.0
+            return [_clean_record(r) for r in records], confidence
+        except Exception:
+            return [], 0.0
+
+    # ------------------------------------------------------------------
+    # Strategy 7 — Generic layout-aware text
+    # ------------------------------------------------------------------
+
+    def _extract_generic(
+        self,
+        soup: BeautifulSoup,
+        url: Optional[str],
+        title: Optional[str],
+    ) -> List[Dict[str, Any]]:
+        records: List[Dict[str, Any]] = []
+        seen: set = set()
+
+        for tag in soup.find_all(["h1", "h2", "h3", "p", "li"]):
+            if tag in seen:
+                continue
+            seen.add(tag)
+            text = _fix_encoding(tag.get_text(separator=" ", strip=True))
+            if text:
+                records.append({
+                    "tag":   tag.name,
+                    "text":  text,
+                    "url":   url,
+                    "title": title,
+                })
 
         return records
 
 
-# ---------------------------------------------------------------------------
+# ===========================================================================
 # DataFrame builder
-# ---------------------------------------------------------------------------
+# ===========================================================================
 
-def build_dataframe(parsed_pages: List[ParsedPage]) -> pd.DataFrame:
+# Columns that are never analytically useful regardless of content
+_ALWAYS_DROP = {"extraction_method", "source_html_path", "page_title"}
+
+# Column types that signal low analytical value even when populated
+_URL_PATTERN = re.compile(r"https?://|/catalogue/|\.html$", re.I)
+
+
+def build_dataframe(results: List[ExtractionResult]) -> pd.DataFrame:
     """
-    Builds a single tidy DataFrame from all parsed pages.
+    Builds a tidy DataFrame from all extraction results.
 
-    - For structured_data / product_cards pages: each record is one row
-      (one product), with url and title added as metadata columns.
-    - For html_parse pages: each paragraph/table-row is one row.
-
-    The method column records which extraction strategy was used, which
-    is useful for debugging and for the analyzer agent's quality check.
+    Drops:
+    - Columns where all values are identical (zero variance)
+    - Columns where every value is a URL path (not analytically useful)
+    - Internal bookkeeping columns (extraction_method, source_html_path)
+    - Columns with > 95% missing values
     """
     all_rows: List[Dict[str, Any]] = []
 
-    for page in parsed_pages:
-        if not page.success or not page.records:
+    for result in results:
+        if not result.success or not result.records:
             continue
-
-        for record in page.records:
+        for record in result.records:
             row = dict(record)
-            # Always attach page-level metadata so the analyzer can verify
-            row.setdefault("source_url",   page.url)
-            row.setdefault("page_title",   page.title)
-            row["extraction_method"] = page.extraction_method
+            row["_page_type"]   = result.page_type
+            row["_confidence"]  = result.confidence
             all_rows.append(row)
 
     if not all_rows:
@@ -309,17 +722,71 @@ def build_dataframe(parsed_pages: List[ParsedPage]) -> pd.DataFrame:
 
     df = pd.DataFrame(all_rows)
 
-    # Drop columns that are 100 % identical across all rows — they add no
-    # analytical value and are exactly what caused the bad charts (e.g. a
-    # 'url' column where every row is 'https://books.toscrape.com').
-    cols_to_drop = [
-        col for col in df.columns
-        if df[col].nunique(dropna=False) <= 1
+    # Drop always-useless columns
+    df = df.drop(columns=[c for c in _ALWAYS_DROP if c in df.columns])
+
+    # Drop zero-variance columns (all values identical)
+    df = df.drop(columns=[
+        c for c in df.columns
+        if df[c].nunique(dropna=False) <= 1
+    ])
+
+    # Drop columns where > 95% values are URL paths
+    url_cols = [
+        c for c in df.columns
+        if df[c].dtype == object
+        and df[c].dropna().apply(lambda v: bool(_URL_PATTERN.search(str(v)))).mean() > 0.95
     ]
-    if cols_to_drop:
-        df = df.drop(columns=cols_to_drop)
+    df = df.drop(columns=url_cols)
+
+    # Drop columns with > 95% missing values
+    df = df.dropna(axis=1, thresh=max(1, int(len(df) * 0.05)))
 
     return df
+
+
+# ===========================================================================
+# EDA hint: which columns are worth visualizing
+# ===========================================================================
+
+def get_visualization_hints(df: pd.DataFrame) -> Dict[str, Any]:
+    """
+    Returns metadata that tells the EDA and visualization agents which
+    columns are worth plotting and how.
+
+    Rules:
+    - Numeric columns with > 1 unique value → histogram / KDE
+    - Categorical columns with 2–20 unique values → bar chart
+    - Categorical columns with > 20 unique values → skip (too many categories)
+    - Columns with all-unique values (IDs, URLs) → skip
+    """
+    hints: Dict[str, Any] = {
+        "numeric_plot":      [],
+        "categorical_plot":  [],
+        "skip":              [],
+    }
+
+    for col in df.columns:
+        if col.startswith("_"):
+            hints["skip"].append(col)
+            continue
+
+        n_unique = df[col].nunique(dropna=True)
+        n_rows   = len(df)
+
+        if pd.api.types.is_numeric_dtype(df[col]):
+            if n_unique > 1:
+                hints["numeric_plot"].append(col)
+            else:
+                hints["skip"].append(col)
+        else:
+            if 2 <= n_unique <= 20:
+                hints["categorical_plot"].append(col)
+            else:
+                # Too many unique values to be useful as a bar chart
+                hints["skip"].append(col)
+
+    return hints
 
 
 # ---------------------------------------------------------------------------
@@ -340,44 +807,32 @@ def save_metadata(state: ExtractionState) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Extraction pipeline
-#
-# The key change: execute_extraction now accepts an optional raw_data_path
-# so it can read the scraper's structured_data directly, rather than always
-# re-parsing from HTML.
+# Extraction pipeline — public interface unchanged for orchestrator compat
 # ---------------------------------------------------------------------------
 
 def execute_extraction(
     html_paths: List[str],
     url_map: Optional[Dict[str, str]] = None,
-    raw_data_path: Optional[str] = None,     # NEW: path to scraper's raw JSON
+    raw_data_path: Optional[str] = None,
 ) -> ExtractionState:
     """
-    Reads each raw scraper record and extracts structured content.
-
-    Priority:
-      1. If raw_data_path is provided, read structured_data and page_type
-         from the scraper's JSON output for each URL.
-      2. Fall back to HTML re-parsing when structured_data is absent.
+    Orchestrates extraction for a batch of HTML files.
 
     Args:
-        html_paths:     Paths to saved HTML files.
-        url_map:        {html_path: original_url}
-        raw_data_path:  Path to the raw_data JSON written by save_raw_data()
-                        in data_collection_agent.py. When provided, the extractor
-                        uses pre-extracted product records instead of re-parsing.
+        html_paths:    Paths to saved HTML files.
+        url_map:       {html_path: original_url}
+        raw_data_path: Path to the scraper's raw JSON. When provided, uses
+                       pre-extracted structured_data as the first-priority source.
     """
     url_map = url_map or {}
-    state = ExtractionState(html_paths=html_paths)
+    state   = ExtractionState(html_paths=html_paths)
     extractor = HTMLExtractor()
 
-    # Build a lookup from html_path → scraper record so we can pass
-    # structured_data and page_type into the extractor.
     scraper_record_map: Dict[str, Dict[str, Any]] = {}
     if raw_data_path:
         try:
             with open(raw_data_path, "r", encoding="utf-8") as f:
-                raw_records: List[Dict[str, Any]] = json.load(f)
+                raw_records = json.load(f)
             for rec in raw_records:
                 hp = rec.get("html_path")
                 if hp:
@@ -390,29 +845,31 @@ def execute_extraction(
 
     state.logs.append(f"Starting extraction for {len(html_paths)} HTML file(s)")
 
-    parsed_pages: List[ParsedPage] = []
+    results: List[ExtractionResult] = []
     for path in html_paths:
         print(f"Extracting: {path}")
-        scraper_rec = scraper_record_map.get(path, {})
+        rec = scraper_record_map.get(path, {})
 
-        page = extractor.extract(
+        result = extractor.extract(
             html_path=path,
-            url=url_map.get(path) or scraper_rec.get("url"),
-            structured_data=scraper_rec.get("structured_data"),
-            page_type=scraper_rec.get("page_type"),
-            title=scraper_rec.get("title"),
+            url=url_map.get(path) or rec.get("url"),
+            structured_data=rec.get("structured_data"),
+            page_type=rec.get("page_type"),
+            title=rec.get("title"),
         )
-        parsed_pages.append(page)
+        results.append(result)
         state.logs.append(
-            f"{path} → method={page.extraction_method}, "
-            f"records={len(page.records)}, success={page.success}"
+            f"{path} → type={result.page_type}, method={result.extraction_method}, "
+            f"records={len(result.records)}, confidence={result.confidence:.2f}"
         )
 
-    state.parsed_pages = [p.model_dump() for p in parsed_pages]
+    state.parsed_pages = [r.model_dump() for r in results]
     state.logs.append("Extraction complete")
 
-    df = build_dataframe(parsed_pages)
-    state.logs.append(f"DataFrame built: {df.shape[0]} rows × {df.shape[1]} cols")
+    df = build_dataframe(results)
+    hints = get_visualization_hints(df)
+    state.logs.append(f"DataFrame: {df.shape[0]} rows × {df.shape[1]} cols")
+    state.logs.append(f"Visualization hints: {hints}")
     print(f"\nDataFrame shape: {df.shape}")
     print(df.head())
 
@@ -430,9 +887,8 @@ def execute_extraction(
 # ---------------------------------------------------------------------------
 
 def extract_from_html_file(html_path: str, url: Optional[str] = None) -> dict:
-    """ADK-compatible tool. Parses a single HTML file and returns structured records."""
-    extractor = HTMLExtractor()
-    result = extractor.extract(html_path, url=url)
+    """ADK-compatible tool. Extracts structured records from a single HTML file."""
+    result = HTMLExtractor().extract(html_path, url=url)
     return result.model_dump()
 
 
@@ -444,24 +900,27 @@ extraction_agent = Agent(
     model="gemini-2.0-flash",
     name="extraction_agent",
     description=(
-        "Reads scraper output records, extracts structured content using a "
-        "three-tier strategy (pre-extracted structured_data → product card "
-        "re-parse → generic HTML parse), and stores results as a tidy CSV."
+        "Universal extraction agent. Classifies page type, then tries "
+        "JSON-LD → microdata → HTML tables → repeating blocks (with LLM "
+        "schema inference) → LLM fallback → generic text, stopping at the "
+        "first strategy that exceeds a confidence threshold."
     ),
     instruction="""
     You are a data extraction agent. Your job:
-    1. Accept a list of HTML file paths and optionally a raw_data_path JSON.
-    2. For each file, use the highest-quality extraction strategy available:
-       - structured_data from the scraper (best)
-       - product card re-parse from HTML
-       - generic paragraph/table extraction (fallback)
-    3. Report which strategy was used per file and how many records were extracted.
-    4. Confirm the final DataFrame path and its shape.
+    1. Accept HTML file paths and optionally a raw_data_path JSON.
+    2. For each file, run the full extraction pipeline. It will automatically
+       choose the best strategy.
+    3. Report: page_type, extraction_method, confidence, and record count
+       for each file.
+    4. Report the final DataFrame shape and path.
+    5. If confidence < 0.6 for any file, flag it and suggest the user
+       verify that the extracted records look correct.
 
     Rules:
     - Never fabricate data.
-    - If a file fails, log the error and continue with the rest.
-    - Always prefer structured_data over raw HTML re-parsing.
+    - If a file fails, log the error and continue.
+    - Always prefer high-confidence structured sources (JSON-LD, microdata)
+      over heuristic or LLM-based extraction.
     """,
     tools=[extract_from_html_file],
 )
@@ -472,12 +931,8 @@ extraction_agent = Agent(
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    sample_html_paths = [
-        "storage/raw_html/example1.html",
-    ]
-    sample_url_map = {
-        "storage/raw_html/example1.html": "https://books.toscrape.com",
-    }
+    sample_html_paths = ["storage/raw_html/example1.html"]
+    sample_url_map    = {"storage/raw_html/example1.html": "https://books.toscrape.com"}
     final_state = execute_extraction(
         sample_html_paths,
         url_map=sample_url_map,

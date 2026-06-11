@@ -1,0 +1,1172 @@
+{
+  "user_query": "scrape and analyze data from the website https://www.scrapethissite.com/pages/simple/",
+  "current_stage": "finished",
+  "execution_plan": {
+    "user_query": "scrape and analyze data from the website https://www.scrapethissite.com/pages/simple/",
+    "stages": [
+      "data_collection",
+      "extraction",
+      "data_cleaning",
+      "feature_engineering",
+      "eda",
+      "visualization"
+    ],
+    "start_csv_path": null,
+    "reasoning": "The user explicitly requests to 'scrape' data from a website, which mandates `data_collection`. Following this, the raw scraped data needs to be converted into a structured format via `extraction`. All real-world data requires `data_cleaning` to handle issues like nulls or inconsistencies. 'Analyze data' implies preparing data for analysis (`feature_engineering`), understanding its characteristics and patterns (`eda`), and visually presenting insights (`visualization`).",
+    "data_goal": "Scrape, process, and analyze data from the specified website to extract meaningful insights.",
+    "expected_output": "A dashboard or set of visualizations showing key patterns, distributions, and insights derived from the scraped data."
+  },
+  "raw_data_state": {
+    "user_query": "scrape and analyze data from the website https://www.scrapethissite.com/pages/simple/",
+    "source_urls": [
+      "https://www.scrapethissite.com/pages/simple/"
+    ],
+    "raw_data_path": "storage\\raw\\raw_data_bc8795d6-95bc-4145-a7b0-cf58ea409a07.json",
+    "metadata_path": "storage\\metadata\\metadata_770d01b9-6e32-4af6-bca4-a48adb661df7.json",
+    "logs": [
+      "Started data collection workflow",
+      "Extracted URL(s) from query: ['https://www.scrapethissite.com/pages/simple/']",
+      "Discovered 1 URLs",
+      "Completed web scraping",
+      "  https://www.scrapethissite.com/pages/simple/ → page_type=article, structured_records=0, success=True",
+      "Raw data saved: storage\\raw\\raw_data_bc8795d6-95bc-4145-a7b0-cf58ea409a07.json",
+      "Metadata saved: storage\\metadata\\metadata_770d01b9-6e32-4af6-bca4-a48adb661df7.json"
+    ],
+    "current_stage": "data_collection",
+    "raw_data_preview": [
+      {
+        "url": "https://www.scrapethissite.com/pages/simple/",
+        "scraping_mode": "static",
+        "title": "Countries of the World: A Simple Example | Scrape This Site | A public sandbox for learning web scraping",
+        "extracted_text": "Scrape This Site\nSandbox\nLessons\nFAQ\nLogin\n# Countries of the World: A Simple Example 250 items\nA single page that lists information about all the countries in the world. Good for those just get started with web scraping.\n                            Practice looking for patterns in the HTML that will allow you to extract information about each country. Then, build a simple web scraper that makes a request to this page, parses the HTML and prints out each country's name.\nThere are 4 video lessons that show you how to scrape this page.\nData via http://peric.github.io/GetCountries/\n### Andorra\n### United Arab Emirates\n### Afghanistan\n### Antigua and Barbuda\n### Anguilla\n### Albania\n### Armenia\n### Angola\n### Antarctica\n### Argentina\n### American Samoa\n### Austria\n### Australia\n### Aruba\n### Åland\n### Azerbaijan\n### Bosnia and Herzegovina\n### Barbados\n### Bangladesh\n### Belgium\n### Burkina Faso\n### Bulgaria\n### Bahrain\n### Burundi\n### Benin\n### Saint Barthélemy\n### Bermuda\n### Brunei\n### Bolivia\n### Bonaire\n### Brazil\n### Bahamas\n### Bhutan\n### Bouvet Island\n### Botswana\n### Belarus\n### Belize\n### Canada\n### Cocos [Keeling] Islands\n### Democratic Republic of the Congo\n### Central African Republic\n### Republic of the Congo\n### Switzerland\n### Ivory Coast\n### Cook Islands\n### Chile\n### Cameroon\n### China\n### Colombia\n### Costa Rica\n### Cuba\n### Cape Verde\n### Curacao\n### Christmas Island\n### Cyprus\n### Czech Republic\n### Germany\n### Djibouti\n### Denmark\n### Dominica\n### Dominican Republic\n### Algeria\n### Ecuador\n### Estonia\n### Egypt\n### Western Sahara\n### Eritrea\n### Spain\n### Ethiopia\n### Finland\n### Fiji\n### Falkland Islands\n### Micronesia\n### Faroe Islands\n### France\n### Gabon\n### United Kingdom\n### Grenada\n### Georgia\n### French Guiana\n### Guernsey\n### Ghana\n### Gibraltar\n### Greenland\n### Gambia\n### Guinea\n### Guadeloupe\n### Equatorial Guinea\n### Greece\n### South Georgia and the South Sandwich Islands\n### Guatemala\n### Guam\n### Guinea-Bissau\n### Guyana\n### Hong Kong\n### Heard Island and McDonald Islands\n### Honduras\n### Croatia\n### Haiti\n### Hungary\n### Indonesia\n### Ireland\n### Israel\n### Isle of Man\n### India\n### British Indian Ocean Territory\n### Iraq\n### Iran\n### Iceland\n### Italy\n### Jersey\n### Jamaica\n### Jordan\n### Japan\n### Kenya\n### Kyrgyzstan\n### Cambodia\n### Kiribati\n### Comoros\n### Saint Kitts and Nevis\n### North Korea\n### South Korea\n### Kuwait\n### Cayman Islands\n### Kazakhstan\n### Laos\n### Lebanon\n### Saint Lucia\n### Liechtenstein\n### Sri Lanka\n### Liberia\n### Lesotho\n### Lithuania\n### Luxembourg\n### Latvia\n### Libya\n### Morocco\n### Monaco\n### Moldova\n### Montenegro\n### Saint Martin\n### Madagascar\n### Marshall Islands\n### Macedonia\n### Mali\n### Myanmar [Burma]\n### Mongolia\n### Macao\n### Northern Mariana Islands\n### Martinique\n### Mauritania\n### Montserrat\n### Malta\n### Mauritius\n### Maldives\n### Malawi\n### Mexico\n### Malaysia\n### Mozambique\n### Namibia\n### New Caledonia\n### Niger\n### Norfolk Island\n### Nigeria\n### Nicaragua\n### Netherlands\n### Norway\n### Nepal\n### Nauru\n### Niue\n### New Zealand\n### Oman\n### Panama\n### Peru\n### French Polynesia\n### Papua New Guinea\n### Philippines\n### Pakistan\n### Poland\n### Saint Pierre and Miquelon\n### Pitcairn Islands\n### Puerto Rico\n### Palestine\n### Portugal\n### Palau\n### Paraguay\n### Qatar\n### Réunion\n### Romania\n### Serbia\n### Russia\n### Rwanda\n### Saudi Arabia\n### Solomon Islands\n### Seychelles\n### Sudan\n### Sweden\n### Singapore\n### Saint Helena\n### Slovenia\n### Svalbard and Jan Mayen\n### Slovakia\n### Sierra Leone\n### San Marino\n### Senegal\n### Somalia\n### Suriname\n### South Sudan\n### São Tomé and Príncipe\n### El Salvador\n### Sint Maarten\n### Syria\n### Swaziland\n### Turks and Caicos Islands\n### Chad\n### French Southern Territories\n### Togo\n### Thailand\n### Tajikistan\n### Tokelau\n### East Timor\n### Turkmenistan\n### Tunisia\n### Tonga\n### Turkey\n### Trinidad and Tobago\n### Tuvalu\n### Taiwan\n### Tanzania\n### Ukraine\n### Uganda\n### U.S. Minor Outlying Islands\n### United States\n### Uruguay\n### Uzbekistan\n### Vatican City\n### Saint Vincent and the Grenadines\n### Venezuela\n### British Virgin Islands\n### U.S. Virgin Islands\n### Vietnam\n### Vanuatu\n### Wallis and Futuna\n### Samoa\n### Kosovo\n### Yemen\n### Mayotte\n### South Africa\n### Zambia\n### Zimbabwe",
+        "structured_data": null,
+        "page_type": "article",
+        "html_path": "storage\\raw_html\\2f82385c-ed4a-4576-b683-fda57d95f7c2.html",
+        "screenshot_path": null,
+        "metadata_path": "storage\\metadata\\226dbf65-99fd-442e-8fe0-dca9fd7f6a80.json",
+        "success": true,
+        "error": null
+      }
+    ]
+  },
+  "extraction_state": {
+    "html_paths": [
+      "storage\\raw_html\\2f82385c-ed4a-4576-b683-fda57d95f7c2.html"
+    ],
+    "parsed_pages": [
+      {
+        "source_html_path": "storage\\raw_html\\2f82385c-ed4a-4576-b683-fda57d95f7c2.html",
+        "url": "https://www.scrapethissite.com/pages/simple/",
+        "title": "Countries of the World: A Simple Example | Scrape This Site | A public sandbox for learning web scraping",
+        "page_type": "article",
+        "extraction_method": "repeating_blocks",
+        "confidence": 0.82,
+        "records": [
+          {
+            "text_div_col_md_12": "Countries of the World: A Simple Example 250 items",
+            "text_small": "250 items"
+          },
+          {
+            "text_div_col_md_6": "There are 4 video lessons that show you how to scrape this page.",
+            "text_p": "Data via http://peric.github.io/GetCountries/",
+            "link_a": "/lessons/",
+            "text_a": "4 video lessons",
+            "link_a_data_attribution": "http://peric.github.io/GetCountries/"
+          },
+          {
+            "text_div_col_md_4_country": "Afghanistan Capital: Kabul Population: 29121286 Area (km 2 ): 647500.0",
+            "text_h3_country_name": "Afghanistan",
+            "text_div_country_info": "Capital: Kabul Population: 29121286 Area (km 2 ): 647500.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Kabul",
+            "text_span_country_population": "29121286",
+            "text_sup": "2",
+            "text_span_country_area": "647500.0"
+          },
+          {
+            "text_div_col_md_4_country": "Albania Capital: Tirana Population: 2986952 Area (km 2 ): 28748.0",
+            "text_h3_country_name": "Albania",
+            "text_div_country_info": "Capital: Tirana Population: 2986952 Area (km 2 ): 28748.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Tirana",
+            "text_span_country_population": "2986952",
+            "text_sup": "2",
+            "text_span_country_area": "28748.0"
+          },
+          {
+            "text_div_col_md_4_country": "Antarctica Capital: None Population: 0 Area (km 2 ): 1.4E7",
+            "text_h3_country_name": "Antarctica",
+            "text_div_country_info": "Capital: None Population: 0 Area (km 2 ): 1.4E7",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "None",
+            "text_span_country_population": "0",
+            "text_sup": "2",
+            "text_span_country_area": "1.4E7"
+          },
+          {
+            "text_div_col_md_4_country": "Austria Capital: Vienna Population: 8205000 Area (km 2 ): 83858.0",
+            "text_h3_country_name": "Austria",
+            "text_div_country_info": "Capital: Vienna Population: 8205000 Area (km 2 ): 83858.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Vienna",
+            "text_span_country_population": "8205000",
+            "text_sup": "2",
+            "text_span_country_area": "83858.0"
+          },
+          {
+            "text_div_col_md_4_country": "Åland Capital: Mariehamn Population: 26711 Area (km 2 ): 1580.0",
+            "text_h3_country_name": "Åland",
+            "text_div_country_info": "Capital: Mariehamn Population: 26711 Area (km 2 ): 1580.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Mariehamn",
+            "text_span_country_population": "26711",
+            "text_sup": "2",
+            "text_span_country_area": "1580.0"
+          },
+          {
+            "text_div_col_md_4_country": "Barbados Capital: Bridgetown Population: 285653 Area (km 2 ): 431.0",
+            "text_h3_country_name": "Barbados",
+            "text_div_country_info": "Capital: Bridgetown Population: 285653 Area (km 2 ): 431.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Bridgetown",
+            "text_span_country_population": "285653",
+            "text_sup": "2",
+            "text_span_country_area": "431.0"
+          },
+          {
+            "text_div_col_md_4_country": "Burkina Faso Capital: Ouagadougou Population: 16241811 Area (km 2 ): 274200.0",
+            "text_h3_country_name": "Burkina Faso",
+            "text_div_country_info": "Capital: Ouagadougou Population: 16241811 Area (km 2 ): 274200.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Ouagadougou",
+            "text_span_country_population": "16241811",
+            "text_sup": "2",
+            "text_span_country_area": "274200.0"
+          },
+          {
+            "text_div_col_md_4_country": "Burundi Capital: Bujumbura Population: 9863117 Area (km 2 ): 27830.0",
+            "text_h3_country_name": "Burundi",
+            "text_div_country_info": "Capital: Bujumbura Population: 9863117 Area (km 2 ): 27830.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Bujumbura",
+            "text_span_country_population": "9863117",
+            "text_sup": "2",
+            "text_span_country_area": "27830.0"
+          },
+          {
+            "text_div_col_md_4_country": "Bermuda Capital: Hamilton Population: 65365 Area (km 2 ): 53.0",
+            "text_h3_country_name": "Bermuda",
+            "text_div_country_info": "Capital: Hamilton Population: 65365 Area (km 2 ): 53.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Hamilton",
+            "text_span_country_population": "65365",
+            "text_sup": "2",
+            "text_span_country_area": "53.0"
+          },
+          {
+            "text_div_col_md_4_country": "Bonaire Capital: Kralendijk Population: 18012 Area (km 2 ): 328.0",
+            "text_h3_country_name": "Bonaire",
+            "text_div_country_info": "Capital: Kralendijk Population: 18012 Area (km 2 ): 328.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Kralendijk",
+            "text_span_country_population": "18012",
+            "text_sup": "2",
+            "text_span_country_area": "328.0"
+          },
+          {
+            "text_div_col_md_4_country": "Bhutan Capital: Thimphu Population: 699847 Area (km 2 ): 47000.0",
+            "text_h3_country_name": "Bhutan",
+            "text_div_country_info": "Capital: Thimphu Population: 699847 Area (km 2 ): 47000.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Thimphu",
+            "text_span_country_population": "699847",
+            "text_sup": "2",
+            "text_span_country_area": "47000.0"
+          },
+          {
+            "text_div_col_md_4_country": "Belarus Capital: Minsk Population: 9685000 Area (km 2 ): 207600.0",
+            "text_h3_country_name": "Belarus",
+            "text_div_country_info": "Capital: Minsk Population: 9685000 Area (km 2 ): 207600.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Minsk",
+            "text_span_country_population": "9685000",
+            "text_sup": "2",
+            "text_span_country_area": "207600.0"
+          },
+          {
+            "text_div_col_md_4_country": "Cocos [Keeling] Islands Capital: West Island Population: 628 Area (km 2 ): 14.0",
+            "text_h3_country_name": "Cocos [Keeling] Islands",
+            "text_div_country_info": "Capital: West Island Population: 628 Area (km 2 ): 14.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "West Island",
+            "text_span_country_population": "628",
+            "text_sup": "2",
+            "text_span_country_area": "14.0"
+          },
+          {
+            "text_div_col_md_4_country": "Republic of the Congo Capital: Brazzaville Population: 3039126 Area (km 2 ): 342000.0",
+            "text_h3_country_name": "Republic of the Congo",
+            "text_div_country_info": "Capital: Brazzaville Population: 3039126 Area (km 2 ): 342000.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Brazzaville",
+            "text_span_country_population": "3039126",
+            "text_sup": "2",
+            "text_span_country_area": "342000.0"
+          },
+          {
+            "text_div_col_md_4_country": "Cook Islands Capital: Avarua Population: 21388 Area (km 2 ): 240.0",
+            "text_h3_country_name": "Cook Islands",
+            "text_div_country_info": "Capital: Avarua Population: 21388 Area (km 2 ): 240.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Avarua",
+            "text_span_country_population": "21388",
+            "text_sup": "2",
+            "text_span_country_area": "240.0"
+          },
+          {
+            "text_div_col_md_4_country": "China Capital: Beijing Population: 1330044000 Area (km 2 ): 9596960.0",
+            "text_h3_country_name": "China",
+            "text_div_country_info": "Capital: Beijing Population: 1330044000 Area (km 2 ): 9596960.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Beijing",
+            "text_span_country_population": "1330044000",
+            "text_sup": "2",
+            "text_span_country_area": "9596960.0"
+          },
+          {
+            "text_div_col_md_4_country": "Cuba Capital: Havana Population: 11423000 Area (km 2 ): 110860.0",
+            "text_h3_country_name": "Cuba",
+            "text_div_country_info": "Capital: Havana Population: 11423000 Area (km 2 ): 110860.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Havana",
+            "text_span_country_population": "11423000",
+            "text_sup": "2",
+            "text_span_country_area": "110860.0"
+          },
+          {
+            "text_div_col_md_4_country": "Christmas Island Capital: Flying Fish Cove Population: 1500 Area (km 2 ): 135.0",
+            "text_h3_country_name": "Christmas Island",
+            "text_div_country_info": "Capital: Flying Fish Cove Population: 1500 Area (km 2 ): 135.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Flying Fish Cove",
+            "text_span_country_population": "1500",
+            "text_sup": "2",
+            "text_span_country_area": "135.0"
+          },
+          {
+            "text_div_col_md_4_country": "Germany Capital: Berlin Population: 81802257 Area (km 2 ): 357021.0",
+            "text_h3_country_name": "Germany",
+            "text_div_country_info": "Capital: Berlin Population: 81802257 Area (km 2 ): 357021.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Berlin",
+            "text_span_country_population": "81802257",
+            "text_sup": "2",
+            "text_span_country_area": "357021.0"
+          },
+          {
+            "text_div_col_md_4_country": "Dominica Capital: Roseau Population: 72813 Area (km 2 ): 754.0",
+            "text_h3_country_name": "Dominica",
+            "text_div_country_info": "Capital: Roseau Population: 72813 Area (km 2 ): 754.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Roseau",
+            "text_span_country_population": "72813",
+            "text_sup": "2",
+            "text_span_country_area": "754.0"
+          },
+          {
+            "text_div_col_md_4_country": "Ecuador Capital: Quito Population: 14790608 Area (km 2 ): 283560.0",
+            "text_h3_country_name": "Ecuador",
+            "text_div_country_info": "Capital: Quito Population: 14790608 Area (km 2 ): 283560.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Quito",
+            "text_span_country_population": "14790608",
+            "text_sup": "2",
+            "text_span_country_area": "283560.0"
+          },
+          {
+            "text_div_col_md_4_country": "Western Sahara Capital: Laâyoune / El Aaiún Population: 273008 Area (km 2 ): 266000.0",
+            "text_h3_country_name": "Western Sahara",
+            "text_div_country_info": "Capital: Laâyoune / El Aaiún Population: 273008 Area (km 2 ): 266000.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Laâyoune / El Aaiún",
+            "text_span_country_population": "273008",
+            "text_sup": "2",
+            "text_span_country_area": "266000.0"
+          },
+          {
+            "text_div_col_md_4_country": "Ethiopia Capital: Addis Ababa Population: 88013491 Area (km 2 ): 1127127.0",
+            "text_h3_country_name": "Ethiopia",
+            "text_div_country_info": "Capital: Addis Ababa Population: 88013491 Area (km 2 ): 1127127.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Addis Ababa",
+            "text_span_country_population": "88013491",
+            "text_sup": "2",
+            "text_span_country_area": "1127127.0"
+          },
+          {
+            "text_div_col_md_4_country": "Falkland Islands Capital: Stanley Population: 2638 Area (km 2 ): 12173.0",
+            "text_h3_country_name": "Falkland Islands",
+            "text_div_country_info": "Capital: Stanley Population: 2638 Area (km 2 ): 12173.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Stanley",
+            "text_span_country_population": "2638",
+            "text_sup": "2",
+            "text_span_country_area": "12173.0"
+          },
+          {
+            "text_div_col_md_4_country": "France Capital: Paris Population: 64768389 Area (km 2 ): 547030.0",
+            "text_h3_country_name": "France",
+            "text_div_country_info": "Capital: Paris Population: 64768389 Area (km 2 ): 547030.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Paris",
+            "text_span_country_population": "64768389",
+            "text_sup": "2",
+            "text_span_country_area": "547030.0"
+          },
+          {
+            "text_div_col_md_4_country": "Grenada Capital: St. George's Population: 107818 Area (km 2 ): 344.0",
+            "text_h3_country_name": "Grenada",
+            "text_div_country_info": "Capital: St. George's Population: 107818 Area (km 2 ): 344.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "St. George's",
+            "text_span_country_population": "107818",
+            "text_sup": "2",
+            "text_span_country_area": "344.0"
+          },
+          {
+            "text_div_col_md_4_country": "Guernsey Capital: St Peter Port Population: 65228 Area (km 2 ): 78.0",
+            "text_h3_country_name": "Guernsey",
+            "text_div_country_info": "Capital: St Peter Port Population: 65228 Area (km 2 ): 78.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "St Peter Port",
+            "text_span_country_population": "65228",
+            "text_sup": "2",
+            "text_span_country_area": "78.0"
+          },
+          {
+            "text_div_col_md_4_country": "Greenland Capital: Nuuk Population: 56375 Area (km 2 ): 2166086.0",
+            "text_h3_country_name": "Greenland",
+            "text_div_country_info": "Capital: Nuuk Population: 56375 Area (km 2 ): 2166086.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Nuuk",
+            "text_span_country_population": "56375",
+            "text_sup": "2",
+            "text_span_country_area": "2166086.0"
+          },
+          {
+            "text_div_col_md_4_country": "Guadeloupe Capital: Basse-Terre Population: 443000 Area (km 2 ): 1780.0",
+            "text_h3_country_name": "Guadeloupe",
+            "text_div_country_info": "Capital: Basse-Terre Population: 443000 Area (km 2 ): 1780.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Basse-Terre",
+            "text_span_country_population": "443000",
+            "text_sup": "2",
+            "text_span_country_area": "1780.0"
+          },
+          {
+            "text_div_col_md_4_country": "South Georgia and the South Sandwich Islands Capital: Grytviken Population: 30 Area (km 2 ): 3903.0",
+            "text_h3_country_name": "South Georgia and the South Sandwich Islands",
+            "text_div_country_info": "Capital: Grytviken Population: 30 Area (km 2 ): 3903.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Grytviken",
+            "text_span_country_population": "30",
+            "text_sup": "2",
+            "text_span_country_area": "3903.0"
+          },
+          {
+            "text_div_col_md_4_country": "Guinea-Bissau Capital: Bissau Population: 1565126 Area (km 2 ): 36120.0",
+            "text_h3_country_name": "Guinea-Bissau",
+            "text_div_country_info": "Capital: Bissau Population: 1565126 Area (km 2 ): 36120.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Bissau",
+            "text_span_country_population": "1565126",
+            "text_sup": "2",
+            "text_span_country_area": "36120.0"
+          },
+          {
+            "text_div_col_md_4_country": "Heard Island and McDonald Islands Capital: None Population: 0 Area (km 2 ): 412.0",
+            "text_h3_country_name": "Heard Island and McDonald Islands",
+            "text_div_country_info": "Capital: None Population: 0 Area (km 2 ): 412.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "None",
+            "text_span_country_population": "0",
+            "text_sup": "2",
+            "text_span_country_area": "412.0"
+          },
+          {
+            "text_div_col_md_4_country": "Haiti Capital: Port-au-Prince Population: 9648924 Area (km 2 ): 27750.0",
+            "text_h3_country_name": "Haiti",
+            "text_div_country_info": "Capital: Port-au-Prince Population: 9648924 Area (km 2 ): 27750.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Port-au-Prince",
+            "text_span_country_population": "9648924",
+            "text_sup": "2",
+            "text_span_country_area": "27750.0"
+          },
+          {
+            "text_div_col_md_4_country": "Ireland Capital: Dublin Population: 4622917 Area (km 2 ): 70280.0",
+            "text_h3_country_name": "Ireland",
+            "text_div_country_info": "Capital: Dublin Population: 4622917 Area (km 2 ): 70280.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Dublin",
+            "text_span_country_population": "4622917",
+            "text_sup": "2",
+            "text_span_country_area": "70280.0"
+          },
+          {
+            "text_div_col_md_4_country": "India Capital: New Delhi Population: 1173108018 Area (km 2 ): 3287590.0",
+            "text_h3_country_name": "India",
+            "text_div_country_info": "Capital: New Delhi Population: 1173108018 Area (km 2 ): 3287590.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "New Delhi",
+            "text_span_country_population": "1173108018",
+            "text_sup": "2",
+            "text_span_country_area": "3287590.0"
+          },
+          {
+            "text_div_col_md_4_country": "Iran Capital: Tehran Population: 76923300 Area (km 2 ): 1648000.0",
+            "text_h3_country_name": "Iran",
+            "text_div_country_info": "Capital: Tehran Population: 76923300 Area (km 2 ): 1648000.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Tehran",
+            "text_span_country_population": "76923300",
+            "text_sup": "2",
+            "text_span_country_area": "1648000.0"
+          },
+          {
+            "text_div_col_md_4_country": "Jersey Capital: Saint Helier Population: 90812 Area (km 2 ): 116.0",
+            "text_h3_country_name": "Jersey",
+            "text_div_country_info": "Capital: Saint Helier Population: 90812 Area (km 2 ): 116.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Saint Helier",
+            "text_span_country_population": "90812",
+            "text_sup": "2",
+            "text_span_country_area": "116.0"
+          },
+          {
+            "text_div_col_md_4_country": "Japan Capital: Tokyo Population: 127288000 Area (km 2 ): 377835.0",
+            "text_h3_country_name": "Japan",
+            "text_div_country_info": "Capital: Tokyo Population: 127288000 Area (km 2 ): 377835.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Tokyo",
+            "text_span_country_population": "127288000",
+            "text_sup": "2",
+            "text_span_country_area": "377835.0"
+          },
+          {
+            "text_div_col_md_4_country": "Cambodia Capital: Phnom Penh Population: 14453680 Area (km 2 ): 181040.0",
+            "text_h3_country_name": "Cambodia",
+            "text_div_country_info": "Capital: Phnom Penh Population: 14453680 Area (km 2 ): 181040.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Phnom Penh",
+            "text_span_country_population": "14453680",
+            "text_sup": "2",
+            "text_span_country_area": "181040.0"
+          },
+          {
+            "text_div_col_md_4_country": "Saint Kitts and Nevis Capital: Basseterre Population: 51134 Area (km 2 ): 261.0",
+            "text_h3_country_name": "Saint Kitts and Nevis",
+            "text_div_country_info": "Capital: Basseterre Population: 51134 Area (km 2 ): 261.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Basseterre",
+            "text_span_country_population": "51134",
+            "text_sup": "2",
+            "text_span_country_area": "261.0"
+          },
+          {
+            "text_div_col_md_4_country": "Kuwait Capital: Kuwait City Population: 2789132 Area (km 2 ): 17820.0",
+            "text_h3_country_name": "Kuwait",
+            "text_div_country_info": "Capital: Kuwait City Population: 2789132 Area (km 2 ): 17820.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Kuwait City",
+            "text_span_country_population": "2789132",
+            "text_sup": "2",
+            "text_span_country_area": "17820.0"
+          },
+          {
+            "text_div_col_md_4_country": "Laos Capital: Vientiane Population: 6368162 Area (km 2 ): 236800.0",
+            "text_h3_country_name": "Laos",
+            "text_div_country_info": "Capital: Vientiane Population: 6368162 Area (km 2 ): 236800.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Vientiane",
+            "text_span_country_population": "6368162",
+            "text_sup": "2",
+            "text_span_country_area": "236800.0"
+          },
+          {
+            "text_div_col_md_4_country": "Liechtenstein Capital: Vaduz Population: 35000 Area (km 2 ): 160.0",
+            "text_h3_country_name": "Liechtenstein",
+            "text_div_country_info": "Capital: Vaduz Population: 35000 Area (km 2 ): 160.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Vaduz",
+            "text_span_country_population": "35000",
+            "text_sup": "2",
+            "text_span_country_area": "160.0"
+          },
+          {
+            "text_div_col_md_4_country": "Lesotho Capital: Maseru Population: 1919552 Area (km 2 ): 30355.0",
+            "text_h3_country_name": "Lesotho",
+            "text_div_country_info": "Capital: Maseru Population: 1919552 Area (km 2 ): 30355.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Maseru",
+            "text_span_country_population": "1919552",
+            "text_sup": "2",
+            "text_span_country_area": "30355.0"
+          },
+          {
+            "text_div_col_md_4_country": "Latvia Capital: Riga Population: 2217969 Area (km 2 ): 64589.0",
+            "text_h3_country_name": "Latvia",
+            "text_div_country_info": "Capital: Riga Population: 2217969 Area (km 2 ): 64589.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Riga",
+            "text_span_country_population": "2217969",
+            "text_sup": "2",
+            "text_span_country_area": "64589.0"
+          },
+          {
+            "text_div_col_md_4_country": "Monaco Capital: Monaco Population: 32965 Area (km 2 ): 1.95",
+            "text_h3_country_name": "Monaco",
+            "text_div_country_info": "Capital: Monaco Population: 32965 Area (km 2 ): 1.95",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_population": "32965",
+            "text_sup": "2",
+            "text_span_country_area": "1.95"
+          },
+          {
+            "text_div_col_md_4_country": "Saint Martin Capital: Marigot Population: 35925 Area (km 2 ): 53.0",
+            "text_h3_country_name": "Saint Martin",
+            "text_div_country_info": "Capital: Marigot Population: 35925 Area (km 2 ): 53.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Marigot",
+            "text_span_country_population": "35925",
+            "text_sup": "2",
+            "text_span_country_area": "53.0"
+          },
+          {
+            "text_div_col_md_4_country": "Macedonia Capital: Skopje Population: 2062294 Area (km 2 ): 25333.0",
+            "text_h3_country_name": "Macedonia",
+            "text_div_country_info": "Capital: Skopje Population: 2062294 Area (km 2 ): 25333.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Skopje",
+            "text_span_country_population": "2062294",
+            "text_sup": "2",
+            "text_span_country_area": "25333.0"
+          },
+          {
+            "text_div_col_md_4_country": "Mongolia Capital: Ulan Bator Population: 3086918 Area (km 2 ): 1565000.0",
+            "text_h3_country_name": "Mongolia",
+            "text_div_country_info": "Capital: Ulan Bator Population: 3086918 Area (km 2 ): 1565000.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Ulan Bator",
+            "text_span_country_population": "3086918",
+            "text_sup": "2",
+            "text_span_country_area": "1565000.0"
+          },
+          {
+            "text_div_col_md_4_country": "Martinique Capital: Fort-de-France Population: 432900 Area (km 2 ): 1100.0",
+            "text_h3_country_name": "Martinique",
+            "text_div_country_info": "Capital: Fort-de-France Population: 432900 Area (km 2 ): 1100.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Fort-de-France",
+            "text_span_country_population": "432900",
+            "text_sup": "2",
+            "text_span_country_area": "1100.0"
+          },
+          {
+            "text_div_col_md_4_country": "Malta Capital: Valletta Population: 403000 Area (km 2 ): 316.0",
+            "text_h3_country_name": "Malta",
+            "text_div_country_info": "Capital: Valletta Population: 403000 Area (km 2 ): 316.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Valletta",
+            "text_span_country_population": "403000",
+            "text_sup": "2",
+            "text_span_country_area": "316.0"
+          },
+          {
+            "text_div_col_md_4_country": "Malawi Capital: Lilongwe Population: 15447500 Area (km 2 ): 118480.0",
+            "text_h3_country_name": "Malawi",
+            "text_div_country_info": "Capital: Lilongwe Population: 15447500 Area (km 2 ): 118480.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Lilongwe",
+            "text_span_country_population": "15447500",
+            "text_sup": "2",
+            "text_span_country_area": "118480.0"
+          },
+          {
+            "text_div_col_md_4_country": "Mozambique Capital: Maputo Population: 22061451 Area (km 2 ): 801590.0",
+            "text_h3_country_name": "Mozambique",
+            "text_div_country_info": "Capital: Maputo Population: 22061451 Area (km 2 ): 801590.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Maputo",
+            "text_span_country_population": "22061451",
+            "text_sup": "2",
+            "text_span_country_area": "801590.0"
+          },
+          {
+            "text_div_col_md_4_country": "Niger Capital: Niamey Population: 15878271 Area (km 2 ): 1267000.0",
+            "text_h3_country_name": "Niger",
+            "text_div_country_info": "Capital: Niamey Population: 15878271 Area (km 2 ): 1267000.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Niamey",
+            "text_span_country_population": "15878271",
+            "text_sup": "2",
+            "text_span_country_area": "1267000.0"
+          },
+          {
+            "text_div_col_md_4_country": "Nicaragua Capital: Managua Population: 5995928 Area (km 2 ): 129494.0",
+            "text_h3_country_name": "Nicaragua",
+            "text_div_country_info": "Capital: Managua Population: 5995928 Area (km 2 ): 129494.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Managua",
+            "text_span_country_population": "5995928",
+            "text_sup": "2",
+            "text_span_country_area": "129494.0"
+          },
+          {
+            "text_div_col_md_4_country": "Nepal Capital: Kathmandu Population: 28951852 Area (km 2 ): 140800.0",
+            "text_h3_country_name": "Nepal",
+            "text_div_country_info": "Capital: Kathmandu Population: 28951852 Area (km 2 ): 140800.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Kathmandu",
+            "text_span_country_population": "28951852",
+            "text_sup": "2",
+            "text_span_country_area": "140800.0"
+          },
+          {
+            "text_div_col_md_4_country": "New Zealand Capital: Wellington Population: 4252277 Area (km 2 ): 268680.0",
+            "text_h3_country_name": "New Zealand",
+            "text_div_country_info": "Capital: Wellington Population: 4252277 Area (km 2 ): 268680.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Wellington",
+            "text_span_country_population": "4252277",
+            "text_sup": "2",
+            "text_span_country_area": "268680.0"
+          },
+          {
+            "text_div_col_md_4_country": "Peru Capital: Lima Population: 29907003 Area (km 2 ): 1285220.0",
+            "text_h3_country_name": "Peru",
+            "text_div_country_info": "Capital: Lima Population: 29907003 Area (km 2 ): 1285220.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Lima",
+            "text_span_country_population": "29907003",
+            "text_sup": "2",
+            "text_span_country_area": "1285220.0"
+          },
+          {
+            "text_div_col_md_4_country": "Philippines Capital: Manila Population: 99900177 Area (km 2 ): 300000.0",
+            "text_h3_country_name": "Philippines",
+            "text_div_country_info": "Capital: Manila Population: 99900177 Area (km 2 ): 300000.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Manila",
+            "text_span_country_population": "99900177",
+            "text_sup": "2",
+            "text_span_country_area": "300000.0"
+          },
+          {
+            "text_div_col_md_4_country": "Saint Pierre and Miquelon Capital: Saint-Pierre Population: 7012 Area (km 2 ): 242.0",
+            "text_h3_country_name": "Saint Pierre and Miquelon",
+            "text_div_country_info": "Capital: Saint-Pierre Population: 7012 Area (km 2 ): 242.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Saint-Pierre",
+            "text_span_country_population": "7012",
+            "text_sup": "2",
+            "text_span_country_area": "242.0"
+          },
+          {
+            "text_div_col_md_4_country": "Palestine Capital: None Population: 3800000 Area (km 2 ): 5970.0",
+            "text_h3_country_name": "Palestine",
+            "text_div_country_info": "Capital: None Population: 3800000 Area (km 2 ): 5970.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "None",
+            "text_span_country_population": "3800000",
+            "text_sup": "2",
+            "text_span_country_area": "5970.0"
+          },
+          {
+            "text_div_col_md_4_country": "Paraguay Capital: Asunción Population: 6375830 Area (km 2 ): 406750.0",
+            "text_h3_country_name": "Paraguay",
+            "text_div_country_info": "Capital: Asunción Population: 6375830 Area (km 2 ): 406750.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Asunción",
+            "text_span_country_population": "6375830",
+            "text_sup": "2",
+            "text_span_country_area": "406750.0"
+          },
+          {
+            "text_div_col_md_4_country": "Romania Capital: Bucharest Population: 21959278 Area (km 2 ): 237500.0",
+            "text_h3_country_name": "Romania",
+            "text_div_country_info": "Capital: Bucharest Population: 21959278 Area (km 2 ): 237500.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Bucharest",
+            "text_span_country_population": "21959278",
+            "text_sup": "2",
+            "text_span_country_area": "237500.0"
+          },
+          {
+            "text_div_col_md_4_country": "Rwanda Capital: Kigali Population: 11055976 Area (km 2 ): 26338.0",
+            "text_h3_country_name": "Rwanda",
+            "text_div_country_info": "Capital: Kigali Population: 11055976 Area (km 2 ): 26338.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Kigali",
+            "text_span_country_population": "11055976",
+            "text_sup": "2",
+            "text_span_country_area": "26338.0"
+          },
+          {
+            "text_div_col_md_4_country": "Seychelles Capital: Victoria Population: 88340 Area (km 2 ): 455.0",
+            "text_h3_country_name": "Seychelles",
+            "text_div_country_info": "Capital: Victoria Population: 88340 Area (km 2 ): 455.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Victoria",
+            "text_span_country_population": "88340",
+            "text_sup": "2",
+            "text_span_country_area": "455.0"
+          },
+          {
+            "text_div_col_md_4_country": "Singapore Capital: Singapore Population: 4701069 Area (km 2 ): 692.7",
+            "text_h3_country_name": "Singapore",
+            "text_div_country_info": "Capital: Singapore Population: 4701069 Area (km 2 ): 692.7",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_population": "4701069",
+            "text_sup": "2",
+            "text_span_country_area": "692.7"
+          },
+          {
+            "text_div_col_md_4_country": "Svalbard and Jan Mayen Capital: Longyearbyen Population: 2550 Area (km 2 ): 62049.0",
+            "text_h3_country_name": "Svalbard and Jan Mayen",
+            "text_div_country_info": "Capital: Longyearbyen Population: 2550 Area (km 2 ): 62049.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Longyearbyen",
+            "text_span_country_population": "2550",
+            "text_sup": "2",
+            "text_span_country_area": "62049.0"
+          },
+          {
+            "text_div_col_md_4_country": "San Marino Capital: San Marino Population: 31477 Area (km 2 ): 61.2",
+            "text_h3_country_name": "San Marino",
+            "text_div_country_info": "Capital: San Marino Population: 31477 Area (km 2 ): 61.2",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_population": "31477",
+            "text_sup": "2",
+            "text_span_country_area": "61.2"
+          },
+          {
+            "text_div_col_md_4_country": "Suriname Capital: Paramaribo Population: 492829 Area (km 2 ): 163270.0",
+            "text_h3_country_name": "Suriname",
+            "text_div_country_info": "Capital: Paramaribo Population: 492829 Area (km 2 ): 163270.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Paramaribo",
+            "text_span_country_population": "492829",
+            "text_sup": "2",
+            "text_span_country_area": "163270.0"
+          },
+          {
+            "text_div_col_md_4_country": "El Salvador Capital: San Salvador Population: 6052064 Area (km 2 ): 21040.0",
+            "text_h3_country_name": "El Salvador",
+            "text_div_country_info": "Capital: San Salvador Population: 6052064 Area (km 2 ): 21040.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "San Salvador",
+            "text_span_country_population": "6052064",
+            "text_sup": "2",
+            "text_span_country_area": "21040.0"
+          },
+          {
+            "text_div_col_md_4_country": "Swaziland Capital: Mbabane Population: 1354051 Area (km 2 ): 17363.0",
+            "text_h3_country_name": "Swaziland",
+            "text_div_country_info": "Capital: Mbabane Population: 1354051 Area (km 2 ): 17363.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Mbabane",
+            "text_span_country_population": "1354051",
+            "text_sup": "2",
+            "text_span_country_area": "17363.0"
+          },
+          {
+            "text_div_col_md_4_country": "French Southern Territories Capital: Port-aux-Français Population: 140 Area (km 2 ): 7829.0",
+            "text_h3_country_name": "French Southern Territories",
+            "text_div_country_info": "Capital: Port-aux-Français Population: 140 Area (km 2 ): 7829.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Port-aux-Français",
+            "text_span_country_population": "140",
+            "text_sup": "2",
+            "text_span_country_area": "7829.0"
+          },
+          {
+            "text_div_col_md_4_country": "Tajikistan Capital: Dushanbe Population: 7487489 Area (km 2 ): 143100.0",
+            "text_h3_country_name": "Tajikistan",
+            "text_div_country_info": "Capital: Dushanbe Population: 7487489 Area (km 2 ): 143100.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Dushanbe",
+            "text_span_country_population": "7487489",
+            "text_sup": "2",
+            "text_span_country_area": "143100.0"
+          },
+          {
+            "text_div_col_md_4_country": "Turkmenistan Capital: Ashgabat Population: 4940916 Area (km 2 ): 488100.0",
+            "text_h3_country_name": "Turkmenistan",
+            "text_div_country_info": "Capital: Ashgabat Population: 4940916 Area (km 2 ): 488100.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Ashgabat",
+            "text_span_country_population": "4940916",
+            "text_sup": "2",
+            "text_span_country_area": "488100.0"
+          },
+          {
+            "text_div_col_md_4_country": "Turkey Capital: Ankara Population: 77804122 Area (km 2 ): 780580.0",
+            "text_h3_country_name": "Turkey",
+            "text_div_country_info": "Capital: Ankara Population: 77804122 Area (km 2 ): 780580.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Ankara",
+            "text_span_country_population": "77804122",
+            "text_sup": "2",
+            "text_span_country_area": "780580.0"
+          },
+          {
+            "text_div_col_md_4_country": "Taiwan Capital: Taipei Population: 22894384 Area (km 2 ): 35980.0",
+            "text_h3_country_name": "Taiwan",
+            "text_div_country_info": "Capital: Taipei Population: 22894384 Area (km 2 ): 35980.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Taipei",
+            "text_span_country_population": "22894384",
+            "text_sup": "2",
+            "text_span_country_area": "35980.0"
+          },
+          {
+            "text_div_col_md_4_country": "Uganda Capital: Kampala Population: 33398682 Area (km 2 ): 236040.0",
+            "text_h3_country_name": "Uganda",
+            "text_div_country_info": "Capital: Kampala Population: 33398682 Area (km 2 ): 236040.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Kampala",
+            "text_span_country_population": "33398682",
+            "text_sup": "2",
+            "text_span_country_area": "236040.0"
+          },
+          {
+            "text_div_col_md_4_country": "Uruguay Capital: Montevideo Population: 3477000 Area (km 2 ): 176220.0",
+            "text_h3_country_name": "Uruguay",
+            "text_div_country_info": "Capital: Montevideo Population: 3477000 Area (km 2 ): 176220.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Montevideo",
+            "text_span_country_population": "3477000",
+            "text_sup": "2",
+            "text_span_country_area": "176220.0"
+          },
+          {
+            "text_div_col_md_4_country": "Saint Vincent and the Grenadines Capital: Kingstown Population: 104217 Area (km 2 ): 389.0",
+            "text_h3_country_name": "Saint Vincent and the Grenadines",
+            "text_div_country_info": "Capital: Kingstown Population: 104217 Area (km 2 ): 389.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Kingstown",
+            "text_span_country_population": "104217",
+            "text_sup": "2",
+            "text_span_country_area": "389.0"
+          },
+          {
+            "text_div_col_md_4_country": "U.S. Virgin Islands Capital: Charlotte Amalie Population: 108708 Area (km 2 ): 352.0",
+            "text_h3_country_name": "U.S. Virgin Islands",
+            "text_div_country_info": "Capital: Charlotte Amalie Population: 108708 Area (km 2 ): 352.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Charlotte Amalie",
+            "text_span_country_population": "108708",
+            "text_sup": "2",
+            "text_span_country_area": "352.0"
+          },
+          {
+            "text_div_col_md_4_country": "Wallis and Futuna Capital: Mata-Utu Population: 16025 Area (km 2 ): 274.0",
+            "text_h3_country_name": "Wallis and Futuna",
+            "text_div_country_info": "Capital: Mata-Utu Population: 16025 Area (km 2 ): 274.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Mata-Utu",
+            "text_span_country_population": "16025",
+            "text_sup": "2",
+            "text_span_country_area": "274.0"
+          },
+          {
+            "text_div_col_md_4_country": "Yemen Capital: Sanaa Population: 23495361 Area (km 2 ): 527970.0",
+            "text_h3_country_name": "Yemen",
+            "text_div_country_info": "Capital: Sanaa Population: 23495361 Area (km 2 ): 527970.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Sanaa",
+            "text_span_country_population": "23495361",
+            "text_sup": "2",
+            "text_span_country_area": "527970.0"
+          },
+          {
+            "text_div_col_md_4_country": "Zambia Capital: Lusaka Population: 13460305 Area (km 2 ): 752614.0",
+            "text_h3_country_name": "Zambia",
+            "text_div_country_info": "Capital: Lusaka Population: 13460305 Area (km 2 ): 752614.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Lusaka",
+            "text_span_country_population": "13460305",
+            "text_sup": "2",
+            "text_span_country_area": "752614.0"
+          },
+          {
+            "text_div_col_md_4_country": "Zimbabwe Capital: Harare Population: 11651858 Area (km 2 ): 390580.0",
+            "text_h3_country_name": "Zimbabwe",
+            "text_div_country_info": "Capital: Harare Population: 11651858 Area (km 2 ): 390580.0",
+            "text_strong": "Area (km 2 ):",
+            "text_span_country_capital": "Harare",
+            "text_span_country_population": "11651858",
+            "text_sup": "2",
+            "text_span_country_area": "390580.0"
+          }
+        ],
+        "success": true,
+        "error": null
+      }
+    ],
+    "dataframe_path": "storage\\dataframes\\extracted_82db15d6-660f-470c-9ba2-eafb6907c653.csv",
+    "metadata_path": "storage\\metadata\\extraction_metadata_633c22b1-5ef5-49de-9568-c09df1bb47b3.json",
+    "logs": [
+      "Loaded 1 scraper record(s) from storage\\raw\\raw_data_bc8795d6-95bc-4145-a7b0-cf58ea409a07.json",
+      "Starting extraction for 1 HTML file(s)",
+      "storage\\raw_html\\2f82385c-ed4a-4576-b683-fda57d95f7c2.html → type=article, method=repeating_blocks, records=86, confidence=0.82",
+      "Extraction complete",
+      "DataFrame: 86 rows × 8 cols",
+      "Visualization hints: {'numeric_plot': [], 'categorical_plot': [], 'skip': ['text_div_col_md_4_country', 'text_h3_country_name', 'text_div_country_info', 'text_strong', 'text_span_country_capital', 'text_span_country_population', 'text_sup', 'text_span_country_area']}",
+      "DataFrame saved: storage\\dataframes\\extracted_82db15d6-660f-470c-9ba2-eafb6907c653.csv",
+      "Metadata saved: storage\\metadata\\extraction_metadata_633c22b1-5ef5-49de-9568-c09df1bb47b3.json"
+    ]
+  },
+  "cleaning_state": {
+    "input_dataframe_path": "storage\\dataframes\\extracted_82db15d6-660f-470c-9ba2-eafb6907c653.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+    "profile_path": "storage\\profiles\\profile_5eb892d1-0f48-4edf-845e-5ae9a418db8f.json",
+    "metadata_path": "storage\\metadata\\cleaning_metadata_ea7d2e76-906c-4174-94d3-2179c70b1dcf.json",
+    "logs": [
+      "Loading dataframe",
+      "Loaded dataframe with shape (86, 8)",
+      "Data profiling completed",
+      "Missing values handled",
+      "Duplicates removed",
+      "Text standardized",
+      "Numeric validation completed",
+      "Cleaned dataframe saved at storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+      "Metadata saved at storage\\metadata\\cleaning_metadata_ea7d2e76-906c-4174-94d3-2179c70b1dcf.json"
+    ],
+    "quality_report": {
+      "final_rows": 67,
+      "final_columns": 8,
+      "missing_after_cleaning": {
+        "text_div_col_md_4_country": 0,
+        "text_h3_country_name": 0,
+        "text_div_country_info": 0,
+        "text_strong": 0,
+        "text_span_country_capital": 0,
+        "text_span_country_population": 0,
+        "text_sup": 0,
+        "text_span_country_area": 0
+      },
+      "duplicates_after_cleaning": 0
+    }
+  },
+  "feature_state": {
+    "input_dataframe_path": "storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+    "profile_path": "storage\\profiles\\profile_1207748a-1ae8-40e8-ab8a-01e021aa87be.json",
+    "metadata_path": "storage\\metadata\\feature_engineering_metadata_c6ae59ff-dac8-4e8c-84c1-1210f60dd061.json",
+    "logs": [
+      "Started feature engineering pipeline for: storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+      "Loaded DataFrame: 67 rows × 8 cols. Numeric columns: ['text_span_country_population', 'text_sup', 'text_span_country_area']",
+      "Skewness correction applied.",
+      "Z-score scaling applied to numeric features.",
+      "DateTime expansion complete. New columns: none",
+      "[interaction] Attempt 1/3",
+      "[interaction] LLM call failed: GEMINI_API_KEY environment variable is not set.",
+      "Feature interaction complete. Added: none",
+      "Engineered DataFrame saved: 67 rows × 8 cols → storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+      "Metadata saved."
+    ],
+    "quality_report": {
+      "pre_skewness": {
+        "text_span_country_population": 1.928909799612445,
+        "text_sup": 0.0,
+        "text_span_country_area": 1.6577303625870676
+      },
+      "post_skewness": {
+        "text_span_country_population": 1.928909799612445,
+        "text_sup": 0.0,
+        "text_span_country_area": -0.14741994244473852
+      },
+      "datetime_features_added": [],
+      "interaction_features_added": [],
+      "final_shape": [
+        67,
+        8
+      ]
+    },
+    "analysis_summary": "Skewness corrected, z-score scaling applied. DateTime expansion added 0 signals. LLM-proposed interaction features accepted: 0.",
+    "interaction_features_added": [],
+    "datetime_features_added": []
+  },
+  "eda_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+    "profile_path": "storage\\profiles\\profile_a9b1c148-af16-42a0-93d0-837fcd36ff56.json",
+    "plot_paths": [
+      "storage\\plots\\plot_text_strong_3794e216-a4b8-454f-b5d3-8b50784d3896.png",
+      "storage\\plots\\plot_text_span_country_population_07f8c038-1173-414d-bc95-76990f8df88f.png",
+      "storage\\plots\\plot_text_span_country_area_3e67112c-0972-47c7-a170-f8298af4e0f4.png"
+    ],
+    "metadata_path": "storage\\metadata\\eda_metadata_6bfb6970-fc20-40d8-9ed7-d99cca8629f9.json",
+    "logs": [
+      "Loading data from: storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+      "Loaded DataFrame: 67 rows × 8 cols",
+      "Profile saved: storage\\profiles\\profile_a9b1c148-af16-42a0-93d0-837fcd36ff56.json",
+      "Descriptive stats computed for 2 column groups",
+      "Saved 3 plot(s) to storage\\plots",
+      "Outlier detection complete: 3 column(s) checked",
+      "Skewed columns (|skew|>0.5): ['text_span_country_population']",
+      "Categorical analysis complete",
+      "Bivariate analysis complete: 28 pair(s)",
+      "Metadata saved: storage\\metadata\\eda_metadata_6bfb6970-fc20-40d8-9ed7-d99cca8629f9.json"
+    ],
+    "quality_report": {
+      "rows": 67,
+      "columns": 8,
+      "missing_values": {
+        "text_div_col_md_4_country": 0,
+        "text_h3_country_name": 0,
+        "text_div_country_info": 0,
+        "text_strong": 0,
+        "text_span_country_capital": 0,
+        "text_span_country_population": 0,
+        "text_sup": 0,
+        "text_span_country_area": 0
+      },
+      "missing_pct": {
+        "text_div_col_md_4_country": 0.0,
+        "text_h3_country_name": 0.0,
+        "text_div_country_info": 0.0,
+        "text_strong": 0.0,
+        "text_span_country_capital": 0.0,
+        "text_span_country_population": 0.0,
+        "text_sup": 0.0,
+        "text_span_country_area": 0.0
+      },
+      "duplicates": 0,
+      "dtypes": {
+        "text_div_col_md_4_country": "str",
+        "text_h3_country_name": "str",
+        "text_div_country_info": "str",
+        "text_strong": "str",
+        "text_span_country_capital": "str",
+        "text_span_country_population": "float64",
+        "text_sup": "float64",
+        "text_span_country_area": "float64"
+      },
+      "numeric_summary": {
+        "text_span_country_population": {
+          "count": 67.0,
+          "mean": 6.793902090989764e-17,
+          "std": 1.0000000000000002,
+          "min": -0.6758423129158865,
+          "25%": -0.6681657638200345,
+          "50%": -0.4693356083182591,
+          "75%": 0.23873846891115985,
+          "max": 3.730864723913159
+        },
+        "text_sup": {
+          "count": 67.0,
+          "mean": 2.0,
+          "std": 0.0,
+          "min": 2.0,
+          "25%": 2.0,
+          "50%": 2.0,
+          "75%": 2.0,
+          "max": 2.0
+        },
+        "text_span_country_area": {
+          "count": 67.0,
+          "mean": 1.3256394323882466e-17,
+          "std": 1.0,
+          "min": -1.9955641698423856,
+          "25%": -1.007255171926357,
+          "50%": 0.2479298080568006,
+          "75%": 0.9268319260076556,
+          "max": 1.5260640116424746
+        }
+      }
+    }
+  },
+  "visualization_state": {
+    "input_dataframe_path": "storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_e46875cf-fa5e-46c5-b188-a0ad3fc23131.html",
+    "generated_plots": [
+      "Trend over time: text_span_country_population by text_span_country_population",
+      "Distribution of text_span_country_population",
+      "Boxplot for text_span_country_population",
+      "Distribution of text_span_country_area",
+      "Boxplot for text_span_country_area",
+      "Relationship between text_span_country_population and text_span_country_area"
+    ],
+    "chart_explanations": [
+      {
+        "chart_title": "Trend over time: text_span_country_population by text_span_country_population",
+        "reason": "Time series data exists alongside a numeric measure, making a trend line meaningful.",
+        "insight": "This chart shows how text_span_country_population evolves over time and highlights any directionally consistent patterns or seasonality."
+      },
+      {
+        "chart_title": "Distribution of text_span_country_population",
+        "reason": "Numeric feature with sufficient samples and variance.",
+        "insight": "This histogram reveals the shape of text_span_country_population, including skew, central tendency, and whether values are concentrated in one range."
+      },
+      {
+        "chart_title": "Boxplot for text_span_country_population",
+        "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+        "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+      },
+      {
+        "chart_title": "Distribution of text_span_country_area",
+        "reason": "Numeric feature with sufficient samples and variance.",
+        "insight": "This histogram reveals the shape of text_span_country_area, including skew, central tendency, and whether values are concentrated in one range."
+      },
+      {
+        "chart_title": "Boxplot for text_span_country_area",
+        "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+        "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+      },
+      {
+        "chart_title": "Relationship between text_span_country_population and text_span_country_area",
+        "reason": "Two meaningful numeric variables exist, allowing relational analysis.",
+        "insight": "This scatter plot helps identify correlation or groupings between text_span_country_population and text_span_country_area. "
+      }
+    ],
+    "visualization_summary": "Created 6 meaningful visualization(s) based on dataset structure and analytical value.",
+    "metadata_path": "storage\\visual_metadata\\visualisation_metadata_583e70a8-3f52-40c8-9f43-3f3045a168f5.json",
+    "logs": [
+      "[INIT] Started visualization generation.",
+      "[PLOT] Generated trend chart for text_span_country_population, text_span_country_population.",
+      "[PLOT] Generated histogram chart for text_span_country_population.",
+      "[PLOT] Generated boxplot chart for text_span_country_population.",
+      "[PLOT] Generated histogram chart for text_span_country_area.",
+      "[PLOT] Generated boxplot chart for text_span_country_area.",
+      "[PLOT] Generated scatter chart for text_span_country_population, text_span_country_area.",
+      "Interactive dashboard compiled and persisted."
+    ]
+  },
+  "logs": [
+    "Starting stage: data_collection",
+    "Raw data saved: storage\\raw\\raw_data_bc8795d6-95bc-4145-a7b0-cf58ea409a07.json",
+    "Starting stage: extraction",
+    "Extracted CSV saved: storage\\dataframes\\extracted_82db15d6-660f-470c-9ba2-eafb6907c653.csv",
+    "Starting stage: data_cleaning",
+    "Cleaned CSV saved: storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+    "Starting stage: feature_engineering",
+    "Engineered CSV saved: storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+    "Starting stage: eda",
+    "EDA metadata saved: storage\\metadata\\eda_metadata_6bfb6970-fc20-40d8-9ed7-d99cca8629f9.json",
+    "Starting stage: visualization",
+    "Dashboard saved: storage\\dashboards\\tableau_dashboard_e46875cf-fa5e-46c5-b188-a0ad3fc23131.html",
+    "All stages complete."
+  ],
+  "artifact_paths": {
+    "raw_data_path": "storage\\raw\\raw_data_bc8795d6-95bc-4145-a7b0-cf58ea409a07.json",
+    "extracted_dataframe_path": "storage\\dataframes\\extracted_82db15d6-660f-470c-9ba2-eafb6907c653.csv",
+    "cleaned_dataframe_path": "storage\\cleaned_data\\cleaned_786f9429-76bc-4fe8-994e-504f20dc7f82.csv",
+    "engineered_dataframe_path": "storage\\eda_data\\engineered_data_d045487e-62ad-41b6-9eb1-5daba7614940.csv",
+    "eda_metadata_path": "storage\\metadata\\eda_metadata_6bfb6970-fc20-40d8-9ed7-d99cca8629f9.json",
+    "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_e46875cf-fa5e-46c5-b188-a0ad3fc23131.html"
+  },
+  "attempt": 1,
+  "correction_instruction": null
+}
