@@ -13,10 +13,7 @@ from pydantic import BaseModel, Field
 from google.adk.agents import Agent
 
 
-# ---------------------------------------------------------------------------
 # Storage setup
-# ---------------------------------------------------------------------------
-
 BASE_STORAGE_DIR   = "storage"
 FEATURED_DATA_DIR  = os.path.join(BASE_STORAGE_DIR, "eda_data")
 PROFILE_DIR        = os.path.join(BASE_STORAGE_DIR, "profiles")
@@ -27,18 +24,12 @@ for d in (FEATURED_DATA_DIR, PROFILE_DIR, METADATA_DIR, LOG_DIR):
     os.makedirs(d, exist_ok=True)
 
 
-# ---------------------------------------------------------------------------
 # Utilities
-# ---------------------------------------------------------------------------
-
 def _unique_path(directory: str, prefix: str, extension: str) -> str:
     return os.path.join(directory, f"{prefix}_{uuid.uuid4()}.{extension}")
 
 
-# ---------------------------------------------------------------------------
 # Numeric string recovery (pre-pass safety net)
-# ---------------------------------------------------------------------------
-
 _FE_STRIP_RE = re.compile(
     r"[\$\£\€\₹\¥,%]"
     r"|(\s*(km\u00b2?|mi\u00b2?|sq\s*km|lbs?|kg|m\u00b2?|mph|kph|ft|in|cm|mm|ha|ac|oz|ml|l|gb|mb|tb))\b",
@@ -96,10 +87,7 @@ def _sanitize_for_json(obj: Any) -> Any:
     return str(obj)
 
 
-# ---------------------------------------------------------------------------
 # Data model
-# ---------------------------------------------------------------------------
-
 class FeatureEngineeringState(BaseModel):
     input_dataframe_path: str
     engineered_dataframe_path: Optional[str] = None
@@ -112,10 +100,7 @@ class FeatureEngineeringState(BaseModel):
     datetime_features_added: List[str] = Field(default_factory=list)
 
 
-# ---------------------------------------------------------------------------
 # Persistence helpers
-# ---------------------------------------------------------------------------
-
 def save_profile(profile: Dict[str, Any]) -> str:
     path = _unique_path(PROFILE_DIR, "profile", "json")
     with open(path, "w", encoding="utf-8") as f:
@@ -253,9 +238,7 @@ def process_date_columns(df: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
 
     return df, all_new_cols
 
-# ---------------------------------------------------------------------------
 # Step 1 — Semantic Intent Tagging & Metadata Payload
-# ---------------------------------------------------------------------------
 
 # Heuristic keyword maps used to assign broad domain tags to column names.
 # These are intentionally simple — the LLM does the nuanced reasoning.
@@ -336,10 +319,7 @@ def build_metadata_payload(
     return payload
 
 
-# ---------------------------------------------------------------------------
 # Step 2 — LLM Prompt for Formula Generation
-# ---------------------------------------------------------------------------
-
 FEATURE_PROPOSAL_SYSTEM_PROMPT = """
 You are a senior Feature Engineering specialist embedded inside an automated ML pipeline.
 
@@ -419,10 +399,7 @@ def _call_gemini(prompt: str, metadata_payload: Dict[str, Any]) -> Optional[Dict
     return json.loads(raw_text)
 
 
-# ---------------------------------------------------------------------------
 # Step 3 — Statistical Validation Safety Net
-# ---------------------------------------------------------------------------
-
 def validate_and_append_feature(
     df: pd.DataFrame,
     proposal: Dict[str, Any],
@@ -508,10 +485,7 @@ def validate_and_append_feature(
     return df, True, f"Feature '{new_col}' validated and added."
 
 
-# ---------------------------------------------------------------------------
 # Feature interaction orchestrator
-# ---------------------------------------------------------------------------
-
 def run_feature_interaction(
     df: pd.DataFrame,
     logs: List[str],
@@ -561,10 +535,7 @@ def run_feature_interaction(
     return df, added_features
 
 
-# ===========================================================================
 # Main pipeline
-# ===========================================================================
-
 def execute_feature_engineering(
     csv_path: str,
     target_variable: Optional[str] = None,
@@ -670,10 +641,7 @@ def run_feature_engineering_on_csv(
     return _sanitize_for_json(state.model_dump())
 
 
-# ---------------------------------------------------------------------------
 # ADK agent
-# ---------------------------------------------------------------------------
-
 feature_engineering_agent = Agent(
     name="feature_engineering_agent",
     model="gemini-2.0-flash",
@@ -701,10 +669,7 @@ feature_engineering_agent = Agent(
 )
 
 
-# ---------------------------------------------------------------------------
 # Entry point
-# ---------------------------------------------------------------------------
-
 if __name__ == "__main__":
     import sys
     csv_path = sys.argv[1] if len(sys.argv) > 1 else "storage/dataframes/cleaned_example.csv"

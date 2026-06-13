@@ -27,10 +27,7 @@ from ..feature_engineering_agent.feature_engineering_agent import run_feature_en
 from ..visualization_agent.visualization_agent import run_visualisation_pipeline
 
 
-# ---------------------------------------------------------------------------
 # Storage setup
-# ---------------------------------------------------------------------------
-
 BASE_STORAGE_DIR = "storage"
 PIPELINE_METADATA_DIR = os.path.join(BASE_STORAGE_DIR, "pipeline")
 os.makedirs(PIPELINE_METADATA_DIR, exist_ok=True)
@@ -38,10 +35,7 @@ os.makedirs(PIPELINE_METADATA_DIR, exist_ok=True)
 MAX_RETRY_ATTEMPTS = 2
 
 
-# ---------------------------------------------------------------------------
 # Data models
-# ---------------------------------------------------------------------------
-
 class ExecutionPlan(BaseModel):
     user_query: str
     stages: List[str]
@@ -77,10 +71,7 @@ class OrchestratorState(BaseModel):
         self.logs.append(message)
 
 
-# ---------------------------------------------------------------------------
 # Internal utilities
-# ---------------------------------------------------------------------------
-
 def _read_json(path: str) -> Any:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -128,11 +119,7 @@ def _save_orchestrator_metadata(state: OrchestratorState) -> str:
     return path
 
 
-# ---------------------------------------------------------------------------
 # ADK runner helper
-# YOUR working version — kept exactly as-is.
-# ---------------------------------------------------------------------------
-
 _session_service = InMemorySessionService()
 
 
@@ -189,10 +176,7 @@ async def _run_adk_agent(agent: Agent, prompt: str) -> str:
     raise RuntimeError("Gemini unavailable after multiple retries.")
 
 
-# ---------------------------------------------------------------------------
 # Reasoning agent
-# ---------------------------------------------------------------------------
-
 _reasoning_agent = Agent(
     model="gemini-2.5-flash",
     name="pipeline_reasoning_agent",
@@ -267,10 +251,7 @@ def plan_pipeline(user_query: str, start_csv_path: Optional[str] = None) -> Exec
         )
 
 
-# ---------------------------------------------------------------------------
 # Analyzer agent
-# ---------------------------------------------------------------------------
-
 _analyzer_agent = Agent(
     model="gemini-2.5-flash",
     name="output_analyzer_agent",
@@ -348,10 +329,7 @@ def analyze_output(
         )
 
 
-# ---------------------------------------------------------------------------
 # Stage executors
-# ---------------------------------------------------------------------------
-
 VALID_STAGES = {
     "data_collection",
     "extraction",
@@ -435,10 +413,7 @@ def _run_visualization(state: OrchestratorState, input_csv: str) -> Dict[str, An
     return viz_state
 
 
-# ---------------------------------------------------------------------------
 # Core pipeline runner
-# ---------------------------------------------------------------------------
-
 def _execute_plan(
     plan: ExecutionPlan,
     attempt: int = 1,
@@ -507,10 +482,7 @@ def _execute_plan(
     return state
 
 
-# ---------------------------------------------------------------------------
 # Orchestrate with reasoning + analysis loop
-# ---------------------------------------------------------------------------
-
 def orchestrate_full_pipeline(
     user_query: str,
     start_from_csv_path: Optional[str] = None,
@@ -562,10 +534,7 @@ def orchestrate_full_pipeline(
     return _sanitize_for_json(orch_state.model_dump())
 
 
-# ---------------------------------------------------------------------------
 # ADK tool wrappers
-# ---------------------------------------------------------------------------
-
 def execute_data_collection_tool(user_query: str) -> dict:
     """ADK tool: runs data collection and returns serialized state."""
     state = _run_async(
@@ -595,10 +564,7 @@ def plan_pipeline_tool(user_query: str, start_csv_path: Optional[str] = None) ->
     return plan_pipeline(user_query, start_csv_path).model_dump()
 
 
-# ---------------------------------------------------------------------------
 # ADK orchestrator agent
-# ---------------------------------------------------------------------------
-
 orchestrator_agent = Agent(
     model="gemini-2.5-flash",
     name="ml_orchestrator_agent",
@@ -641,10 +607,7 @@ orchestrator_agent = Agent(
 )
 
 
-# ---------------------------------------------------------------------------
 # Entry point
-# ---------------------------------------------------------------------------
-
 if __name__ == "__main__":
     result = orchestrate_full_pipeline(
         user_query="Scrape machine learning articles and visualize topic frequency trends",

@@ -41,10 +41,7 @@ def _sanitize_for_json(obj: Any) -> Any:
     return obj
 
 
-# ---------------------------------------------------------------------------
 # Numeric string recovery
-# ---------------------------------------------------------------------------
-
 _NUMERIC_STRIP_RE = re.compile(
     r"[\$\£\€\₹\¥,%]"
     r"|(\s*(km\u00b2?|mi\u00b2?|sq\s*km|lbs?|kg|m\u00b2?|mph|kph|ft|in|cm|mm|ha|ac|oz|ml|l|gb|mb|tb))\b",
@@ -88,10 +85,7 @@ def recover_numeric_columns(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# ---------------------------------------------------------------------------
 # LLM outlier arbiter
-# ---------------------------------------------------------------------------
-
 _OUTLIER_ARBITER_PROMPT = """
 You are a data quality specialist inside an automated data analysis pipeline.
 

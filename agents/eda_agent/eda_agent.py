@@ -5,7 +5,7 @@ import uuid
 import pandas as pd
 import numpy as np
 import matplotlib
-matplotlib.use("Agg")  # non-interactive backend — safe for agents and servers
+matplotlib.use("Agg")  
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -14,10 +14,7 @@ from pydantic import BaseModel, Field
 from google.adk.agents import Agent
 
 
-# ---------------------------------------------------------------------------
 # Storage setup
-# ---------------------------------------------------------------------------
-
 BASE_STORAGE_DIR = "storage"
 EDA_DATA_DIR  = os.path.join(BASE_STORAGE_DIR, "eda_data")
 PROFILE_DIR   = os.path.join(BASE_STORAGE_DIR, "profiles")
@@ -29,10 +26,7 @@ for d in (EDA_DATA_DIR, PROFILE_DIR, METADATA_DIR, PLOT_DIR, LOG_DIR):
     os.makedirs(d, exist_ok=True)
 
 
-# ---------------------------------------------------------------------------
 # Data model
-# ---------------------------------------------------------------------------
-
 class EDAState(BaseModel):
     input_dataframe_path: str
     profile_path: Optional[str] = None
@@ -42,10 +36,7 @@ class EDAState(BaseModel):
     quality_report: Optional[Dict[str, Any]] = None
 
 
-# ---------------------------------------------------------------------------
 # Persistence helpers
-# ---------------------------------------------------------------------------
-
 def _unique_path(directory: str, prefix: str, extension: str) -> str:
     return os.path.join(directory, f"{prefix}_{uuid.uuid4()}.{extension}")
 
@@ -88,12 +79,9 @@ def _should_use_log_scale(series: pd.Series) -> bool:
     ratio = series.max()/max(series.min(), 1e-9)
     return ratio>100
 
-# ---------------------------------------------------------------------------
 # EDA tools
 # Each function accepts a DataFrame and returns a JSON-serializable result.
 # They are also registered as ADK tools below.
-# ---------------------------------------------------------------------------
-
 def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
     """
     Returns a data quality snapshot: shape, missing values, duplicates,
@@ -150,7 +138,7 @@ def visualisation_tool(df: pd.DataFrame) -> List[str]:
     - Skip columns where > 50% of values look like URL paths
 
     Numeric  → KDE distribution plot
-    Categorical (2–20 unique values) → horizontal bar chart of value counts
+    Categorical (2-20 unique values) → horizontal bar chart of value counts
     """
     saved_paths = []
     url_pattern = re.compile(r"https?://|/catalogue/|\.html$", re.I)
@@ -303,9 +291,9 @@ def categorical_missing(df: pd.DataFrame) -> Dict[str, Any]:
 def bivariate_analysis(df: pd.DataFrame) -> Dict[str, Any]:
     """
     Runs pairwise analysis across all column combinations:
-    - num × num  → Pearson correlation coefficient
-    - num × cat  → per-category mean of the numeric column
-    - cat × cat  → contingency table (value counts)
+    - num x num  → Pearson correlation coefficient
+    - num x cat  → per-category mean of the numeric column
+    - cat x cat  → contingency table (value counts)
 
     Collects ALL pairs before returning instead of exiting after the first.
     """
@@ -320,36 +308,33 @@ def bivariate_analysis(df: pd.DataFrame) -> Dict[str, Any]:
              for j in range(i + 1, len(all_cols))]
 
     for col1, col2 in pairs:  # was pairs[] — invalid syntax
-        key = f"{col1} × {col2}"
+        key = f"{col1} x {col2}"
 
         if col1 in num_cols and col2 in num_cols:
             corr = df[col1].corr(df[col2])
             if pd.isna(corr):
                 corr = 0
-            report[key] = {"type": "num×num", "pearson_r": round(corr, 4)}
+            report[key] = {"type": "num x num", "pearson_r": round(corr, 4)}
 
         elif col1 in num_cols and col2 in cat_cols:
             # mean of numeric column grouped by the categorical column
             group_means = df.groupby(col2)[col1].mean().round(4).to_dict()
-            report[key] = {"type": "num×cat", "group_means": group_means}
+            report[key] = {"type": "num x cat", "group_means": group_means}
 
         elif col1 in cat_cols and col2 in num_cols:
             group_means = df.groupby(col1)[col2].mean().round(4).to_dict()
-            report[key] = {"type": "cat×num", "group_means": group_means}
+            report[key] = {"type": "cat x num", "group_means": group_means}
 
         else:
             # cat × cat — contingency table
             # was using df['cat_var'] (literal string) instead of df[cat_var]
             ct = pd.crosstab(df[col1], df[col2]).to_dict()
-            report[key] = {"type": "cat×cat", "contingency_table": ct}
+            report[key] = {"type": "cat x cat", "contingency_table": ct}
 
     return report
 
 
-# ---------------------------------------------------------------------------
 # Full EDA pipeline
-# ---------------------------------------------------------------------------
-
 def execute_eda(csv_path: str) -> EDAState:
     """
     Loads a cleaned CSV, runs the full EDA suite, saves all artifacts to
@@ -359,7 +344,7 @@ def execute_eda(csv_path: str) -> EDAState:
     state.logs.append(f"Loading data from: {csv_path}")
 
     df = pd.read_csv(csv_path, encoding="utf-8")
-    state.logs.append(f"Loaded DataFrame: {df.shape[0]} rows × {df.shape[1]} cols")
+    state.logs.append(f"Loaded DataFrame: {df.shape[0]} rows x {df.shape[1]} cols")
 
     # 1 — profile
     profile = profile_dataframe(df)
@@ -404,21 +389,14 @@ def execute_eda(csv_path: str) -> EDAState:
 
     return state
 
-
-# ---------------------------------------------------------------------------
 # ADK tool wrapper
-# ---------------------------------------------------------------------------
-
 def run_eda_on_csv(csv_path: str) -> dict:
     """ADK-compatible tool. Runs the full EDA pipeline and returns the state."""
     state = execute_eda(csv_path)
     return state.model_dump()
 
 
-# ---------------------------------------------------------------------------
 # ADK agent
-# ---------------------------------------------------------------------------
-
 eda_agent = Agent(
     name="eda_agent",
     model="gemini-2.0-flash",
@@ -451,10 +429,7 @@ eda_agent = Agent(
 )
 
 
-# ---------------------------------------------------------------------------
 # Entry point
-# ---------------------------------------------------------------------------
-
 if __name__ == "__main__":
     import sys
     csv_path = sys.argv[1] if len(sys.argv) > 1 else "storage/dataframes/cleaned_example.csv"

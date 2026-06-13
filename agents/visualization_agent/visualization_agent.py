@@ -10,7 +10,7 @@ from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
 from google.adk.agents import Agent
 
-# Extending your existing storage directory tree
+# Extending the existing storage directory tree
 BASE_STORAGE_DIR = "storage"
 DASHBOARD_DIR = os.path.join(BASE_STORAGE_DIR, "dashboards")
 VISUAL_METADATA_DIR = os.path.join(BASE_STORAGE_DIR, "visual_metadata")

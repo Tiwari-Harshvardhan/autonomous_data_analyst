@@ -15,10 +15,8 @@ from google.adk.agents import Agent
 from google.adk.tools import google_search
 
 
-# ---------------------------------------------------------------------------
-# JSON sanitizer
-# ---------------------------------------------------------------------------
 
+# JSON sanitizer
 def _sanitize_for_json(obj: Any) -> Any:
     if isinstance(obj, dict):
         return {k: _sanitize_for_json(v) for k, v in obj.items()}
@@ -34,10 +32,7 @@ def _sanitize_for_json(obj: Any) -> Any:
     return str(obj)
 
 
-# ---------------------------------------------------------------------------
 # Storage setup
-# ---------------------------------------------------------------------------
-
 BASE_STORAGE_DIR = "storage"
 RAW_DATA_DIR   = os.path.join(BASE_STORAGE_DIR, "raw")
 LOG_DIR        = os.path.join(BASE_STORAGE_DIR, "logs")
@@ -49,10 +44,7 @@ for d in (RAW_DATA_DIR, LOG_DIR, METADATA_DIR, RAW_HTML_DIR, SCREENSHOT_DIR):
     os.makedirs(d, exist_ok=True)
 
 
-# ---------------------------------------------------------------------------
 # Data models
-# ---------------------------------------------------------------------------
-
 class ScraperResult(BaseModel):
     url: str
     scraping_mode: str
@@ -77,10 +69,7 @@ class WorkflowState(BaseModel):
     raw_data_preview: Optional[List[Dict[str, Any]]] = None
 
 
-# ---------------------------------------------------------------------------
 # Page classification helpers (used by the scraper to tag each page)
-# ---------------------------------------------------------------------------
-
 _PRODUCT_SIGNALS = [
     "product", "price", "rating", "add-to-cart", "buy", "shop",
     "item", "catalogue", "catalog", "listing", "card",
@@ -114,10 +103,7 @@ def _classify_page(html: str, soup: BeautifulSoup) -> str:
     return "general"
 
 
-# ---------------------------------------------------------------------------
 # Layout-aware extraction helpers
-# ---------------------------------------------------------------------------
-
 def _fix_encoding(text: str) -> str:
     """Repairs mojibake: 'â£51.77' → '£51.77'"""
     try:
@@ -252,10 +238,7 @@ def extract_tables_as_records(soup: BeautifulSoup) -> List[Dict[str, Any]]:
     return records
 
 
-# ---------------------------------------------------------------------------
 # LLM fallback parser
-# ---------------------------------------------------------------------------
-
 _LLM_EXTRACTION_PROMPT = """
 You are a data extraction specialist inside a web scraping pipeline.
 
@@ -332,10 +315,7 @@ def _call_llm_for_extraction(structural_map: str) -> List[Dict[str, Any]]:
     return []
 
 
-# ===========================================================================
 # Universal Scraper
-# ===========================================================================
-
 class UniversalScraper:
     """
     Scrapes a URL using requests+BeautifulSoup (static) or Playwright (dynamic).
@@ -365,10 +345,8 @@ class UniversalScraper:
         print(f"[{mode}] {url}")
         return await (self._scrape_dynamic if is_dynamic else self._scrape_static)(url)
 
-    # ------------------------------------------------------------------
-    # Detection
-    # ------------------------------------------------------------------
 
+    # Detection
     async def _is_dynamic(self, url: str) -> bool:
         try:
             resp  = requests.get(url, headers=self.HEADERS, timeout=10)
@@ -380,10 +358,7 @@ class UniversalScraper:
         except Exception:
             return True
 
-    # ------------------------------------------------------------------
     # Extraction dispatcher (shared by static and dynamic paths)
-    # ------------------------------------------------------------------
-
     def _extract(
         self, html: str, soup: BeautifulSoup
     ) -> Tuple[str, Optional[List[Dict[str, Any]]], str]:
@@ -422,10 +397,7 @@ class UniversalScraper:
 
         return extracted_text, structured_data, page_type
 
-    # ------------------------------------------------------------------
     # Static path
-    # ------------------------------------------------------------------
-
     async def _scrape_static(self, url: str) -> ScraperResult:
         try:
             resp = requests.get(url, headers=self.HEADERS, timeout=15)
@@ -453,10 +425,7 @@ class UniversalScraper:
                 url=url, scraping_mode="static", success=False, error=str(e)
             )
 
-    # ------------------------------------------------------------------
     # Dynamic path
-    # ------------------------------------------------------------------
-
     async def _scrape_dynamic(self, url: str) -> ScraperResult:
         try:
             async with async_playwright() as p:
@@ -490,10 +459,7 @@ class UniversalScraper:
                 url=url, scraping_mode="dynamic", success=False, error=str(e)
             )
 
-    # ------------------------------------------------------------------
     # Infinite scroll
-    # ------------------------------------------------------------------
-
     async def _scroll_to_bottom(self, page, max_rounds: int = 20) -> None:
         prev_height = await page.evaluate("document.body.scrollHeight")
         for _ in range(max_rounds):
@@ -504,10 +470,7 @@ class UniversalScraper:
                 break
             prev_height = new_height
 
-    # ------------------------------------------------------------------
     # Persistence helpers
-    # ------------------------------------------------------------------
-
     def _unique_path(self, directory: str, extension: str) -> str:
         return os.path.join(directory, f"{uuid.uuid4()}.{extension}")
 
@@ -532,10 +495,7 @@ class UniversalScraper:
         return path
 
 
-# ---------------------------------------------------------------------------
 # Workflow-level persistence
-# ---------------------------------------------------------------------------
-
 def save_raw_data(scraped_results: List[ScraperResult]) -> str:
     """Serializes ScraperResults to JSON. Path is read by extraction agent."""
     path    = os.path.join(RAW_DATA_DIR, f"raw_data_{uuid.uuid4()}.json")
@@ -552,10 +512,7 @@ def save_workflow_metadata(state: WorkflowState) -> str:
     return path
 
 
-# ---------------------------------------------------------------------------
 # ADK tool wrapper
-# ---------------------------------------------------------------------------
-
 async def scrape_url(url: str) -> dict:
     """ADK tool: scrapes a single URL and returns a JSON-safe ScraperResult dict."""
     scraper = UniversalScraper()
@@ -563,10 +520,7 @@ async def scrape_url(url: str) -> dict:
     return _sanitize_for_json(result.model_dump())
 
 
-# ---------------------------------------------------------------------------
 # Data collection pipeline
-# ---------------------------------------------------------------------------
-
 async def execute_data_collection(state: WorkflowState) -> WorkflowState:
     state.logs.append("Started data collection workflow")
 
@@ -610,10 +564,7 @@ async def execute_data_collection(state: WorkflowState) -> WorkflowState:
     return state
 
 
-# ---------------------------------------------------------------------------
 # ADK agent
-# ---------------------------------------------------------------------------
-
 data_collection_agent = Agent(
     model="gemini-2.0-flash",
     name="data_collection_agent",
@@ -644,10 +595,7 @@ data_collection_agent = Agent(
 )
 
 
-# ---------------------------------------------------------------------------
 # Entry point
-# ---------------------------------------------------------------------------
-
 if __name__ == "__main__":
     import sys
 
