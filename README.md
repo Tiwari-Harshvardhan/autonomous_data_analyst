@@ -188,6 +188,8 @@ python installation_and_setup.py
 
 # ▶️ Running the Project
 
+Fork the repo on github and clone it on your machine, install all the dependencies and then run
+
 ```bash
 python server.py
 ```
@@ -201,7 +203,7 @@ uvicorn server:app --reload
 Open:
 
 ```text
-http://localhost:8000
+http://127.0.0.1:8001
 ```
 
 ---
