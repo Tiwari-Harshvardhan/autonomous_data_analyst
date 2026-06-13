@@ -1,0 +1,84 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_8cdee020-c821-4c9d-a897-23a8105cecf7.csv",
+  "dashboard_html_path": "storage\\dashboards\\tableau_dashboard_6b3b91dc-db3f-42e1-af73-cc917a549a0d.html",
+  "generated_plots": [
+    "Distribution of country_population",
+    "Boxplot for country_population",
+    "Distribution of country_area",
+    "Boxplot for country_area",
+    "Distribution of __original__country_population",
+    "Boxplot for __original__country_population",
+    "Distribution of __original__country_area",
+    "Boxplot for __original__country_area",
+    "Relationship between country_population and country_area",
+    "Correlation heatmap for numeric features"
+  ],
+  "chart_explanations": [
+    {
+      "chart_title": "Distribution of country_population",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of country_population, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for country_population",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Distribution of country_area",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of country_area, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for country_area",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Distribution of __original__country_population",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of __original__country_population, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for __original__country_population",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Distribution of __original__country_area",
+      "reason": "Numeric feature with sufficient samples and variance.",
+      "insight": "This histogram reveals the shape of __original__country_area, including skew, central tendency, and whether values are concentrated in one range."
+    },
+    {
+      "chart_title": "Boxplot for __original__country_area",
+      "reason": "Numeric feature with enough data for outlier and spread evaluation.",
+      "insight": "This boxplot exposes outliers, variability, and whether the central values are tightly clustered."
+    },
+    {
+      "chart_title": "Relationship between country_population and country_area",
+      "reason": "Two meaningful numeric variables exist, allowing relational analysis.",
+      "insight": "This scatter plot helps identify correlation or groupings between country_population and country_area. "
+    },
+    {
+      "chart_title": "Correlation heatmap for numeric features",
+      "reason": "Multiple numeric variables are available, making correlation analysis valuable.",
+      "insight": "This heatmap summarizes the strength of relationships among the strongest numeric features."
+    }
+  ],
+  "visualization_summary": "Created 10 meaningful visualization(s) based on dataset structure and analytical value.",
+  "metadata_path": null,
+  "logs": [
+    "[INIT] Started visualization generation.",
+    "[PLOT] Generated histogram chart for country_population.",
+    "[PLOT] Generated boxplot chart for country_population.",
+    "[PLOT] Generated histogram chart for country_area.",
+    "[PLOT] Generated boxplot chart for country_area.",
+    "[PLOT] Generated histogram chart for __original__country_population.",
+    "[PLOT] Generated boxplot chart for __original__country_population.",
+    "[PLOT] Generated histogram chart for __original__country_area.",
+    "[PLOT] Generated boxplot chart for __original__country_area.",
+    "[PLOT] Generated scatter chart for country_population, country_area.",
+    "[PLOT] Generated heatmap chart for country_population, country_area, __original__country_population, __original__country_area.",
+    "Interactive dashboard compiled and persisted."
+  ]
+}
