@@ -71,6 +71,22 @@ def _save_figure(prefix: str) -> str:
     plt.close()
     return path
 
+def get_plot_column(df: pd.DataFrame, col: str) -> pd.Series:
+    #use original values if available
+    original_col = f"__original__{col}"
+    if original_col in df.columns:
+        return df[original_col]
+    return df[col]
+
+def _should_use_log_scale(series: pd.Series) -> bool:
+    #automatically enable log-scale for highly skewed values
+    series = series.dropna()
+    if len(series) == 0:
+        return False
+    if (series<=0).any():
+        return False
+    ratio = series.max()/max(series.min(), 1e-9)
+    return ratio>100
 
 # ---------------------------------------------------------------------------
 # EDA tools
@@ -83,6 +99,15 @@ def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
     Returns a data quality snapshot: shape, missing values, duplicates,
     dtypes, and numeric summary statistics.
     """
+
+    numeric_summary = {}
+    numeric_cols = df.select_dtypes(include = [np.number]).columns
+    for col in df.select_dtypes(include=[np.number]).columns:
+        if col.startswith("__original__"):
+            continue
+        source_col = (f"__original__{col}" if f"__original__{col}" in df.columns else col)
+        numeric_summary[col] = (df[source_col].describe().to_dict())
+
     return {
         "rows": len(df),
         "columns": len(df.columns),
@@ -90,11 +115,8 @@ def profile_dataframe(df: pd.DataFrame) -> Dict[str, Any]:
         "missing_pct": (df.isnull().mean() * 100).round(2).to_dict(),
         "duplicates": int(df.duplicated().sum()),
         "dtypes": df.dtypes.astype(str).to_dict(),
-        "numeric_summary": (
-            df.describe(include=[np.number]).to_dict()
-            if not df.select_dtypes(include=[np.number]).empty
-            else {}
-        ),
+        "numeric_summary": numeric_summary
+        
     }
 
 
@@ -144,9 +166,15 @@ def visualisation_tool(df: pd.DataFrame) -> List[str]:
         if pd.api.types.is_numeric_dtype(df[col]):
             if n_unique <= 1:
                 continue  # constant column — no distribution to show
-            fig, ax = plt.subplots(figsize=(8, 4))
-            df[col].dropna().plot(kind="kde", ax=ax, title=f"Distribution — {col}")
-            ax.set_xlabel(col)
+            plot_series = get_plot_column(df, col)
+            fig, ax = plt.subplots(figsize=(8,4))
+            plot_series.dropna().plot(kind = "kde",ax=ax,title=f"Distribution - {col}")
+
+            if _should_use_log_scale(plot_series):
+                ax.set_xscale("log")
+                ax.set_xlabel(f"{col} (log scale)")
+            else:
+                ax.set_xlabel(col)
             path = _save_figure(f"plot_{col}")
             saved_paths.append(path)
 
@@ -183,7 +211,15 @@ def outlier_detector(df: pd.DataFrame) -> Dict[str, Any]:
     Uses the IQR method to identify outliers in every numeric column.
     Returns a dict mapping column name → list of outlier values.
     """
-    numeric_df = df.select_dtypes(include=[np.number])
+    numeric_df = pd.DataFrame()
+    for col in df.select_dtypes(include=[np.number]).columns:
+        if col.startswith("__original__"):
+            continue
+        original_col = f"__original__{col}"
+        if original_col in df.columns:
+            numeric_df[col] = df[original_col]
+        else:
+            numeric_df[col] = df[col]
     if numeric_df.empty:
         return {"error": "No numeric columns found"}
 
@@ -288,6 +324,8 @@ def bivariate_analysis(df: pd.DataFrame) -> Dict[str, Any]:
 
         if col1 in num_cols and col2 in num_cols:
             corr = df[col1].corr(df[col2])
+            if pd.isna(corr):
+                corr = 0
             report[key] = {"type": "num×num", "pearson_r": round(corr, 4)}
 
         elif col1 in num_cols and col2 in cat_cols:

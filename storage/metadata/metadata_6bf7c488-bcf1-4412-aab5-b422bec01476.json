@@ -1,0 +1,32 @@
+{
+  "user_query": "scrape and analyze data from the website https://www.scrapethissite.com/pages/simple/",
+  "source_urls": [
+    "https://www.scrapethissite.com/pages/simple/"
+  ],
+  "raw_data_path": "storage\\raw\\raw_data_d5cf46aa-6401-450d-9e74-9bd57fbd81c6.json",
+  "metadata_path": null,
+  "logs": [
+    "Started data collection workflow",
+    "Extracted URL(s) from query: ['https://www.scrapethissite.com/pages/simple/']",
+    "Discovered 1 URLs",
+    "Completed web scraping",
+    "  https://www.scrapethissite.com/pages/simple/ → page_type=article, structured_records=0, success=True",
+    "Raw data saved: storage\\raw\\raw_data_d5cf46aa-6401-450d-9e74-9bd57fbd81c6.json"
+  ],
+  "current_stage": "data_collection",
+  "raw_data_preview": [
+    {
+      "url": "https://www.scrapethissite.com/pages/simple/",
+      "scraping_mode": "static",
+      "title": "Countries of the World: A Simple Example | Scrape This Site | A public sandbox for learning web scraping",
+      "extracted_text": "Scrape This Site\nSandbox\nLessons\nFAQ\nLogin\n# Countries of the World: A Simple Example 250 items\nA single page that lists information about all the countries in the world. Good for those just get started with web scraping.\n                            Practice looking for patterns in the HTML that will allow you to extract information about each country. Then, build a simple web scraper that makes a request to this page, parses the HTML and prints out each country's name.\nThere are 4 video lessons that show you how to scrape this page.\nData via http://peric.github.io/GetCountries/\n### Andorra\n### United Arab Emirates\n### Afghanistan\n### Antigua and Barbuda\n### Anguilla\n### Albania\n### Armenia\n### Angola\n### Antarctica\n### Argentina\n### American Samoa\n### Austria\n### Australia\n### Aruba\n### Åland\n### Azerbaijan\n### Bosnia and Herzegovina\n### Barbados\n### Bangladesh\n### Belgium\n### Burkina Faso\n### Bulgaria\n### Bahrain\n### Burundi\n### Benin\n### Saint Barthélemy\n### Bermuda\n### Brunei\n### Bolivia\n### Bonaire\n### Brazil\n### Bahamas\n### Bhutan\n### Bouvet Island\n### Botswana\n### Belarus\n### Belize\n### Canada\n### Cocos [Keeling] Islands\n### Democratic Republic of the Congo\n### Central African Republic\n### Republic of the Congo\n### Switzerland\n### Ivory Coast\n### Cook Islands\n### Chile\n### Cameroon\n### China\n### Colombia\n### Costa Rica\n### Cuba\n### Cape Verde\n### Curacao\n### Christmas Island\n### Cyprus\n### Czech Republic\n### Germany\n### Djibouti\n### Denmark\n### Dominica\n### Dominican Republic\n### Algeria\n### Ecuador\n### Estonia\n### Egypt\n### Western Sahara\n### Eritrea\n### Spain\n### Ethiopia\n### Finland\n### Fiji\n### Falkland Islands\n### Micronesia\n### Faroe Islands\n### France\n### Gabon\n### United Kingdom\n### Grenada\n### Georgia\n### French Guiana\n### Guernsey\n### Ghana\n### Gibraltar\n### Greenland\n### Gambia\n### Guinea\n### Guadeloupe\n### Equatorial Guinea\n### Greece\n### South Georgia and the South Sandwich Islands\n### Guatemala\n### Guam\n### Guinea-Bissau\n### Guyana\n### Hong Kong\n### Heard Island and McDonald Islands\n### Honduras\n### Croatia\n### Haiti\n### Hungary\n### Indonesia\n### Ireland\n### Israel\n### Isle of Man\n### India\n### British Indian Ocean Territory\n### Iraq\n### Iran\n### Iceland\n### Italy\n### Jersey\n### Jamaica\n### Jordan\n### Japan\n### Kenya\n### Kyrgyzstan\n### Cambodia\n### Kiribati\n### Comoros\n### Saint Kitts and Nevis\n### North Korea\n### South Korea\n### Kuwait\n### Cayman Islands\n### Kazakhstan\n### Laos\n### Lebanon\n### Saint Lucia\n### Liechtenstein\n### Sri Lanka\n### Liberia\n### Lesotho\n### Lithuania\n### Luxembourg\n### Latvia\n### Libya\n### Morocco\n### Monaco\n### Moldova\n### Montenegro\n### Saint Martin\n### Madagascar\n### Marshall Islands\n### Macedonia\n### Mali\n### Myanmar [Burma]\n### Mongolia\n### Macao\n### Northern Mariana Islands\n### Martinique\n### Mauritania\n### Montserrat\n### Malta\n### Mauritius\n### Maldives\n### Malawi\n### Mexico\n### Malaysia\n### Mozambique\n### Namibia\n### New Caledonia\n### Niger\n### Norfolk Island\n### Nigeria\n### Nicaragua\n### Netherlands\n### Norway\n### Nepal\n### Nauru\n### Niue\n### New Zealand\n### Oman\n### Panama\n### Peru\n### French Polynesia\n### Papua New Guinea\n### Philippines\n### Pakistan\n### Poland\n### Saint Pierre and Miquelon\n### Pitcairn Islands\n### Puerto Rico\n### Palestine\n### Portugal\n### Palau\n### Paraguay\n### Qatar\n### Réunion\n### Romania\n### Serbia\n### Russia\n### Rwanda\n### Saudi Arabia\n### Solomon Islands\n### Seychelles\n### Sudan\n### Sweden\n### Singapore\n### Saint Helena\n### Slovenia\n### Svalbard and Jan Mayen\n### Slovakia\n### Sierra Leone\n### San Marino\n### Senegal\n### Somalia\n### Suriname\n### South Sudan\n### São Tomé and Príncipe\n### El Salvador\n### Sint Maarten\n### Syria\n### Swaziland\n### Turks and Caicos Islands\n### Chad\n### French Southern Territories\n### Togo\n### Thailand\n### Tajikistan\n### Tokelau\n### East Timor\n### Turkmenistan\n### Tunisia\n### Tonga\n### Turkey\n### Trinidad and Tobago\n### Tuvalu\n### Taiwan\n### Tanzania\n### Ukraine\n### Uganda\n### U.S. Minor Outlying Islands\n### United States\n### Uruguay\n### Uzbekistan\n### Vatican City\n### Saint Vincent and the Grenadines\n### Venezuela\n### British Virgin Islands\n### U.S. Virgin Islands\n### Vietnam\n### Vanuatu\n### Wallis and Futuna\n### Samoa\n### Kosovo\n### Yemen\n### Mayotte\n### South Africa\n### Zambia\n### Zimbabwe",
+      "structured_data": null,
+      "page_type": "article",
+      "html_path": "storage\\raw_html\\7341ebaf-b397-4fc1-a77c-578110c90dce.html",
+      "screenshot_path": null,
+      "metadata_path": "storage\\metadata\\dbc5d972-531c-42b6-b91f-baef2843e376.json",
+      "success": true,
+      "error": null
+    }
+  ]
+}

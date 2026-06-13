@@ -1,0 +1,131 @@
+{
+  "input_dataframe_path": "storage\\eda_data\\engineered_data_d373d16d-32c6-453f-8b67-dc36bf86d52c.csv",
+  "profile_path": "storage\\profiles\\profile_f9760f80-8858-4fa4-a4ed-39713365d393.json",
+  "plot_paths": [
+    "storage\\plots\\plot_text_strong_c35b6d54-63b0-4abd-82f9-72004fd1a01a.png",
+    "storage\\plots\\plot_country_population_91ad28b5-e4d0-4fce-9076-2b516ef9f0e5.png",
+    "storage\\plots\\plot_country_area_2bc73b94-43ed-442b-8fe7-19c908167723.png",
+    "storage\\plots\\plot_country_population_zscore_d038c9f7-b5c1-4cdf-bc3c-12a4f57480e0.png",
+    "storage\\plots\\plot_country_area_zscore_c88d6f51-c785-409c-822d-3a8b0db4940a.png"
+  ],
+  "metadata_path": null,
+  "logs": [
+    "Loading data from: storage\\eda_data\\engineered_data_d373d16d-32c6-453f-8b67-dc36bf86d52c.csv",
+    "Loaded DataFrame: 85 rows × 15 cols",
+    "Profile saved: storage\\profiles\\profile_f9760f80-8858-4fa4-a4ed-39713365d393.json",
+    "Descriptive stats computed for 2 column groups",
+    "Saved 5 plot(s) to storage\\plots",
+    "Outlier detection complete: 5 column(s) checked",
+    "Skewed columns (|skew|>0.5): ['country_population', '__original__country_population', 'country_population_zscore', '__original__country_population_zscore']",
+    "Categorical analysis complete",
+    "Bivariate analysis complete: 105 pair(s)"
+  ],
+  "quality_report": {
+    "rows": 85,
+    "columns": 15,
+    "missing_values": {
+      "col_md_4_country": 0,
+      "country_name": 0,
+      "country_info": 0,
+      "text_strong": 0,
+      "country_capital": 0,
+      "country_population": 0,
+      "text_sup": 1,
+      "country_area": 0,
+      "__original__country_population": 0,
+      "__original__text_sup": 1,
+      "__original__country_area": 0,
+      "country_population_zscore": 0,
+      "country_area_zscore": 0,
+      "__original__country_population_zscore": 0,
+      "__original__country_area_zscore": 0
+    },
+    "missing_pct": {
+      "col_md_4_country": 0.0,
+      "country_name": 0.0,
+      "country_info": 0.0,
+      "text_strong": 0.0,
+      "country_capital": 0.0,
+      "country_population": 0.0,
+      "text_sup": 1.18,
+      "country_area": 0.0,
+      "__original__country_population": 0.0,
+      "__original__text_sup": 1.18,
+      "__original__country_area": 0.0,
+      "country_population_zscore": 0.0,
+      "country_area_zscore": 0.0,
+      "__original__country_population_zscore": 0.0,
+      "__original__country_area_zscore": 0.0
+    },
+    "duplicates": 0,
+    "dtypes": {
+      "col_md_4_country": "str",
+      "country_name": "str",
+      "country_info": "str",
+      "text_strong": "str",
+      "country_capital": "str",
+      "country_population": "float64",
+      "text_sup": "float64",
+      "country_area": "float64",
+      "__original__country_population": "float64",
+      "__original__text_sup": "float64",
+      "__original__country_area": "float64",
+      "country_population_zscore": "float64",
+      "country_area_zscore": "float64",
+      "__original__country_population_zscore": "float64",
+      "__original__country_area_zscore": "float64"
+    },
+    "numeric_summary": {
+      "country_population": {
+        "count": 85.0,
+        "mean": 42576356.202380955,
+        "std": 190798315.89669693,
+        "min": 0.0,
+        "25%": 72813.0,
+        "50%": 3086918.0,
+        "75%": 14790608.0,
+        "max": 1330044000.0
+      },
+      "text_sup": {
+        "count": 84.0,
+        "mean": 2.0,
+        "std": 0.0,
+        "min": 2.0,
+        "25%": 2.0,
+        "50%": 2.0,
+        "75%": 2.0,
+        "max": 2.0
+      },
+      "country_area": {
+        "count": 85.0,
+        "mean": 16.390793258496533,
+        "std": 7.5789925175466815,
+        "min": 0.6858733972790819,
+        "25%": 8.578187229816532,
+        "50%": 17.665403480239974,
+        "75%": 22.06057250174574,
+        "max": 33.94987109375386
+      },
+      "country_population_zscore": {
+        "count": 85.0,
+        "mean": 1.436759208338438e-17,
+        "std": 0.9999999999999999,
+        "min": -0.223148490605299,
+        "25%": -0.2227668677400353,
+        "50%": -0.2069695322874943,
+        "75%": -0.1456288965224665,
+        "max": 6.747793541818718
+      },
+      "country_area_zscore": {
+        "count": 85.0,
+        "mean": -3.004132890162188e-17,
+        "std": 1.0,
+        "min": -2.0721645818831247,
+        "25%": -1.030823821318264,
+        "50%": 0.1681767357326843,
+        "75%": 0.7480914158607076,
+        "max": 2.316808968290313
+      }
+    }
+  }
+}

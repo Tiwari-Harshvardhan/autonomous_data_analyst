@@ -53,6 +53,18 @@ def _sanitize_for_json(obj: Any) -> Any:
     return str(obj)
 
 
+def should_use_log_scale(series: pd.Series) -> bool:
+    #decide automatically whether log scaling would improve readability
+    values = series.dropna()
+    if len(values) < 10:
+        return False
+    
+    if (values<=0).any:
+        return False
+    
+    ratio = values.max()/max(values.min(), 1e-9)
+    return ratio>100
+
 def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
     state = VisualisationState(input_dataframe_path=csv_path)
     state.logs.append("[INIT] Started visualization generation.")
@@ -90,7 +102,7 @@ def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
         converted = pd.to_datetime(df[col], errors='coerce')
         return converted.notna().sum() >= 10 and converted.nunique() > 1
 
-    numeric_cols = [col for col in df.select_dtypes(include=['number']).columns if meaningful_numeric(col)]
+    numeric_cols = [col for col in df.select_dtypes(include=['number']).columns if meaningful_numeric(col) and not col.endswith("_zscore")]
     categorical_cols = [col for col in df.select_dtypes(include=['object', 'category']).columns if meaningful_categorical(col)]
     datetime_cols = [col for col in df.columns if meaningful_datetime(col)]
 
@@ -180,11 +192,23 @@ def generate_interactive_dashboard(csv_path: str) -> VisualisationState:
                         continue
                     fig = px.line(plot_df.sort_values(chart['columns'][0]), x=chart['columns'][0], y=chart['columns'][1], title=chart['title'], template='plotly_white')
                 elif chart['type'] == 'histogram':
-                    fig = px.histogram(df, x=chart['columns'][0], title=chart['title'], template='plotly_white', color_discrete_sequence=['#4682B4'])
+                    col = chart['columns'][0]
+                    fig = px.histogram(df, x=col, title=chart['title'], template='plotly_white', color_discrete_sequence=['#4682B4'])
+                    if should_use_log_scale(df[col]):
+                        fig.update_xaxes(type="log")
                 elif chart['type'] == 'boxplot':
-                    fig = px.box(df, y=chart['columns'][0], title=chart['title'], template='plotly_white', color_discrete_sequence=['#5B84B1'])
+                    col = chart['columns'][0]
+                    fig = px.box(df, y=col, title=chart['title'], template='plotly_white', color_discrete_sequence=['#5B84B1'])
+                    if should_use_log_scale(df[col]):
+                        fig.update_yaxes(type = "log")
                 elif chart['type'] == 'scatter':
-                    fig = px.scatter(df, x=chart['columns'][0], y=chart['columns'][1], title=chart['title'], template='plotly_white', color_discrete_sequence=['#E67E22'])
+                    x_col = chart['columns'][0]
+                    y_col = chart['columns'][1]
+                    fig = px.scatter(df, x=x_col, y=y_col, title=chart['title'], template='plotly_white', color_discrete_sequence=['#E67E22'])
+                    if should_use_log_scale(df[x_col]):
+                        fig.update_xaxes(type="log")
+                    if should_use_log_scale(df[y_col]):
+                        fig.update_yaxes(type="log")
                 elif chart['type'] == 'heatmap':
                     corr = df[chart['columns']].corr()
                     fig = px.imshow(corr, text_auto=True, title=chart['title'], color_continuous_scale='RdBu_r')

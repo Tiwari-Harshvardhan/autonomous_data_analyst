@@ -130,15 +130,17 @@ def save_metadata(state: FeatureEngineeringState) -> str:
     return path
 
 
-# ---------------------------------------------------------------------------
-# Existing transforms (unchanged so downstream agents are unaffected)
-# ---------------------------------------------------------------------------
+def preserve_original_numeric_cols(df: pd.DataFrame) -> pd.DataFrame:
+    #store original numeric values before scaling
+    for col in df.select_dtypes(include=[np.number]).columns:
+        df[f"__original__{col}"] = df[col]
+    return df
 
 def feature_scaling(df: pd.DataFrame) -> pd.DataFrame:
     """Z-score standardization for all numeric columns with non-zero std."""
     for col in df.select_dtypes(include=[np.number]).columns:
         if df[col].std() != 0:
-            df[col] = (df[col] - df[col].mean()) / df[col].std()
+            df[f"{col}_zscore"] = (df[col] - df[col].mean()) / df[col].std()
     return df
 
 
@@ -609,6 +611,7 @@ def execute_feature_engineering(
     state.logs.append("Skewness correction applied.")
 
     # 2 — z-score feature scaling
+    df = preserve_original_numeric_cols(df)
     df = feature_scaling(df)
     state.logs.append("Z-score scaling applied to numeric features.")
 
